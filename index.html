@@ -29,7 +29,7 @@
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Inter,system-ui,sans-serif}
+body{margin:0;overflow-x:clip;background:var(--bg);color:var(--ink);font:16px/1.5 Inter,system-ui,sans-serif}
 h1,h2,h3{font-family:Oswald,Impact,sans-serif;letter-spacing:.02em;margin:0}
 a{color:var(--ember)}
 button{font:inherit;cursor:pointer}
@@ -127,7 +127,7 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
 .opt input{accent-color:var(--ember);width:18px;height:18px;flex:none;margin:0}
 .opt .lnk{background:none;border:0;padding:0;color:var(--ink);font:inherit;font-weight:600;text-align:left;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
 .opt small{color:var(--ink-2);white-space:nowrap}
-.wheelbox{text-align:center}
+.wheelbox{text-align:center;overflow:hidden}
 .wheel-wrap{position:relative;width:min(360px,86vw);margin:14px auto 6px}
 #wheel{width:100%;display:block;transition:transform 4.2s cubic-bezier(.15,.7,.1,1)}
 #wheel text{font-family:Oswald,Impact,sans-serif;font-size:6.6px;fill:#fff;letter-spacing:.02em}
