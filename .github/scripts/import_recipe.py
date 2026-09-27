@@ -149,6 +149,12 @@ def fetch_recipe(url):
             rec = extract(r.text)
             if rec:
                 return r.text, rec, "site"
+    # Many sites (Cloudflare) block cloud servers like GitHub's. A public reader fetches the page for us.
+    r = get("https://r.jina.ai/" + url, headers={"X-Return-Format": "html"}, timeout=60)
+    if r is not None and r.status_code == 200:
+        rec = extract(r.text)
+        if rec:
+            return r.text, rec, "reader"
     snap = None
     r = get("https://archive.org/wayback/available", params={"url": url})
     if r is not None and r.status_code == 200:
