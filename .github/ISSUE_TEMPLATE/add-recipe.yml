@@ -1,0 +1,41 @@
+name: Add a recipe
+description: Paste a link to a recipe. It gets read, sorted and added to the site automatically in a few minutes.
+title: "Add recipe"
+labels: ["add-recipe"]
+body:
+  - type: input
+    id: url
+    attributes:
+      label: Recipe link
+      description: The web address of the recipe page.
+      placeholder: https://
+    validations:
+      required: true
+  - type: dropdown
+    id: cooker
+    attributes:
+      label: Cooker
+      description: Leave on Auto-detect unless you want to force it.
+      options:
+        - Auto-detect
+        - Blackstone
+        - Pit Barrel
+        - Grill
+      default: 0
+  - type: dropdown
+    id: type
+    attributes:
+      label: Type
+      options:
+        - Auto-detect
+        - Beef main
+        - Chicken main
+        - Other main (pork, seafood)
+        - Side dish
+        - Appetizer
+      default: 0
+  - type: input
+    id: region
+    attributes:
+      label: Region (optional)
+      description: e.g. Mexican, Thai, Southern. Leave blank to auto-detect.

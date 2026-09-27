@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Flat Top & Barrel</title>
-<meta name="description" content="Top-rated Blackstone griddle and Pit Barrel Cooker recipes: beef and chicken mains, sides and appetizers, filterable by cooker, type and region.">
+<title>Flat Top, Barrel & Grill</title>
+<meta name="description" content="Top-rated Blackstone griddle, Pit Barrel Cooker and grill recipes: beef and chicken mains, sides and appetizers, filterable by cooker, type and region.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔥</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,19 +12,19 @@
 <style>
 :root{
   --bg:#f6f1ea; --surface:#ffffff; --surface-2:#efe7dc; --ink:#231c16; --ink-2:#5c5148; --line:#ddd1c2;
-  --ember:#c2410c; --ember-ink:#fff; --bs:#1f2937; --pbc:#7c2d12; --gold:#b45309; --focus:#2563eb;
+  --ember:#c2410c; --ember-ink:#fff; --bs:#1f2937; --pbc:#7c2d12; --gr:#166534; --gold:#b45309; --focus:#2563eb;
   --shadow:0 1px 2px rgba(0,0,0,.06),0 4px 14px rgba(0,0,0,.06);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --bg:#15120f; --surface:#1f1a16; --surface-2:#2a231d; --ink:#f3ece4; --ink-2:#b9ab9c; --line:#3a3129;
-    --ember:#f97316; --ember-ink:#1a0f06; --bs:#94a3b8; --pbc:#fb923c; --gold:#fbbf24; --focus:#60a5fa;
+    --ember:#f97316; --ember-ink:#1a0f06; --bs:#94a3b8; --pbc:#fb923c; --gr:#4ade80; --gold:#fbbf24; --focus:#60a5fa;
     --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.3);
   }
 }
 :root[data-theme="dark"]{
   --bg:#15120f; --surface:#1f1a16; --surface-2:#2a231d; --ink:#f3ece4; --ink-2:#b9ab9c; --line:#3a3129;
-  --ember:#f97316; --ember-ink:#1a0f06; --bs:#94a3b8; --pbc:#fb923c; --gold:#fbbf24; --focus:#60a5fa;
+  --ember:#f97316; --ember-ink:#1a0f06; --bs:#94a3b8; --pbc:#fb923c; --gr:#4ade80; --gold:#fbbf24; --focus:#60a5fa;
   --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.3);
 }
 *{box-sizing:border-box}
@@ -74,6 +74,9 @@ nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(-
 .tag{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;padding:2px 8px;border-radius:6px;background:var(--surface-2);color:var(--ink-2)}
 .tag.bs{background:var(--bs);color:var(--bg)}
 .tag.pbc{background:var(--pbc);color:var(--bg)}
+.tag.gr{background:var(--gr);color:var(--bg)}
+.tag.added{background:var(--gold);color:var(--bg)}
+a.btn{text-decoration:none;display:inline-flex;align-items:center}
 .meta{display:flex;justify-content:space-between;font-size:.82rem;color:var(--ink-2);margin-top:auto}
 .fav{color:var(--gold)}
 .pick{color:var(--gold);font-size:.78rem;font-weight:600}
@@ -165,8 +168,8 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
 <header class="hero">
   <button class="theme-toggle" id="themeBtn" type="button" aria-label="Toggle dark mode">Theme</button>
   <div class="wrap">
-    <h1>Flat Top <span>&amp;</span> Barrel</h1>
-    <p>Blackstone griddle and Pit Barrel Cooker recipes. Beef, chicken, sides, appetizers.</p>
+    <h1>Flat Top, Barrel <span>&amp;</span> Grill</h1>
+    <p>Blackstone griddle, Pit Barrel Cooker and grill recipes. Beef, chicken, sides, appetizers.</p>
     <div class="stats" id="stats"></div>
   </div>
 </header>
@@ -187,6 +190,7 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
         <input id="q" type="search" placeholder="Search recipes or ingredients (e.g. jalapeño, brisket, soy)" aria-label="Search recipes">
         <button class="btn" id="favOnly" type="button" aria-pressed="false">★ Favorites</button>
         <button class="btn" id="reset" type="button">Reset</button>
+        <a class="btn" href="https://github.com/rsissons/grill-recipes/issues/new?template=add-recipe.yml" target="_blank" rel="noopener">＋ Add a recipe</a>
       </div>
       <div class="frow"><span class="lbl">Cooker</span><div class="chips" id="f-cooker"></div></div>
       <div class="frow"><span class="lbl">Type</span><div class="chips" id="f-type"></div></div>
@@ -250,6 +254,7 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
   <div class="dlg-body" id="dlgBody"></div>
 </dialog>
 
+<script src="added.js"></script>
 <script>
 /* ---------- Recipe data ----------
    cooker: BS = Blackstone griddle, PBC = Pit Barrel Cooker
@@ -756,9 +761,148 @@ const R = [
  desc:"Coconut-curry marinated chicken skewers seared on the flat top, served with a rich peanut sauce.",
  ing:["1.3 lb chicken thighs, 3/4 inch pieces","Marinade: 1/4 cup coconut milk, 1 Tbsp curry powder, 2 tsp brown sugar, 1 tsp salt, 2 garlic cloves","Peanut sauce: the rest of a 14 oz can of coconut milk, 3/4 cup natural peanut butter, 2 tsp red curry paste, 2 Tbsp brown sugar, 2 tsp dark soy, 2 Tbsp cider vinegar","Bamboo skewers, cucumber, cilantro"],
  steps:["Marinate the chicken at least 20 minutes, up to overnight, then thread it onto skewers.","Simmer the peanut sauce ingredients 3 to 5 minutes until thick, and thin with water as needed.","Medium-high heat, lightly oiled. Cook the skewers 3 minutes a side until charred and 175°F.","Serve with the peanut sauce, cucumber and cilantro."],
- tip:"Thighs, not breast. They stay juicy through the char.",src:["RecipeTin Eats: Thai Chicken Satay","https://www.recipetineats.com/thai-chicken-satay-peanut-sauce/"]}
+ tip:"Thighs, not breast. They stay juicy through the char.",src:["RecipeTin Eats: Thai Chicken Satay","https://www.recipetineats.com/thai-chicken-satay-peanut-sauce/"]},
+/* ================= GRILL: BEEF ================= */
+{id:"bistecca",name:"Bistecca alla Fiorentina",cooker:"GR",type:"Beef",region:"European",mins:45,
+ desc:"A 3 inch porterhouse charred hard over hot coals, rare inside, finished with olive oil, rosemary and sea salt.",
+ ing:["1 porterhouse or T-bone, 2.5 to 3 inches thick (3 lb)","Coarse sea salt, black pepper","Extra-virgin olive oil","1 bunch rosemary and sage, tied into a brush","Lemon wedges"],
+ steps:["Let the steak sit out 1 to 2 hours so it isn't fridge-cold.","Build a hot two-zone fire (charcoal is best).","Sear over the hottest spot 5 to 8 minutes a side without moving it, then stand it on the bone 5 minutes.","Move it to the cool side if needed until the thick part reads 120 to 125°F.","Rest 5 to 10 minutes, cut off the bone, slice thick, and brush with olive oil using the herb brush. Salt and pepper right at the end."],
+ tip:"Salt after slicing, Tuscan style. Serve it rare to medium rare. This cut doesn't like going further.",src:["Barbecue Bible: The Real Bistecca alla Fiorentina","https://barbecuebible.com/recipe/real-bistecca-alla-fiorentina/"]},
+{id:"juicy-lucy",name:"Juicy Lucy Burgers",cooker:"GR",type:"Beef",region:"American",mins:30,
+ desc:"Minneapolis-style cheeseburgers with the American cheese sealed inside, so it melts into a molten core.",
+ ing:["2 lb 80/20 ground beef, in 8 thin patties","4 slices American cheese, folded into quarters","Salt, pepper, garlic powder","4 buns, pickles, onion"],
+ steps:["Stack cheese in the center of 4 patties, cap each with another patty and pinch the edges tightly to seal.","Press a small dimple in the center of each so it doesn't puff up.","Season and grill over medium-high heat, covered, 4 to 5 minutes a side to 160°F.","Rest 2 minutes before biting. The cheese is molten."],
+ tip:"Seal the edges completely or the cheese leaks out and flares up.",src:["Hey Grill Hey: Juicy Lucy Burger","https://heygrillhey.com/juicy-lucy-burger/"]},
+{id:"shish-kebab",name:"Beef Shish Kebabs",cooker:"GR",type:"Beef",region:"Mediterranean",mins:40,
+ desc:"Marinated sirloin cubes with peppers, onion and mushrooms, charred on skewers.",
+ ing:["2 lb sirloin, 1.5 inch cubes","Marinade: 1/4 cup olive oil, 1/4 cup soy, 2 Tbsp Worcestershire, 2 Tbsp balsamic, 1 Tbsp Dijon, 3 garlic cloves, 1 tsp pepper","2 bell peppers and 1 red onion, chunked","8 oz mushrooms","Skewers"],
+ steps:["Marinate the beef 3 to 8 hours.","Thread the beef and vegetables onto skewers, alternating.","Grill over medium-high heat (about 400°F), 8 to 10 minutes total, turning every 2 minutes, to 130 to 135°F.","Rest 5 minutes before serving."],
+ tip:"Put the vegetables on their own skewers if you want the beef medium rare. They cook at different speeds.",src:["Downshiftology: Beef Shish Kabob","https://downshiftology.com/recipes/beef-shish-kabob/"]},
+{id:"kofta",name:"Beef Kofta Kebabs",cooker:"GR",type:"Beef",region:"Mediterranean",mins:40,
+ desc:"Ground beef and lamb with onion, parsley and warm spices, shaped onto skewers and grilled. Serve with tahini and pita.",
+ ing:["1 lb ground beef and 1/2 lb ground lamb","1 small onion, grated and squeezed dry","1/2 cup parsley, 3 garlic cloves","1 tsp each allspice, cumin, coriander, paprika; 1/2 tsp cinnamon, salt, pepper","Pita, tahini sauce, tomato, cucumber"],
+ steps:["Mix everything and chill 30 minutes.","Shape into long sausages around skewers (wet your hands).","Grill over medium-high heat 2 to 3 minutes a side until browned and 160°F.","Serve with pita, tahini and salad."],
+ tip:"Squeeze the grated onion dry. Wet mix falls off the skewer.",src:["The Mediterranean Dish: Kofta Kebab","https://www.themediterraneandish.com/kofta-kebab-recipe/"]},
+{id:"suya",name:"Nigerian Beef Suya",cooker:"GR",type:"Beef",region:"African",mins:40,
+ desc:"Thin beef skewers crusted in yaji, a peanut and chile spice, grilled hot and served with raw onion and tomato.",
+ ing:["2 lb sirloin or flank, sliced 1/4 inch thin","Yaji: 1/2 cup finely ground roasted peanuts, 1 Tbsp paprika, 2 tsp ginger, 1 tsp each garlic powder and onion powder, 1 to 2 tsp cayenne, 1 tsp salt, 1 bouillon cube crushed","3 Tbsp oil","Red onion, tomato, cabbage for serving","Skewers"],
+ steps:["Mix the yaji. Toss the beef with the oil and most of the spice, and marinate 30 minutes or longer.","Thread the beef onto skewers in thin ribbons.","Grill hot and fast, turning often, about 8 minutes, until the edges char.","Dust with more yaji and serve with sliced onion and tomato."],
+ tip:"Grind the peanuts to a dry powder, not butter. Pulse in short bursts.",src:["Chili Pepper Madness: Nigerian Suya","https://www.chilipeppermadness.com/recipes/suya/"]},
+{id:"london-broil",name:"Grilled London Broil",cooker:"GR",type:"Beef",region:"American",mins:40,
+ desc:"Budget top round marinated in balsamic, soy and garlic overnight, grilled medium rare and sliced paper thin.",
+ ing:["2 to 2.5 lb top round (London broil), 1.5 inches thick","Marinade: 1/3 cup balsamic, 1/4 cup soy, 1/4 cup olive oil, 2 Tbsp Worcestershire, 2 Tbsp honey, 4 garlic cloves, 1 tsp pepper"],
+ steps:["Poke the meat all over with a fork and marinate 8 to 24 hours.","Grill over high heat 7 to 9 minutes a side to 130°F.","Rest 10 minutes.","Slice very thin at a 45 degree angle across the grain."],
+ tip:"The thin cross-grain slice is what makes this cheap cut tender. Use your sharpest knife.",src:["Hey Grill Hey: Grilled London Broil","https://heygrillhey.com/simple-grilled-london-broil-marinade/"]},
+{id:"filet-cowboy",name:"Filet Mignon with Cowboy Butter",cooker:"GR",type:"Beef",region:"American",mins:30,
+ desc:"Thick filets seared over direct heat and topped with a garlicky herb, paprika and Dijon compound butter.",
+ ing:["4 filet mignon steaks, 2 inches thick","Salt, pepper, olive oil","Cowboy butter: 1 stick softened butter, 3 garlic cloves minced, 1 Tbsp each parsley and chives, 1 tsp thyme, 1 tsp smoked paprika, 1 tsp Dijon, lemon zest, pinch of red pepper flakes"],
+ steps:["Mix the butter, roll it into a log and chill.","Oil and season the steaks. Set up a two-zone fire.","Sear 3 to 4 minutes a side over direct heat, then move to indirect until 125 to 130°F.","Rest 5 minutes with a thick coin of butter melting on top."],
+ tip:"Make the butter a day ahead. Leftovers go great on corn and bread.",src:["Grits and Pinecones: Filet Mignon with Cowboy Butter","https://www.gritsandpinecones.com/bacon-wrapped-filet-mignon/"]},
+
+/* ================= GRILL: CHICKEN ================= */
+{id:"beer-can-chicken",name:"Beer Can Chicken",cooker:"GR",type:"Chicken",region:"BBQ",mins:90,
+ desc:"A whole chicken roasted upright over a half-full can of beer on indirect heat for crisp skin all around.",
+ ing:["1 whole chicken, 4 lb","1 can beer (drink or pour off half)","3 Tbsp BBQ rub","1 Tbsp oil"],
+ steps:["Set up the grill for indirect heat around 350°F.","Oil and rub the chicken inside and out.","Open the beer, pour off half, and lower the chicken's cavity over the can so it stands up on the can and its two legs.","Cook indirect, lid closed, 1 to 1.25 hours until the thigh reads 175°F.","Carefully lift the bird off the hot can (use tongs and a towel) and rest 10 minutes."],
+ tip:"The beer barely flavors the meat. The upright position is the magic, because it gives even crisp skin all around.",src:["Barbecue Bible: Beer Can Chicken","https://barbecuebible.com/recipe/basic-beer-can-chicken/"]},
+{id:"cornell-chicken",name:"Cornell Chicken",cooker:"GR",type:"Chicken",region:"American",mins:90,
+ desc:"The New York State Fair classic: chicken halves in a tangy vinegar-egg-oil baste that caramelizes to bronze.",
+ ing:["2 chickens, halved (or 4 lb leg quarters)","Baste: 1 egg, 1 cup vegetable oil, 2 cups cider vinegar, 3 Tbsp salt, 1 Tbsp poultry seasoning, 1 tsp pepper"],
+ steps:["Blend the egg, then stream in the oil to make a thin mayo. Blend in the vinegar and seasonings.","Marinate the chicken in half the baste 4 to 24 hours.","Cook indirect at 325°F, skin side up, basting every 10 minutes, about 45 minutes.","Move it over direct heat to crisp the skin, flipping, until the breast is 160°F and the thigh 175°F."],
+ tip:"Keep a clean batch of baste for the grill. Never baste with the marinade the raw chicken sat in.",src:["AmazingRibs: Crispy Grilled Cornell Chicken","https://amazingribs.com/tested-recipes/chicken-recipes/crispy-grilled-cornell-chicken-recipe/"]},
+{id:"souvlaki",name:"Chicken Souvlaki",cooker:"GR",type:"Chicken",region:"Mediterranean",mins:40,
+ desc:"Lemon, garlic, oregano and white wine marinated chicken skewers with tzatziki, pita and tomato.",
+ ing:["2 lb chicken breast or thigh, 1.5 inch cubes","Marinade: 1/4 cup olive oil, juice of 1 lemon, 2 Tbsp dry white wine, 6 garlic cloves, 2 tsp dried oregano, 1 tsp rosemary, 1 tsp paprika, salt, pepper","2 bay leaves","Pita, tzatziki, tomato, red onion"],
+ steps:["Blitz the marinade, toss with the chicken and bay leaves, and marinate 2 hours to overnight.","Thread onto skewers.","Grill over medium-high heat 4 to 5 minutes a side to 165°F (175°F for thigh).","Serve with warm pita, tzatziki, tomato and onion."],
+ tip:"Grill the pitas brushed with oil for 30 seconds a side at the end.",src:["The Mediterranean Dish: Chicken Souvlaki","https://www.themediterraneandish.com/greek-chicken-souvlaki-recipe-tzatziki/"]},
+{id:"pollo-brasa",name:"Pollo a la Brasa with Aji Verde",cooker:"GR",type:"Chicken",region:"South American",mins:90,
+ desc:"Peruvian spatchcocked chicken in a cumin, paprika, soy and lime marinade, with a creamy green sauce.",
+ ing:["1 whole chicken, spatchcocked","Marinade: 1/4 cup lime juice, 2 Tbsp soy, 2 Tbsp oil, 6 garlic cloves, 1 Tbsp cumin, 1 Tbsp paprika, 2 tsp oregano, 1 tsp pepper, 1 tsp salt, 1 Tbsp aji amarillo paste (optional)","Aji verde: 1 cup cilantro, 2 jalapeños, 1/2 cup mayo, 1/4 cup cotija, juice of 1 lime, 1 garlic clove, 2 Tbsp olive oil"],
+ steps:["Blend the marinade, rub it all over and under the skin, and marinate 4 to 24 hours.","Cook skin side up over indirect heat at 375 to 400°F for 40 to 50 minutes.","Flip onto direct heat for a few minutes to crisp the skin, until the breast is 160°F and the thigh 175°F.","Blend the aji verde and serve it with the chicken."],
+ tip:"Make extra aji verde. You'll want it on fries, rice and everything else.",src:["Feasting at Home: Peruvian Chicken with Green Sauce","https://www.feastingathome.com/grilled-peruvian-chicken-with-green-sauce/"]},
+{id:"piri-piri",name:"Piri Piri Chicken",cooker:"GR",type:"Chicken",region:"African",mins:75,
+ desc:"Portuguese-African chicken in a fiery bird's eye chile, garlic, lemon and paprika sauce, charred over the flame.",
+ ing:["3 lb bone-in chicken thighs and legs","Sauce: 4 to 8 red bird's eye chiles, 1 roasted red bell pepper, 6 garlic cloves, 1/3 cup olive oil, 1/4 cup red wine vinegar, juice of 1 lemon, 1 Tbsp smoked paprika, 1 tsp oregano, 1 tsp salt","Lemon wedges"],
+ steps:["Blend the sauce. Save 1/3 of it for basting.","Score the chicken and marinate it in the rest 4 hours to overnight.","Grill over medium indirect heat 30 to 35 minutes, then over direct heat to char, basting, until 175°F.","Serve with the extra sauce and lemon."],
+ tip:"Adjust the heat with the number of chiles. Four is warm, eight is Nando's extra hot.",src:["Immaculate Bites: Grilled Peri Peri Chicken","https://www.africanbites.com/mozambique-peri-peri-grill-chicken/"]},
+{id:"pollo-asado",name:"Pollo Asado",cooker:"GR",type:"Chicken",region:"Mexican",mins:60,
+ desc:"Achiote-citrus marinated chicken thighs grilled with char. Serve them whole, or chop for tacos and bowls.",
+ ing:["3 lb bone-in, skin-on chicken thighs","Marinade: 1/2 cup orange juice, juice of 2 limes, 2 Tbsp achiote paste, 4 garlic cloves, 1 tsp cumin, 1 tsp Mexican oregano, 1 chipotle in adobo, 2 Tbsp oil, 1.5 tsp salt","Tortillas, salsa, onion, cilantro"],
+ steps:["Blend the marinade and marinate the chicken 2 hours to overnight.","Grill skin side down over medium direct heat, lid closed, 5 to 7 minutes until crisp.","Flip and cook until 175 to 180°F, about 15 minutes, moving to indirect if it flares.","Rest 5 minutes. Serve whole or chopped for tacos."],
+ tip:"This is a Southern California taco shop staple. Chop it with the crispy skin for the best tacos.",src:["Isabel Eats: Pollo Asado","https://www.isabeleats.com/pollo-asado/"]},
+{id:"dak-bulgogi",name:"Spicy Dak Bulgogi",cooker:"GR",type:"Chicken",region:"Korean",mins:40,
+ desc:"Korean BBQ chicken thighs in a gochujang, soy, ginger and pear marinade, grilled until caramelized.",
+ ing:["2 lb boneless chicken thighs","Marinade: 3 Tbsp gochujang, 2 Tbsp soy, 1 Tbsp gochugaru, 2 Tbsp honey, 1 Tbsp sesame oil, 1/4 Asian pear grated, 4 garlic cloves, 1 Tbsp ginger, pepper","Green onions, sesame seeds, lettuce, rice"],
+ steps:["Marinate the chicken 1 hour to overnight.","Grill over medium heat 5 to 6 minutes a side until charred and 175°F. Watch it, because the sugar burns fast.","Slice and top with green onions and sesame seeds.","Serve with rice and lettuce wraps."],
+ tip:"Medium heat, not high. Gochujang goes from caramelized to burnt in a minute.",src:["Korean Bapsang: Dak Bulgogi","https://www.koreanbapsang.com/dak-bulgogi-korean-bbq-chicken/"]},
+{id:"spiedies",name:"Chicken Spiedies",cooker:"GR",type:"Chicken",region:"American",mins:40,
+ desc:"Binghamton, NY's cult sandwich: herb-vinegar marinated chicken skewers pulled onto soft Italian bread.",
+ ing:["2 lb chicken breast or thigh, 1.5 inch cubes","Marinade: 1/2 cup olive oil, 1/4 cup red wine vinegar, juice of 1 lemon, 4 garlic cloves, 1 Tbsp oregano, 1 tsp basil, 2 Tbsp fresh mint and parsley, 1 tsp sugar, salt, pepper","Soft Italian bread or hoagie rolls"],
+ steps:["Marinate the chicken 24 to 48 hours. The long soak is the tradition.","Thread onto skewers.","Grill over medium-high heat, turning, 10 to 12 minutes to 165°F.","Wrap a slice of bread around the skewer and pull the chicken off into it."],
+ tip:"Keep a little fresh marinade (never used on raw chicken) to drizzle on the bread.",src:["Sip and Feast: Chicken Spiedies","https://www.sipandfeast.com/chicken-spiedies/"]},
+
+/* ================= GRILL: SIDES ================= */
+{id:"grilled-caesar",name:"Grilled Caesar Salad",cooker:"GR",type:"Side",region:"American",mins:15,
+ desc:"Halved romaine hearts charred on the grill, with a garlicky anchovy Caesar dressing, parmesan and grilled croutons.",
+ ing:["3 romaine hearts, halved lengthwise (core on)","Olive oil, salt, pepper","Dressing: 1/4 cup olive oil, 1 Tbsp mayo, 1 Tbsp Dijon, 2 tsp lemon juice, 2 Tbsp white wine vinegar, 2 to 3 anchovies, 1 garlic clove, 1/4 tsp cayenne","Parmesan, baguette slices"],
+ steps:["Blend or whisk the dressing.","Dry the romaine completely, then brush the cut side with oil and season it.","Grill cut side down over high heat 2 to 3 minutes until charred, and flip for 1 minute.","Grill the oiled baguette slices, then tear them into croutons.","Drizzle with dressing and top with parmesan and croutons."],
+ tip:"Keep the core on so each half holds together, and pull it while the center is still crunchy.",src:["Vindulge: Grilled Romaine Caesar","https://www.vindulge.com/grilled-caesar-salad/"]},
+{id:"grilled-asparagus",name:"Lemon Parmesan Grilled Asparagus",cooker:"GR",type:"Side",region:"European",mins:10,
+ desc:"Spears charred crisp-tender, finished with fresh lemon and a snowfall of parmesan.",
+ ing:["1 to 2 lb asparagus, woody ends snapped off","2 Tbsp olive oil, salt, pepper","1 lemon (zest and juice)","Parmesan, finely grated"],
+ steps:["Toss the asparagus with the oil, salt and pepper.","Lay the spears across the grates over medium-high heat (400 to 450°F).","Grill 3 to 5 minutes, rolling them once, until lightly charred.","Finish with lemon zest, juice and parmesan."],
+ tip:"Lay them across the grates, not along them, or use a grill basket so none fall through.",src:["Spend With Pennies: Grilled Asparagus","https://www.spendwithpennies.com/grilled-lemon-parmesan-asparagus/"]},
+{id:"foil-potatoes",name:"Garlic Parmesan Foil Packet Potatoes",cooker:"GR",type:"Side",region:"American",mins:35,
+ desc:"Cubed red potatoes with garlic, Italian seasoning and parmesan, steamed and crisped in foil on the grill.",
+ ing:["2 lb red potatoes, 1 inch cubes","2 Tbsp olive oil, 2 Tbsp butter","3 garlic cloves, minced","1 Tbsp Italian seasoning, salt, pepper","1/2 cup grated parmesan, parsley"],
+ steps:["Toss everything but the parsley in a bowl.","Divide it onto heavy foil sheets and fold into sealed packets.","Grill over medium-high heat 20 to 30 minutes, flipping halfway, until tender.","Open carefully (steam), top with more parmesan and parsley."],
+ tip:"Use heavy-duty foil or double it up. Thin foil tears when you flip.",src:["The Recipe Critic: Parmesan Garlic Potato Foil Packets","https://therecipecritic.com/parmesan-garlic-potato-foil-packets/"]},
+{id:"grilled-zucchini",name:"Grilled Zucchini with Feta & Mint",cooker:"GR",type:"Side",region:"Mediterranean",mins:15,
+ desc:"Charred zucchini planks dressed hot with lemon, garlic and oregano, topped with feta and fresh mint.",
+ ing:["4 zucchini, sliced lengthwise 1/4 inch thick","Olive oil, salt, pepper","Dressing: 2 Tbsp olive oil, 1 Tbsp red wine vinegar, juice of 1/2 lemon, 1 garlic clove, 1/2 tsp oregano","4 oz feta (block), fresh mint"],
+ steps:["Oil and season the zucchini.","Grill over medium-high heat 3 to 5 minutes a side until marked and tender.","Spoon the dressing over it while it's hot so it soaks in.","Crumble the feta over it and tear the mint on top."],
+ tip:"Buy feta in a block and crumble it yourself. It's creamier than the pre-crumbled kind.",src:["All Day I Dream About Food: Grilled Zucchini with Feta and Mint","https://alldayidreamaboutfood.com/grilled-zucchini/"]},
+{id:"pan-con-tomate",name:"Pan con Tomate",cooker:"GR",type:"Side",region:"European",mins:15,
+ desc:"Catalan grilled bread rubbed with garlic and ripe tomato, finished with olive oil and flaky salt.",
+ ing:["1 loaf ciabatta, sliced 3/4 inch thick","2 large ripe tomatoes, halved","2 garlic cloves, halved","Extra-virgin olive oil, flaky sea salt"],
+ steps:["Brush the bread with oil and grill until charred on both sides.","Rub each slice with the cut garlic.","Rub hard with the cut tomato until the bread is soaked pink and only the skin is left in your hand.","Drizzle with olive oil and sprinkle with flaky salt."],
+ tip:"Use the ripest tomatoes you can find. Mushy ones work best here.",src:["The Mediterranean Dish: Pan con Tomate","https://www.themediterraneandish.com/pan-con-tomate/"]},
+
+/* ================= GRILL: APPETIZERS ================= */
+{id:"grilled-pizza",name:"Grilled Margherita Pizza",cooker:"GR",type:"Appetizer",region:"European",mins:40,
+ desc:"Thin dough stretched and grilled directly on the grates, topped and finished over indirect heat.",
+ ing:["1 lb pizza dough, room temperature, in 4 pieces","Olive oil","1 cup crushed tomatoes with salt and garlic","8 oz fresh mozzarella, torn","Fresh basil, parmesan, flaky salt"],
+ steps:["Set up two zones: hot (500°F+) and cool.","Stretch the dough thin and brush the top with oil.","Lay it oiled side down over direct heat 1 to 2 minutes until it bubbles and marks.","Flip onto the cool side, add the sauce and cheese quickly, and close the lid 3 to 4 minutes until melted.","Top with basil and parmesan."],
+ tip:"Have every topping ready at the grill. It moves fast once the dough goes on.",src:["Grill Girl: Grilled Margherita Pizza","https://grillgirl.com/2022/09/recipe-for-pizza-on-the-grill/"]},
+{id:"halloumi",name:"Grilled Halloumi with Honey",cooker:"GR",type:"Appetizer",region:"Mediterranean",mins:10,
+ desc:"Squeaky Cypriot cheese seared with grill marks and drizzled with honey, thyme and chile flakes.",
+ ing:["2 blocks (8 oz) halloumi, sliced 1/2 inch","Olive oil","3 Tbsp honey, juice of 1/2 lemon, fresh thyme","Pinch of chile flakes"],
+ steps:["Pat the halloumi dry and brush it with oil.","Grill over medium-high heat 2 to 3 minutes a side until charred.","Warm the honey with the lemon and thyme.","Drizzle it over the cheese, add the chile flakes, and serve hot."],
+ tip:"Pat it dry or it steams instead of searing. Serve right away, because it firms up as it cools.",src:["Diane Kochilas: Grilled Halloumi with Greek Honey","https://www.dianekochilas.com/grilled-halloumi-with-greek-honey/"]},
+{id:"peach-burrata",name:"Grilled Peach & Burrata Crostini",cooker:"GR",type:"Appetizer",region:"European",mins:20,
+ desc:"Grilled baguette, creamy burrata and charred peaches with prosciutto and a balsamic drizzle.",
+ ing:["1 baguette, sliced on the bias","3 ripe peaches, halved and pitted","8 oz burrata, room temperature","4 oz prosciutto","Olive oil, balsamic glaze, basil, flaky salt"],
+ steps:["Brush the peaches and bread with oil.","Grill the peaches cut side down 2 to 4 minutes until marked, then slice them.","Grill the bread 1 to 2 minutes a side.","Top with torn burrata, a peach slice and prosciutto, then balsamic, basil and salt."],
+ tip:"Assemble right before serving so the toast stays crisp.",src:["Recipe Runner: Grilled Peach and Burrata Crostini","https://reciperunner.com/grilled-peach-and-burrata-crostini/"]},
+{id:"grilled-guac",name:"Grilled Guacamole",cooker:"GR",type:"Appetizer",region:"Mexican",mins:20,
+ desc:"Avocados, jalapeño, onion and lime charred on the grill, then mashed into a smoky guacamole.",
+ ing:["4 avocados, halved and pitted","1 jalapeño, 1/2 red onion (thick slice), 2 limes halved","1 Roma tomato, diced","Cilantro, 1 garlic clove, salt","Tortilla chips"],
+ steps:["Brush the avocado cut sides with lime and oil.","Grill the avocados cut side down, plus the jalapeño, onion and limes, 4 to 5 minutes until lightly charred.","Scoop the avocado and chop the jalapeño and onion.","Mash with the grilled lime juice, tomato, cilantro, garlic and salt."],
+ tip:"Light char only. Blackened avocado turns bitter.",src:["Garden Betty: Grilled Guacamole","https://gardenbetty.com/grilled-guacamole-youll-never-make-guacamole-the-same-way-again/"]},
+{id:"chargrilled-oysters",name:"Chargrilled Oysters",cooker:"GR",type:"Appetizer",region:"Cajun",mins:25,
+ desc:"New Orleans style: oysters on the half shell bubbling in garlic butter and parmesan-romano over a hot fire.",
+ ing:["2 dozen oysters, shucked on the half shell","Garlic butter: 2 sticks butter, 6 garlic cloves, 1 tsp black pepper, 1/2 tsp oregano, 1 tsp Creole seasoning","1/2 cup each grated parmesan and romano","Parsley, French bread"],
+ steps:["Mix the garlic butter.","Set the oysters on a very hot grill.","Spoon about 2 tsp of butter into each. It will flare.","After 2 minutes, top each with the cheese blend and cook until the edges curl, 2 to 3 minutes more.","Sprinkle with parsley and serve with bread for the butter."],
+ tip:"Nest the shells in a bed of rock salt or crumpled foil so the butter doesn't tip out.",src:["Garlic & Zest: Chargrilled Oysters","https://www.garlicandzest.com/chargrilled-oysters/"]},
+{id:"shishitos",name:"Blistered Shishito Peppers",cooker:"GR",type:"Appetizer",region:"Japanese",mins:10,
+ desc:"Mild Japanese peppers blistered on the grill with sea salt and lemon. About one in ten bites back.",
+ ing:["8 oz shishito peppers","1 Tbsp oil","Flaky salt, lemon wedges","Optional: soy sauce, toasted sesame, everything bagel seasoning"],
+ steps:["Toss the peppers in oil.","Grill over high heat in a basket or across the grates, 3 to 4 minutes a side, until blistered.","Toss with flaky salt and a squeeze of grilled lemon."],
+ tip:"Skewer them in rafts of 5 or 6 so they're easy to flip.",src:["Love and Lemons: Blistered Shishito Peppers","https://www.loveandlemons.com/shishito-peppers-recipe/"]}
 
 ];
+/* recipes added through the "Add a recipe" form (written by the GitHub automation) */
+if(Array.isArray(window.ADDED))window.ADDED.forEach(r=>{if(r&&r.id&&!R.some(x=>x.id===r.id))R.push({...r,added:1})});
 
 /* Hand-picked full menus */
 const MENUS = [
@@ -781,12 +925,23 @@ const MENUS = [
  {name:"Deli Night",s:"Deli Night",why:"Pastrami steamed and piled on rye, patty melts on the griddle next to it.",ids:["pastrami","patty-melt","fried-potatoes-onions"]},
  {name:"Holiday Prime Rib",s:"Prime Rib",why:"The brie goes on the barrel while the roast rests.",ids:["prime-rib","honey-brussels","hasselback","smoked-brie"]},
  {name:"Island Jerk Cookout",s:"Jerk Cookout",why:"Jerk quarters in the barrel, shrimp and cabbage on the griddle.",ids:["jerk-chicken","yellow-rice","fried-cabbage","cajun-shrimp"]},
+ {name:"Backyard Burger Night",s:"Backyard Burgers",why:"Juicy Lucys on the grill, potatoes in foil right next to them.",ids:["juicy-lucy","foil-potatoes","grilled-caesar","grilled-guac"]},
+ {name:"Tuscan Steak Night",s:"Tuscan Steak",why:"One giant porterhouse to share. Grill the bread and peaches while it rests.",ids:["bistecca","grilled-asparagus","pan-con-tomate","peach-burrata"]},
+ {name:"Steak & Oysters",s:"Steak & Oysters",why:"Oysters first while the coals are screaming hot, then the filets.",ids:["filet-cowboy","london-broil","grilled-asparagus","chargrilled-oysters"]},
+ {name:"Greek Grill Night",s:"Greek Grill",why:"Souvlaki or kofta, zucchini with feta, halloumi to start.",ids:["souvlaki","kofta","grilled-zucchini","halloumi"]},
+ {name:"Peruvian Chicken Night",s:"Peruvian",why:"Pollo a la brasa with aji verde. Make extra sauce for the potatoes.",ids:["pollo-brasa","foil-potatoes","shishitos"]},
+ {name:"Grill Taco Night",s:"Grill Tacos",why:"Pollo asado chopped with crispy skin, guac and corn off the grill.",ids:["pollo-asado","shish-kebab","grilled-guac","elote"]},
+ {name:"Spice Route Skewers",s:"Spice Skewers",why:"Suya or piri piri, both fiery. Shishitos and pan con tomate to cool off.",ids:["suya","piri-piri","shishitos","pan-con-tomate"]},
+ {name:"Upstate NY Cookout",s:"Upstate NY",why:"Cornell chicken or spiedies, the two Upstate New York legends.",ids:["cornell-chicken","spiedies","foil-potatoes","grilled-caesar"]},
+ {name:"Beer Can Sunday",s:"Beer Can",why:"The bird stands on the grill for an hour. Pizza keeps everyone busy.",ids:["beer-can-chicken","grilled-asparagus","grilled-pizza"]},
+ {name:"Korean Grill Night",s:"Korean Grill",why:"Spicy dak bulgogi on the grill, gyoza on the griddle.",ids:["dak-bulgogi","hibachi-rice","gyoza"]},
  {name:"Mediterranean Night",s:"Mediterranean",why:"One batch of tzatziki covers both dishes.",ids:["greek-gyros","veg-kebabs","greek-meatballs"]}
 ];
 
-const COOKERS={BS:"Blackstone",PBC:"Pit Barrel"};
-const TYPES=["Beef","Chicken","Side","Appetizer"];
-const TYPE_LABEL={Beef:"Beef Main",Chicken:"Chicken Main",Side:"Side Dish",Appetizer:"Appetizer"};
+const COOKERS={BS:"Blackstone",PBC:"Pit Barrel",GR:"Grill"};
+const MAIN_T=new Set(["Beef","Chicken","Other"]);
+const TYPES=["Beef","Chicken",...(R.some(r=>r.type==="Other")?["Other"]:[]),"Side","Appetizer"];
+const TYPE_LABEL={Beef:"Beef Main",Chicken:"Chicken Main",Other:"Other Main",Side:"Side Dish",Appetizer:"Appetizer"};
 const TIMES=[["q","Under 30 min",m=>m<30],["h","30 to 90 min",m=>m>=30&&m<=90],["l","Low & slow (90+)",m=>m>90]];
 const REGIONS=[...new Set(R.map(r=>r.region))].sort();
 const byId=Object.fromEntries(R.map(r=>[r.id,r]));
@@ -846,14 +1001,14 @@ function updateCounts(){
 }
 function cardHTML(r){
   return `<button class="card" type="button" data-id="${r.id}">
-    <div class="tags"><span class="tag ${r.cooker.toLowerCase()}">${COOKERS[r.cooker]}</span><span class="tag">${esc(r.region)}</span></div>
+    <div class="tags"><span class="tag ${r.cooker.toLowerCase()}">${COOKERS[r.cooker]}</span><span class="tag">${esc(r.region)}</span>${r.added?'<span class="tag added">Added</span>':""}</div>
     <h3>${esc(r.name)}</h3>
     <div class="meta"><span>⏱ ${fmtTime(r.mins)}</span><span>${inPlan(r.id)?'<span class="onlist">🛒 On list</span> ':''}${favs.has(r.id)?'<span class="fav" title="Favorite">♥</span>':''}</span></div>
   </button>`;
 }
 function render(){
   const list=R.filter(r=>matches(r)).sort((a,b)=>a.cooker.localeCompare(b.cooker)||a.name.localeCompare(b.name));
-  const GROUP={Beef:"Beef Mains",Chicken:"Chicken Mains",Side:"Side Dishes",Appetizer:"Appetizers"};
+  const GROUP={Beef:"Beef Mains",Chicken:"Chicken Mains",Other:"Other Mains (pork, seafood & more)",Side:"Side Dishes",Appetizer:"Appetizers"};
   $("#grid").innerHTML=list.length?TYPES.map(t=>{const g=list.filter(r=>r.type===t);return g.length?`<section class="group"><h2>${GROUP[t]}<small>${g.length}</small></h2><div class="grid">${g.map(cardHTML).join("")}</div></section>`:""}).join(""):`<div class="empty">No matches. Clear a filter or hit Reset.</div>`;
   $("#count").textContent=`${list.length} of ${R.length} recipes`;
   updateCounts();
@@ -866,11 +1021,11 @@ $("#grid").onclick=e=>{const c=e.target.closest(".card");if(c)openRecipe(c.datas
 
 /* ---------- pairing suggestions ---------- */
 function score(a,b){let s=0;if(a.region===b.region)s+=5;
-  const fam={"BBQ":"bbq","Southern":"bbq","Cajun":"bbq","American":"bbq","Mexican":"mx","Chinese":"asia","Japanese":"asia","Korean":"asia","Thai":"asia","Mediterranean":"med","European":"med","Indian":"med","South American":"sa","Caribbean":"sa","Hawaiian":"asia"};
+  const fam={"BBQ":"bbq","Southern":"bbq","Cajun":"bbq","American":"bbq","Mexican":"mx","Chinese":"asia","Japanese":"asia","Korean":"asia","Thai":"asia","Mediterranean":"med","European":"med","Indian":"med","South American":"sa","Caribbean":"sa","Hawaiian":"asia","African":"sa"};
   if(fam[a.region]&&fam[a.region]===fam[b.region])s+=3;
   if(a.cooker!==b.cooker)s+=1; return s;}
 function pairsFor(r){
-  const want=r.type==="Beef"||r.type==="Chicken"?["Side","Appetizer"]:["Beef","Chicken"];
+  const want=MAIN_T.has(r.type)?["Side","Appetizer"]:["Beef","Chicken"];
   const out=[];
   want.forEach(t=>{R.filter(x=>x.type===t&&x.id!==r.id).map(x=>[x,score(r,x)]).sort((a,b)=>b[1]-a[1]||a[0].name.localeCompare(b[0].name)).slice(0,2).forEach(([x])=>out.push(x))});
   return out;
@@ -1010,7 +1165,7 @@ function openRecipe(id){
   const isFav=favs.has(r.id);
   $("#dlgBody").innerHTML=`<h3 style="margin-top:0">Ingredients</h3><ul>${r.ing.map(i=>`<li>${esc(i)}</li>`).join("")}</ul>
     <h3>Steps</h3><ol>${r.steps.map(s=>`<li>${esc(s)}</li>`).join("")}</ol>
-    <div class="tip"><b>Tip:</b> ${esc(r.tip)}</div>
+    ${r.tip?`<div class="tip"><b>Tip:</b> ${esc(r.tip)}</div>`:""}
     <div class="pairs-wrap"><h3>Pairs with</h3><div class="pairs">${pairsFor(r).map(p=>`<button type="button" data-id="${p.id}">${esc(p.name)}<small>${COOKERS[p.cooker]} · ${TYPE_LABEL[p.type]} · ${esc(p.region)}</small></button>`).join("")}</div></div>
     <p style="margin-top:16px;font-size:.88rem">Source: <a href="${esc(r.src[1])}" target="_blank" rel="noopener">${esc(r.src[0])}</a></p>
     <div class="dlg-actions"><select id="dayPick" aria-label="Which day">${dayOpts(inPlan(r.id)?inPlan(r.id).day:"Tonight")}</select><button class="btn primary" id="listBtn" type="button">${inPlan(r.id)?'✓ On list (remove)':'＋ Add to list'}</button><button class="btn ${isFav?'primary':''}" id="favBtn" type="button">${isFav?'♥ Saved':'♡ Save to favorites'}</button><button class="btn" type="button" onclick="window.print()">Print</button><button class="btn" id="shareBtn" type="button">Copy link</button></div>`;
@@ -1028,7 +1183,7 @@ dlg.addEventListener("click",e=>{if(e.target===dlg)dlg.close()});
 dlg.addEventListener("close",()=>history.replaceState(null,"",location.pathname+location.search));
 
 /* ---------- meal nights ---------- */
-const isMain=id=>byId[id].type==="Beef"||byId[id].type==="Chicken";
+const isMain=id=>MAIN_T.has(byId[id].type);
 function nightCard(m,i,pfx,chosen){
   const mains=m.ids.filter(isMain),extras=m.ids.filter(id=>!isMain(id));
   const sel=chosen||mains[0];
@@ -1083,16 +1238,16 @@ function spin(){
 }
 $("#spin").onclick=spin;
 
-const bState={region:"Any",setup:"Both",protein:"Either"};
+const bState={region:"Any",setup:"Any",protein:"Either"};
 function single(el,opts,key){el.innerHTML=opts.map(o=>`<button class="chip" type="button" aria-pressed="${o===bState[key]}" data-v="${esc(o)}">${esc(o)}</button>`).join("");
   el.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{bState[key]=c.dataset.v;el.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",x===c))});}
 single($("#b-region"),["Any",...REGIONS],"region");
-single($("#b-setup"),["Both","Blackstone only","Pit Barrel only"],"setup");
+single($("#b-setup"),["Any","Blackstone only","Pit Barrel only","Grill only"],"setup");
 single($("#b-protein"),["Either","Beef","Chicken"],"protein");
 const rnd=a=>a[Math.floor(Math.random()*a.length)];
 $("#build").onclick=()=>{
-  const okCooker=r=>bState.setup==="Both"||(bState.setup==="Blackstone only"?r.cooker==="BS":r.cooker==="PBC");
-  let mains=R.filter(r=>(r.type==="Beef"||r.type==="Chicken")&&okCooker(r)&&(bState.protein==="Either"||r.type===bState.protein));
+  const okCooker=r=>bState.setup==="Any"||r.cooker==={"Blackstone only":"BS","Pit Barrel only":"PBC","Grill only":"GR"}[bState.setup];
+  let mains=R.filter(r=>MAIN_T.has(r.type)&&okCooker(r)&&(bState.protein==="Either"||r.type===bState.protein));
   const inRegion=mains.filter(r=>bState.region==="Any"||r.region===bState.region);
   let note="";
   if(bState.region!=="Any"&&!inRegion.length)note=`No ${bState.region} main fits that setup, so here's the closest match.`;
@@ -1103,7 +1258,7 @@ $("#build").onclick=()=>{
   const items=[main,pick("Side"),pick("Appetizer")].filter(Boolean);
   const mixed=new Set(items.map(i=>i.cooker)).size>1;
   $("#buildOut").innerHTML=`${note?`<p class="section-intro">${esc(note)}</p>`:""}<div class="menu"><h3>Tonight's cook</h3><ol>${items.map(r=>`<li><button type="button" data-id="${r.id}">${esc(r.name)}</button> <small>${COOKERS[r.cooker]} · ${TYPE_LABEL[r.type]} · ${fmtTime(r.mins)}</small></li>`).join("")}</ol>
-   <p style="margin-top:10px">${mixed?"Game plan: light the Pit Barrel first. Its items take longest. Fire the Blackstone about 30 minutes before the barrel stuff comes off.":"Game plan: start the longest item first and work down the list so it all lands hot together."}</p>
+   <p style="margin-top:10px">${!mixed?"Game plan: start the longest item first and work down the list so it all lands hot together.":items.some(r=>r.cooker==="PBC")?"Game plan: light the Pit Barrel first. Its items take longest. Fire the other cooker about 30 minutes before the barrel stuff comes off.":"Game plan: light the grill first and start the longest item. The Blackstone only needs 10 to 15 minutes to heat, so fire it last."}</p>
    <div class="night-actions"><select id="bDay" aria-label="Which day">${dayOpts("Tonight")}</select><button class="btn primary" type="button" id="bAdd">＋ Add to list</button><button class="btn" type="button" id="again">Reroll</button></div></div>`;
   $("#bAdd").onclick=e=>{items.forEach(r=>addToPlan(r.id,$("#bDay").value));render();e.target.textContent="✓ Added to list"};
   $("#buildOut").querySelectorAll("button[data-id]").forEach(b=>b.onclick=()=>openRecipe(b.dataset.id));
@@ -1137,7 +1292,7 @@ $("#sourcesBox").innerHTML=BOOKS.map(b=>`<div class="src"><h3><a href="${b[1]}" 
 
 /* ---------- stats + boot ---------- */
 const c=k=>R.filter(r=>r.cooker===k).length;
-$("#stats").innerHTML=`<span><b>${R.length}</b>recipes</span><span><b>${c("BS")}</b>Blackstone</span><span><b>${c("PBC")}</b>Pit Barrel</span><span><b>${REGIONS.length}</b>regions</span><span><b>${MENUS.length}</b>meal nights</span>`;
+$("#stats").innerHTML=`<span><b>${R.length}</b>recipes</span><span><b>${c("BS")}</b>Blackstone</span><span><b>${c("PBC")}</b>Pit Barrel</span><span><b>${c("GR")}</b>Grill</span><span><b>${REGIONS.length}</b>regions</span><span><b>${MENUS.length}</b>meal nights</span>`;
 render();
 if(location.hash&&byId[location.hash.slice(1)])openRecipe(location.hash.slice(1));
 </script>
