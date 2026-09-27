@@ -61,6 +61,8 @@ nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(-
 .searchbar input{flex:1 1 240px;min-width:0;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);border-radius:10px;padding:9px 12px;font:inherit}
 .btn{border:1px solid var(--line);background:var(--surface-2);color:var(--ink);border-radius:10px;padding:8px 14px;font-weight:600}
 .btn.primary{background:var(--ember);border-color:var(--ember);color:var(--ember-ink)}
+.fbody{display:grid;gap:10px}
+.fbody[hidden]{display:none}
 .count{color:var(--ink-2);font-size:.9rem;margin:14px 2px 10px}
 
 .group h2{font-size:1.5rem;text-transform:uppercase;margin:22px 0 10px;border-bottom:2px solid var(--ember);padding-bottom:4px}
@@ -188,14 +190,17 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
     <div class="filters">
       <div class="searchbar">
         <input id="q" type="search" placeholder="Search recipes or ingredients (e.g. jalapeño, brisket, soy)" aria-label="Search recipes">
+        <button class="btn" id="fToggle" type="button" aria-expanded="false" aria-controls="fBody">Filters<span class="badge" id="fCount"></span> <span aria-hidden="true" id="fArrow">▾</span></button>
         <button class="btn" id="favOnly" type="button" aria-pressed="false">★ Favorites</button>
         <button class="btn" id="reset" type="button">Reset</button>
         <a class="btn" href="https://github.com/rsissons/grill-recipes/issues/new?template=add-recipe.yml" target="_blank" rel="noopener">＋ Add a recipe</a>
       </div>
+      <div id="fBody" class="fbody" hidden>
       <div class="frow"><span class="lbl">Cooker</span><div class="chips" id="f-cooker"></div></div>
       <div class="frow"><span class="lbl">Type</span><div class="chips" id="f-type"></div></div>
       <div class="frow"><span class="lbl">Region</span><div class="chips" id="f-region"></div></div>
       <div class="frow"><span class="lbl">Time</span><div class="chips" id="f-time"></div></div>
+      </div>
     </div>
     <div class="count" id="count" aria-live="polite"></div>
     <div id="grid"></div>
@@ -898,7 +903,113 @@ const R = [
  desc:"Mild Japanese peppers blistered on the grill with sea salt and lemon. About one in ten bites back.",
  ing:["8 oz shishito peppers","1 Tbsp oil","Flaky salt, lemon wedges","Optional: soy sauce, toasted sesame, everything bagel seasoning"],
  steps:["Toss the peppers in oil.","Grill over high heat in a basket or across the grates, 3 to 4 minutes a side, until blistered.","Toss with flaky salt and a squeeze of grilled lemon."],
- tip:"Skewer them in rafts of 5 or 6 so they're easy to flip.",src:["Love and Lemons: Blistered Shishito Peppers","https://www.loveandlemons.com/shishito-peppers-recipe/"]}
+ tip:"Skewer them in rafts of 5 or 6 so they're easy to flip.",src:["Love and Lemons: Blistered Shishito Peppers","https://www.loveandlemons.com/shishito-peppers-recipe/"]},
+/* ================= GRIDDLE SIZZLE BATCH (2026-09-27) ================= */
+{id:"cowboy-stir-fry",name:"Cowboy Stir Fry",cooker:"BS",type:"Beef",region:"American",mins:35,
+ desc:"Seared sirloin bites, crispy baby potatoes, corn and peppers tossed in Worcestershire butter.",
+ ing:["1.5 lb sirloin, 1 inch cubes","1.5 lb baby potatoes, halved","2 Tbsp avocado oil","1 tsp each kosher salt, coarse pepper, garlic powder","2 cups corn kernels","1 red bell pepper, diced","1/2 red onion, diced","4 garlic cloves, minced","3 Tbsp butter, 1 Tbsp Worcestershire","Parsley"],
+ steps:["Microwave the halved potatoes 4 to 5 minutes until just fork-tender.","Preheat to 400°F. Crisp the potatoes in oil 8 to 10 minutes, then slide them to a cool zone.","Season the steak and sear 2 to 3 minutes a side to 130 to 135°F.","Cook the corn, pepper and onion 4 to 5 minutes, adding garlic for the last 30 seconds.","Pull it all together with the butter and Worcestershire, toss 1 minute and top with parsley."],
+ tip:"Microwave the potatoes first. Raw chunks need 20+ minutes on the steel and the steak would be overcooked by then.",src:["Griddle Sizzle: Cowboy Stir Fry","https://griddlesizzle.com/recipes/blackstone-cowboy-stir-fry/"]},
+{id:"california-burrito",name:"California Burrito",cooker:"BS",type:"Beef",region:"Mexican",mins:40,
+ desc:"San Diego's finest: carne asada, crispy fries, cheese, guac and sour cream rolled in a charred flour tortilla.",
+ ing:["2 lb skirt or flank steak","Marinade: 1/4 cup orange juice, 3 Tbsp lime juice, 3 Tbsp soy, 3 Tbsp oil, 4 garlic cloves, 1 tsp cumin, 1 tsp chili powder, 1/2 tsp smoked paprika, salt, pepper, cilantro","4 large (12 inch) flour tortillas","2 cups french fries, cooked crisp","2 cups shredded cheddar or Mexican blend","3/4 cup sour cream, 1 cup guacamole","Pico de gallo, hot sauce"],
+ steps:["Marinate the steak at least 2 hours.","Bake or fry the fries until crisp and keep them warm.","Heat the griddle to 500°F and sear the steak 3 to 4 minutes a side to 130°F. Rest 5 minutes and slice thin against the grain.","Char the tortillas 30 to 45 seconds a side on medium.","Load with fries, steak, cheese, sour cream and guac, roll tight, and sear seam side down 60 to 90 seconds a side."],
+ tip:"Slice the carne asada thin and against the grain. Chewy steak is the most common California burrito mistake.",src:["Griddle Sizzle: California Burrito","https://griddlesizzle.com/recipes/blackstone-california-burrito/"]},
+{id:"onion-burger",name:"Oklahoma Onion Burgers",cooker:"BS",type:"Beef",region:"American",mins:20,
+ desc:"Depression-era classic: paper-thin onions smashed right into the patty so they fry into a sweet, lacy crust.",
+ ing:["1 lb 80/20 ground beef, in four 4 oz balls","2 large yellow onions, shaved paper thin","Salt, pepper, oil or butter","4 slices American cheese","4 soft white buns","Yellow mustard, dill pickles"],
+ steps:["Preheat to 450 to 500°F and oil the steel.","Set a beef ball down and immediately pile a big handful of shaved onion on top.","Smash hard through parchment for 10 to 15 seconds and season.","Cook 3 to 4 minutes untouched until the edges are deep brown.","Flip (onions down), add cheese, dome 60 to 90 seconds. Serve on toasted buns with mustard and pickles."],
+ tip:"The onion pile looks like way too much. It isn't. It cooks down to about a fifth of its size.",src:["Griddle Sizzle: Oklahoma Onion Burger","https://griddlesizzle.com/recipes/blackstone-oklahoma-onion-burger/"]},
+{id:"smash-tacos",name:"Smash Burger Tacos",cooker:"BS",type:"Beef",region:"American",mins:20,
+ desc:"The viral one: beef smashed straight onto a flour tortilla so the patty and tortilla crisp together.",
+ ing:["1 lb 80/20 ground beef, in eight 2 oz balls","8 small flour tortillas","8 slices American cheese","Salt, pepper","Shredded lettuce, diced onion, pickles or pickled jalapeños","Burger sauce (mayo, ketchup, mustard, relish)"],
+ steps:["Preheat to 400 to 450°F.","Lay a tortilla down, set a beef ball in the middle and smash it thin onto the tortilla. Hold 5 seconds.","Season and cook 2 to 3 minutes until the beef browns and the tortilla edges crisp.","Flip the whole thing, add cheese and dome 30 to 45 seconds.","Fold, then top with lettuce, onion, pickles and sauce."],
+ tip:"Don't move anything until you flip. The crust needs full contact with the steel.",src:["Griddle Sizzle: Smash Burger Tacos","https://griddlesizzle.com/recipes/blackstone-smash-burger-tacos/"]},
+{id:"reuben",name:"Reuben",cooker:"BS",type:"Beef",region:"American",mins:15,
+ desc:"Corned beef, sauerkraut, Swiss and Thousand Island on buttery griddled rye.",
+ ing:["Per sandwich: 2 slices seeded rye","4 to 5 oz thin-sliced corned beef","1/4 cup sauerkraut, drained very well","2 slices Swiss","1.5 Tbsp Thousand Island","1 Tbsp softened butter"],
+ steps:["Drain the sauerkraut, then press it dry again in paper towels.","Preheat to 325 to 350°F.","Build it: dressing, Swiss, corned beef, sauerkraut, Swiss. Butter the outsides.","Cook 3 to 4 minutes, pressing with a spatula, then flip and cook 3 to 4 minutes more until the cheese melts."],
+ tip:"Warm the corned beef on the griddle for a minute first so the middle is hot by the time the bread is golden.",src:["Griddle Sizzle: Reuben","https://griddlesizzle.com/recipes/blackstone-reuben/"]},
+{id:"chicken-cutlet-sandwich",name:"Italian Chicken Cutlet Sandwich",cooker:"BS",type:"Chicken",region:"European",mins:35,
+ desc:"Parmesan-panko cutlets shallow-fried on the flat top, with marinara, fresh mozzarella and garlic-butter rolls.",
+ ing:["4 chicken breast cutlets, pounded to 1/4 inch","1/2 cup flour, 2 eggs beaten","1 cup panko, 1/2 cup parmesan, 1 tsp Italian seasoning, 1/2 tsp garlic powder, salt, pepper","1/3 cup avocado oil","1 cup marinara","8 oz fresh mozzarella, sliced","4 hoagie rolls, 3 Tbsp butter mixed with 2 garlic cloves","Basil"],
+ steps:["Pound the cutlets to an even 1/4 inch.","Bread them: flour, egg, then the panko-parmesan mix.","Heat to 375°F with the oil pooled. Fry 3 to 4 minutes a side to golden and 165°F.","Top with marinara and mozzarella and dome 2 to 3 minutes.","Toast the garlic-buttered rolls cut side down and build with basil."],
+ tip:"Even thickness is everything. An uneven cutlet ends up dry in spots and raw in others.",src:["Griddle Sizzle: Italian Chicken Cutlet Sandwich","https://griddlesizzle.com/recipes/blackstone-chicken-cutlet-sandwich/"]},
+{id:"teriyaki-chicken",name:"Teriyaki Chicken Bowls",cooker:"BS",type:"Chicken",region:"Japanese",mins:35,
+ desc:"Thighs seared golden and lacquered in homemade teriyaki, over rice with charred broccoli, carrots and edamame.",
+ ing:["2 lb boneless chicken thighs","Teriyaki: 1/2 cup soy, 1/4 cup mirin, 2 Tbsp sake or dry sherry, 2 Tbsp brown sugar, 1 Tbsp honey, 2 garlic cloves, 1 tsp ginger, 1 tsp cornstarch mixed with 1 Tbsp water","3 cups cooked rice","2 cups broccoli, 1 cup shredded carrots, 1 cup edamame","Sesame oil, sesame seeds, green onions"],
+ steps:["Simmer the teriyaki ingredients, thicken with the slurry for 2 minutes, and save half for serving.","Pat the chicken dry and season lightly. Preheat to 375 to 400°F.","Sear smooth side down 5 to 6 minutes, flip and cook 4 to 5 minutes.","Brush on the teriyaki and let it caramelize 1 minute a side, to 175°F. Rest 3 minutes.","Stir-fry the veg in sesame oil 3 to 4 minutes, then build the bowls."],
+ tip:"Glaze only at the end. The sugar burns if it goes on early.",src:["Griddle Sizzle: Teriyaki Chicken","https://griddlesizzle.com/recipes/blackstone-teriyaki-chicken/"]},
+{id:"caesar-smash-tacos",name:"Chicken Caesar Smash Tacos",cooker:"BS",type:"Chicken",region:"American",mins:25,
+ desc:"Thin chicken cutlets pressed onto flour tortillas, topped with Caesar dressing, parmesan and romaine.",
+ ing:["1.5 lb chicken breast, cut into thin 3 to 4 oz cutlets (1/4 inch)","8 small flour tortillas","Salt, pepper, garlic powder, oil","1/2 cup Caesar dressing","1/2 cup shaved parmesan","2 cups chopped romaine, croutons, lemon"],
+ steps:["Season the cutlets. Preheat to 375 to 400°F and oil lightly.","Lay a tortilla down, put a cutlet on it and press it flat.","Cook 3 to 4 minutes without moving until the tortilla is golden and the chicken reaches 165°F.","Flip and cook 1 to 2 minutes to color the chicken.","Top with dressing, parmesan, romaine and crushed croutons. Fold and serve with lemon."],
+ tip:"The cutlets have to be thin. Thick chicken burns the tortilla before it's cooked.",src:["Griddle Sizzle: Chicken Caesar Smash Tacos","https://griddlesizzle.com/recipes/blackstone-chicken-caesar-smash-tacos/"]},
+{id:"chicken-stir-fry",name:"Chicken Stir Fry Noodles",cooker:"BS",type:"Chicken",region:"Chinese",mins:30,
+ desc:"Velveted chicken thighs, lo mein noodles and crisp vegetables in a soy, oyster and hoisin sauce.",
+ ing:["1.5 lb chicken thighs, 1 inch pieces, tossed with 2 Tbsp soy, 1 Tbsp cornstarch, 1 tsp sesame oil","12 oz lo mein noodles, cooked and tossed with sesame oil","2 cups broccoli, 1 red bell pepper, 1 cup snap peas, 1 carrot","4 garlic cloves, 1 Tbsp ginger, 4 green onions","Sauce: 3 Tbsp soy, 2 Tbsp oyster sauce, 1 Tbsp hoisin, 1 Tbsp rice vinegar, 1 Tbsp sesame oil, 1 tsp sugar, 1 tsp cornstarch, 2 Tbsp water","2 Tbsp avocado oil"],
+ steps:["Marinate the chicken 10 minutes and mix the sauce.","Sear the chicken at 450°F in one layer, 2 to 3 minutes a side.","Cook the veg in stages: broccoli and carrot 2 minutes, then pepper and peas 1 minute, then garlic and ginger 1 minute.","Add the noodles and let them char 1 minute.","Pour the sauce over and toss 1 minute until glossy. Top with green onions."],
+ tip:"Spread everything thin and leave it alone for a minute. Crowded, constantly stirred veg steams instead of charring.",src:["Griddle Sizzle: Chicken Stir Fry","https://griddlesizzle.com/recipes/blackstone-chicken-stir-fry/"]},
+{id:"cuban-sandwich",name:"Cuban Sandwich",cooker:"BS",type:"Other",region:"Caribbean",mins:15,
+ desc:"Roast pork, ham, Swiss, pickles and mustard on Cuban bread, pressed flat and crisp on the flat top.",
+ ing:["Per sandwich: 1 Cuban roll (or soft hoagie), split","3 oz sliced roast pork (leftover pulled pork works)","3 oz thin-sliced ham","2 slices Swiss","4 to 5 dill pickle chips","1.5 tsp yellow mustard","1 Tbsp butter"],
+ steps:["Preheat to 325 to 350°F.","Mustard both sides of the bread. Layer Swiss, ham, pork, pickles, Swiss.","Butter the outside and set it on the griddle.","Press it hard under a heavy pan or grill press, 3 to 4 minutes a side, until golden and melted.","Cut on the diagonal."],
+ tip:"Keep the weight on the whole time. Constant pressure is what makes it a Cuban.",src:["Griddle Sizzle: Cuban Sandwich","https://griddlesizzle.com/recipes/blackstone-cuban-sandwich/"]},
+{id:"griddle-salmon",name:"Garlic Butter Salmon",cooker:"BS",type:"Other",region:"American",mins:25,
+ desc:"Spice-rubbed salmon seared flesh side down for a crust, finished skin side down in garlic lemon butter.",
+ ing:["4 salmon fillets, skin on","Rub: 2 tsp kosher salt, 1 tsp pepper, 1/2 tsp smoked paprika, 1/2 tsp chili powder, 1/4 tsp cumin, 1/4 tsp dill, pinch of cayenne","3 Tbsp butter, 2 garlic cloves sliced, juice of 1 lemon","Avocado oil"],
+ steps:["Pat the fillets dry, coat with the rub and rest 10 to 15 minutes.","Preheat to 375 to 400°F and oil the steel.","Sear flesh side down 6 to 7 minutes without moving.","Flip onto the skin, add the butter and garlic next to it, squeeze on the lemon and spoon the butter over. Cook 3 to 4 minutes to 125 to 130°F.","Rest 2 minutes."],
+ tip:"The fillet lets go on its own when the crust is ready. If it's sticking, wait another 30 to 60 seconds.",src:["Griddle Sizzle: Blackstone Salmon","https://griddlesizzle.com/recipes/blackstone-salmon/"]},
+{id:"shrimp-tacos",name:"Chile Shrimp Tacos",cooker:"BS",type:"Other",region:"Mexican",mins:20,
+ desc:"Cumin-chile shrimp seared hard with a drizzle of chili oil, on corn tortillas with cabbage, tomato and lime.",
+ ing:["1 lb large shrimp, peeled","1.5 tsp cumin, 1/2 tsp chili powder, 1/4 tsp cayenne, 1 tsp salt, pepper","2 Tbsp avocado oil, 2 tsp chili oil","8 corn tortillas","3 cups shredded cabbage, 2 Roma tomatoes, 1/2 red onion, cilantro, lime","Optional: cotija, crema, avocado"],
+ steps:["Toss the shrimp with the spices.","Preheat to 425 to 450°F, 10 minutes on high.","Sear the shrimp in one layer 1 minute, flip, drizzle with chili oil and cook 1 to 2 minutes until pink and charred.","Drop to medium and toast the tortillas 30 seconds a side.","Build with cabbage, shrimp, tomato, onion, cilantro and lime."],
+ tip:"High heat and space between them. Crowded shrimp on medium heat steam instead of sear.",src:["Griddle Sizzle: Shrimp Tacos","https://griddlesizzle.com/recipes/blackstone-shrimp-tacos/"]},
+{id:"sausage-peppers",name:"Sausage & Peppers",cooker:"BS",type:"Other",region:"European",mins:35,
+ desc:"Italian sausages seared slowly next to a big pile of peppers and onions, on hoagies or on their own.",
+ ing:["8 Italian sausage links","3 bell peppers and 2 onions, sliced","2 Tbsp oil, 4 garlic cloves minced","1 tsp Italian seasoning, 1/2 tsp red pepper flakes, salt, pepper","4 to 6 hoagie rolls"],
+ steps:["Preheat to 350 to 375°F.","Sear the sausages 15 to 18 minutes, rolling every 3 to 4 minutes, to 160°F.","Meanwhile cook the peppers and onions 12 to 15 minutes on medium, adding the garlic for the last 2 minutes.","Toss everything together for a minute and serve on toasted rolls."],
+ tip:"Don't poke the sausages. It lets the juice out. Use a thermometer.",src:["Griddle Sizzle: Sausage and Peppers","https://griddlesizzle.com/recipes/blackstone-sausage-and-peppers/"]},
+{id:"egg-roll-bowl",name:"Egg Roll in a Bowl",cooker:"BS",type:"Other",region:"Chinese",mins:20,
+ desc:"Everything inside an egg roll without the wrapper: ground pork, charred cabbage and carrots in a savory ginger sauce.",
+ ing:["1 lb ground pork (or chicken or turkey)","1 small head green cabbage, thinly sliced","2 carrots, shredded; 4 green onions","3 garlic cloves, 1 Tbsp ginger","2 Tbsp sesame oil, 1 Tbsp avocado oil","Sauce: 3 Tbsp soy, 1 Tbsp rice vinegar, 1 Tbsp oyster sauce, 1 tsp sesame oil, 1 tsp chili garlic sauce, 1 tsp sugar","Sesame seeds, sriracha"],
+ steps:["Mix the sauce.","Preheat to 400°F. Brown the pork 5 minutes and slide it to a low zone.","Sesame oil on the hot zone. Cook the garlic, ginger and green onion whites 60 to 90 seconds.","Add the cabbage and carrots and leave them alone 2 minutes, then toss and cook 2 more.","Mix in the pork and sauce, toss 1 to 2 minutes, and top with sesame seeds and sriracha."],
+ tip:"Letting the cabbage sit untouched for 2 minutes is what makes it taste like takeout and not salad.",src:["Griddle Sizzle: Egg Roll in a Bowl","https://griddlesizzle.com/recipes/blackstone-egg-roll-in-a-bowl/"]},
+{id:"seared-scallops",name:"Garlic Butter Seared Scallops",cooker:"BS",type:"Other",region:"American",mins:25,
+ desc:"Big dry-packed sea scallops with a deep golden crust, basted in garlic butter.",
+ ing:["1.5 lb large dry-packed sea scallops (U10 to U15)","Salt, pepper","2 Tbsp avocado oil","3 Tbsp butter, 4 garlic cloves minced","Parsley, lemon wedges"],
+ steps:["Pull off the side muscle, pat dry, and air-dry uncovered in the fridge 10 to 15 minutes.","Preheat to 425 to 450°F, add oil and let it heat 30 seconds. Salt the scallops right before cooking.","Sear flat side down in one layer 1.5 to 2 minutes, untouched, until golden.","Flip, add the butter and garlic and baste 1 to 1.5 minutes.","Top with parsley and serve with lemon."],
+ tip:"Dry scallops sear and wet ones steam. Buy dry-packed and pat them bone dry.",src:["Griddle Sizzle: Blackstone Scallops","https://griddlesizzle.com/recipes/blackstone-scallops/"]},
+{id:"bacon-fried-corn",name:"Bacon Fried Corn",cooker:"BS",type:"Side",region:"Southern",mins:20,
+ desc:"Corn charred in bacon fat with onion and garlic, finished with butter, pepper and crispy bacon.",
+ ing:["6 slices bacon, diced","4 cups corn kernels (fresh or thawed)","1 small onion, diced; 2 garlic cloves","2 Tbsp butter, 1/2 tsp black pepper, salt","Green onions or chives; optional cayenne and lime"],
+ steps:["Render the bacon at 350 to 375°F for 6 to 8 minutes and pull it, leaving the fat.","Soften the onion in the fat 2 to 3 minutes, adding garlic for 30 seconds.","Turn up to 400°F, spread the corn in one layer and leave it 2 to 3 minutes, then toss, 6 to 8 minutes total.","Fold in the butter, pepper and bacon. Top with green onions."],
+ tip:"Spread it out and leave it alone. The char comes from time on the steel, not stirring.",src:["Griddle Sizzle: Bacon Fried Corn","https://griddlesizzle.com/recipes/blackstone-bacon-fried-corn/"]},
+{id:"blistered-green-beans",name:"Blistered Garlic Green Beans",cooker:"BS",type:"Side",region:"American",mins:12,
+ desc:"Fresh green beans blistered on high heat, then finished with garlic butter.",
+ ing:["1 lb green beans, trimmed and dried","2 Tbsp avocado oil","3 garlic cloves, 2 Tbsp butter","1/2 tsp kosher salt, 1/4 tsp pepper, red pepper flakes"],
+ steps:["Preheat to 400°F. Toss the beans with oil and pepper.","Spread in one layer and sear 2 to 3 minutes until blistered underneath.","Toss and cook 3 to 4 minutes more.","Dome for 1 to 2 minutes to finish the centers.","Add the garlic and butter, toss 60 to 90 seconds, then season."],
+ tip:"Dry the beans well. Wet beans steam instead of blister.",src:["Griddle Sizzle: Green Beans on Blackstone","https://griddlesizzle.com/recipes/blackstone-green-beans/"]},
+{id:"charred-cauliflower",name:"Charred Cauliflower",cooker:"BS",type:"Side",region:"American",mins:20,
+ desc:"Halved florets with flat faces seared golden, steamed tender under the dome, with garlic and smoked paprika.",
+ ing:["1 large head cauliflower, in florets halved to make flat sides","3 Tbsp avocado or olive oil","1 tsp kosher salt, 1/2 tsp pepper, 1 tsp garlic powder, 1/2 tsp smoked paprika","2 to 3 Tbsp water"],
+ steps:["Brush the florets generously with oil and season.","Preheat to 375 to 400°F.","Sear flat side down 3 to 4 minutes until golden.","Flip, splash the water next to them and dome 60 seconds.","Uncover and cook 2 minutes more until tender."],
+ tip:"Oil generously. Cauliflower is dry and soaks it up, and under-oiled florets stick.",src:["Griddle Sizzle: Blackstone Cauliflower","https://griddlesizzle.com/recipes/blackstone-cauliflower/"]},
+{id:"griddle-naan",name:"Garlic Butter Naan",cooker:"BS",type:"Side",region:"Indian",mins:90,
+ desc:"Soft yogurt flatbread that puffs and chars in 2 minutes on a screaming-hot flat top.",
+ ing:["2 cups flour, 1 tsp salt","3/4 cup full-fat Greek yogurt, room temperature","1/4 cup warm water, 1 tsp instant yeast, 1 tsp sugar","1 Tbsp olive oil","3 Tbsp melted butter, 2 garlic cloves, cilantro, flaky salt"],
+ steps:["Bloom the yeast in the warm water and sugar 5 to 10 minutes.","Mix with the flour, salt, yogurt and olive oil and knead smooth. Rise 1 hour.","Divide into 6 to 8 pieces and stretch each to about 8 inches long and 1/4 inch thick.","Heat to 450 to 500°F, oil lightly, and cook 60 to 90 seconds untouched until puffed, then flip for 45 to 60 seconds.","Brush with garlic butter and sprinkle cilantro and flaky salt."],
+ tip:"It has to be very hot. A cooler griddle gives dense, dry bread with no puff.",src:["Griddle Sizzle: Blackstone Naan","https://griddlesizzle.com/recipes/blackstone-naan/"]},
+{id:"smash-fries",name:"Crispy Smash Fries",cooker:"BS",type:"Side",region:"American",mins:35,
+ desc:"Boiled baby potatoes smashed thin and seasoned, griddled until they eat like thick, crunchy fries.",
+ ing:["2 lb baby Yukon Gold or red potatoes","3 Tbsp avocado oil","1 tsp garlic powder, 1 tsp smoked paprika, 1/2 tsp onion powder, 1 tsp salt, 1/2 tsp pepper","Chives, flaky salt"],
+ steps:["Boil the potatoes in salted water about 15 minutes until tender. Drain and steam dry 5 minutes.","Preheat to 400 to 425°F with oil.","Smash each potato about 1/4 inch thin with a burger press.","Season right away, drizzle more oil and cook 5 to 6 minutes untouched.","Flip, cook 4 to 5 minutes more, and finish with flaky salt and chives."],
+ tip:"Season in the first 30 seconds. Salt sticks to hot, glossy potatoes and bounces off cool ones.",src:["Griddle Sizzle: French Fries on Blackstone","https://griddlesizzle.com/recipes/blackstone-french-fries/"]},
+{id:"griddle-nachos",name:"Loaded Griddle Nachos",cooker:"BS",type:"Appetizer",region:"Mexican",mins:25,
+ desc:"Taco beef, beans, chiles and double-layered cheese melted in a pan on the griddle, loaded with cold toppings.",
+ ing:["1 bag (11 to 13 oz) tortilla chips","2 cups shredded Mexican blend or Monterey Jack","1 lb ground beef and 1 packet taco seasoning","1 can black beans, drained; 1 can (4 oz) diced green chiles","Pickled jalapeños","Sour cream, guacamole, pico de gallo, cilantro, lime"],
+ steps:["Brown the beef with the taco seasoning at 400°F until the liquid cooks off.","Drop to 350°F and set a cast iron skillet or foil pan on the griddle.","Layer chips, cheese, beef, beans, jalapeños, chiles, then more chips and cheese.","Cover (hood or foil tent) 5 to 8 minutes until melted.","Add the cold toppings and serve right away."],
+ tip:"Use a pan. Chips set straight on the flat top burn.",src:["Griddle Sizzle: Blackstone Nachos","https://griddlesizzle.com/recipes/blackstone-nachos/"]}
 
 ];
 /* recipes added through the "Add a recipe" form (written by the GitHub automation) */
@@ -935,6 +1046,9 @@ const MENUS = [
  {name:"Upstate NY Cookout",s:"Upstate NY",why:"Cornell chicken or spiedies, the two Upstate New York legends.",ids:["cornell-chicken","spiedies","foil-potatoes","grilled-caesar"]},
  {name:"Beer Can Sunday",s:"Beer Can",why:"The bird stands on the grill for an hour. Pizza keeps everyone busy.",ids:["beer-can-chicken","grilled-asparagus","grilled-pizza"]},
  {name:"Korean Grill Night",s:"Korean Grill",why:"Spicy dak bulgogi on the grill, gyoza on the griddle.",ids:["dak-bulgogi","hibachi-rice","gyoza"]},
+ {name:"Sandwich Shop Night",s:"Sandwich Shop",why:"Reuben, Cuban or cutlet sandwich, all pressed on the flat top, with smash fries.",ids:["reuben","cuban-sandwich","chicken-cutlet-sandwich","smash-fries","bacon-fried-corn"]},
+ {name:"Seafood on the Flat Top",s:"Flat Top Seafood",why:"Salmon, scallops or shrimp tacos. Everything cooks in under 10 minutes, so prep first.",ids:["griddle-salmon","seared-scallops","shrimp-tacos","blistered-green-beans","charred-cauliflower"]},
+ {name:"California Burrito Night",s:"Cali Burritos",why:"San Diego style. Fries go inside, nachos to start.",ids:["california-burrito","elote","griddle-nachos"]},
  {name:"Mediterranean Night",s:"Mediterranean",why:"One batch of tzatziki covers both dishes.",ids:["greek-gyros","veg-kebabs","greek-meatballs"]}
 ];
 
@@ -1011,8 +1125,12 @@ function render(){
   const GROUP={Beef:"Beef Mains",Chicken:"Chicken Mains",Other:"Other Mains (pork, seafood & more)",Side:"Side Dishes",Appetizer:"Appetizers"};
   $("#grid").innerHTML=list.length?TYPES.map(t=>{const g=list.filter(r=>r.type===t);return g.length?`<section class="group"><h2>${GROUP[t]}<small>${g.length}</small></h2><div class="grid">${g.map(cardHTML).join("")}</div></section>`:""}).join(""):`<div class="empty">No matches. Clear a filter or hit Reset.</div>`;
   $("#count").textContent=`${list.length} of ${R.length} recipes`;
+  const nf=state.cooker.size+state.type.size+state.region.size+state.time.size;$("#fCount").textContent=nf||"";
   updateCounts();
 }
+function setFilters(open){$("#fBody").hidden=!open;$("#fToggle").setAttribute("aria-expanded",open);$("#fArrow").textContent=open?"▴":"▾";store.set("ftb-fopen",open)}
+setFilters(store.get("ftb-fopen",false));
+$("#fToggle").onclick=()=>setFilters($("#fBody").hidden);
 $("#q").oninput=e=>{state.q=e.target.value.trim().toLowerCase();render()};
 $("#favOnly").onclick=e=>{state.favOnly=!state.favOnly;e.currentTarget.setAttribute("aria-pressed",state.favOnly);e.currentTarget.classList.toggle("primary",state.favOnly);render()};
 $("#reset").onclick=()=>{["cooker","type","region","time"].forEach(k=>state[k].clear());state.q="";state.favOnly=false;$("#q").value="";
