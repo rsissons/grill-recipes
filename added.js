@@ -135,5 +135,46 @@ window.ADDED = [
    "RecipeTin Eats: Thai Yellow Curry (from scratch!)",
    "https://www.recipetineats.com/thai-yellow-curry/"
   ]
+ },
+ {
+  "id": "blackstone-kielbasa",
+  "name": "Blackstone Kielbasa",
+  "cooker": "BS",
+  "type": "Pork",
+  "region": "_No Response_\n\n<!-- Submitted From The Site Form -->",
+  "mins": 17,
+  "desc": "Kielbasa scored in a diamond crosshatch, seared on a Blackstone griddle, and finished with a honey mustard glaze.",
+  "ing": [
+   "2 lbs kielbasa (whole ring or links)",
+   "2 tbsp avocado oil",
+   "2 tbsp unsalted butter",
+   "3 tbsp honey",
+   "1 tbsp Dijon mustard",
+   "1 tbsp brown sugar",
+   "Black pepper",
+   "Mustard and pickles for serving"
+  ],
+  "steps": [
+   "Cut a diamond crosshatch of shallow diagonal slashes across both flat sides.",
+   "Preheat Blackstone to medium (350-375°F). Add avocado oil.",
+   "Cook scored-side down 3-4 minutes per side until deep golden brown.",
+   "Whisk honey, Dijon mustard, and brown sugar together.",
+   "Add butter to the griddle, then brush glaze over the kielbasa, turning once, until caramelized.",
+   "Rest 2-3 minutes, then slice on a bias into 1-inch pieces."
+  ],
+  "tip": "",
+  "src": [
+   "Griddle Sizzle: Blackstone Kielbasa",
+   "https://griddlesizzle.com/recipes/blackstone-kielbasa/"
+  ],
+  "mac": {
+   "cal": 580,
+   "p": 20,
+   "c": 16,
+   "f": 49,
+   "s": 4,
+   "from": "s",
+   "note": "1/5 of recipe"
+  }
  }
 ];
