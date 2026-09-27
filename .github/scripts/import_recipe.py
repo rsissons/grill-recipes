@@ -201,7 +201,7 @@ def site_name(page, rec, url):
 # ---------------- sorting ----------------
 BEEF = r"\b(beef|steak|brisket|burgers?|cheeseburgers?|ribeye|rib eye|sirloin|tri-?tip|short ribs?|carne asada|bulgogi|galbi|barbacoa|meatloaf|tenderloin|chuck|prime rib|kofta|pastrami|flank|skirt|picanha|cheesesteak|philly|london broil|porterhouse|t-bone|tomahawk|filet mignon|meatballs?)\b"
 CHICKEN = r"\b(chicken|wings?|thighs?|drumsticks?|poultry|pollo|turkey|hen)\b"
-OTHER = r"\b(pork|ribs|bacon-wrapped pork|pulled pork|shrimp|salmon|fish|tuna|scallops?|lobster|crab|oysters?|lamb|sausage|brats?|bratwurst|ham|tofu|duck)\b"
+OTHER = r"\b(pork|ribs|pulled pork|shrimp|prawns?|salmon|fish|tuna|ahi|mahi|cod|halibut|tilapia|snapper|grouper|trout|swordfish|catfish|walleye|scallops?|lobster|crab|clams?|mussels|oysters?|lamb|sausages?|kielbasa|brats?|bratwurst|ham|tofu|duck)\b"
 APP_WORDS = r"\b(dip|poppers?|bites|nachos|crostini|bruschetta|sliders|appetizers?|starters?|snacks?|queso|deviled|stuffed mushrooms|skewers? appetizer|flatbread|guacamole|salsa)\b"
 SIDE_WORDS = r"\b(salad|slaw|potatoes|fries|rice|beans|corn|vegetables|veggies|asparagus|broccoli|brussels|zucchini|squash|mac and cheese|mac n|coleslaw|greens|carrots|mushrooms|side)\b"
 
@@ -292,6 +292,32 @@ def pick_region(cuisine, title, text):
     return best if hits >= 2 else "American"
 
 
+# ---------------- macros ----------------
+def first_num(v):
+    m = re.search(r"\d+(?:\.\d+)?", str(v or ""))
+    return float(m.group(0)) if m else None
+
+
+def servings_of(y):
+    for v in (y if isinstance(y, list) else [y]):
+        n = first_num(v)
+        if n:
+            return int(n)
+    return None
+
+
+def macros_of(rec):
+    n = rec.get("nutrition")
+    if not isinstance(n, dict):
+        return None
+    vals = [first_num(n.get(k)) for k in ("calories", "proteinContent", "carbohydrateContent", "fatContent")]
+    if any(v is None for v in vals) or not vals[0]:
+        return None
+    cal, pr, cb, ft = (round(v) for v in vals)
+    return {"cal": cal, "p": pr, "c": cb, "f": ft, "s": servings_of(rec.get("recipeYield")) or 4, "from": "s",
+            "note": clean_text(n.get("servingSize")) if n.get("servingSize") and not re.fullmatch(r"\s*1\s*(serving|g)?\s*", str(n.get("servingSize"))) else ""}
+
+
 # ---------------- existing data ----------------
 def load_added():
     if not os.path.exists(ADDED):
@@ -378,6 +404,9 @@ def main():
     recipe = {"id": rid, "name": name, "cooker": cooker_pick, "type": type_pick, "region": region,
               "mins": mins, "desc": desc, "ing": ings, "steps": steps, "tip": "",
               "src": [f"{site_name(page, rec, url)}: {name}", url]}
+    mac = macros_of(rec)
+    if mac:
+        recipe["mac"] = mac
     if replacing is not None:
         items[replacing] = recipe
     else:
@@ -392,6 +421,7 @@ def main():
     comment = (f"{verb} **{name}**\n\n"
                f"- Cooker: **{cookers[cooker_pick]}**\n- Type: **{types[type_pick]}**\n- Region: **{region}**\n"
                f"- Time: about {mins} min · {len(ings)} ingredients · {len(steps)} steps\n"
+               + (f"- Macros per serving (from the site): {mac['cal']} cal · {mac['p']}g protein · {mac['c']}g carbs · {mac['f']}g fat\n" if mac else "- Macros: the site doesn't publish them\n")
                + ("- Read from the Internet Archive's copy (the site blocks automated readers)\n" if via == "archive" else "")
                + f"\nLive in a few minutes (refresh the page): {SITE}#{rid}{note}\n\n"
                "Sorted wrong? Submit the same link again and set the Cooker, Type or Region in the form. "

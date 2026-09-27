@@ -46,7 +46,6 @@ jobs:
           git commit -m "$MSG"
           git pull --rebase
           git push
-          gh api -X POST "repos/${{ github.repository }}/pages/builds" || true
 
       - name: Reply and close
         if: always()

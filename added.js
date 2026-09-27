@@ -27,13 +27,22 @@ window.ADDED = [
   "src": [
    "Griddle Sizzle: Blackstone Pork Tenderloin",
    "https://griddlesizzle.com/recipes/blackstone-pork-tenderloin/"
-  ]
+  ],
+  "mac": {
+   "cal": 210,
+   "p": 27,
+   "c": 1,
+   "f": 11,
+   "s": 3,
+   "from": "s",
+   "note": "about 4 oz"
+  }
  },
  {
   "id": "blackstone-blackened-mahi-mahi",
   "name": "Blackstone Blackened Mahi Mahi",
   "cooker": "BS",
-  "type": "Side",
+  "type": "Other",
   "region": "Cajun",
   "mins": 20,
   "desc": "Blackstone Blackened Mahi Mahi is a quick and easy meal idea. The blackening seasoning adds so much flavor and is the perfect weeknight meal.",
@@ -60,6 +69,15 @@ window.ADDED = [
   "src": [
    "grillonadime.com: Blackstone Blackened Mahi Mahi",
    "https://grillonadime.com/blackstone-blackened-mahi-mahi/"
-  ]
+  ],
+  "mac": {
+   "cal": 188,
+   "p": 32,
+   "c": 0,
+   "f": 6,
+   "s": 6,
+   "from": "s",
+   "note": ""
+  }
  }
 ];
