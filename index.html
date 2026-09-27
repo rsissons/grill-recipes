@@ -41,6 +41,8 @@ header.hero{background:linear-gradient(135deg,#1c1410 0%,#3b1d0e 60%,#7c2d12 100
 .hero p{max-width:720px;color:#fde6d3;margin:10px 0 0}
 .hero .stats{display:flex;gap:18px;flex-wrap:wrap;margin-top:16px;font-size:.9rem;color:#fed7aa}
 .hero .stats b{color:#fff;font-size:1.15rem;margin-right:4px}
+.spin-cta{margin-top:16px;background:#fb923c;color:#1c1410;border:0;border-radius:999px;padding:11px 20px;font-family:Oswald,Impact,sans-serif;font-size:1.1rem;letter-spacing:.03em;box-shadow:0 4px 14px rgba(0,0,0,.3)}
+.spin-cta:hover{background:#fdba74}
 .theme-toggle{position:absolute;top:14px;right:16px;background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:6px 12px;font-size:.85rem}
 header.hero{position:relative}
 
@@ -188,8 +190,9 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
   <button class="theme-toggle" id="themeBtn" type="button" aria-label="Toggle dark mode">Theme</button>
   <div class="wrap">
     <h1>Flat Top, Barrel <span>&amp;</span> Grill</h1>
-    <p>Blackstone griddle, Pit Barrel Cooker and grill recipes. Beef, chicken, sides, appetizers.</p>
+    <p>Blackstone griddle, Pit Barrel Cooker and grill recipes. Beef, chicken, pork, seafood, sides and appetizers.</p>
     <div class="stats" id="stats"></div>
+    <button class="spin-cta" id="spinCta" type="button">🎡 Can't decide? Spin the wheel</button>
   </div>
 </header>
 
@@ -1104,13 +1107,37 @@ const R = [
  desc:"Meaty swordfish steaks seared over a hot fire and spooned with a caper, parsley and lemon salsa verde.",
  ing:["4 swordfish steaks, 1 inch thick (about 8 oz each)","Olive oil, salt, pepper","Salsa verde: 1 cup parsley, 2 Tbsp capers, 2 anchovies, 1 garlic clove, 1 tsp Dijon, zest and juice of 1 lemon, 1/2 cup olive oil"],
  steps:["Pulse or chop the salsa verde ingredients and let it sit while the grill heats.","Oil and season the swordfish and let it sit 15 minutes.","Set up two zones. Sear over high heat 3 to 4 minutes a side until marked.","Move to the cool side if needed until it reaches 140°F.","Rest 5 minutes and spoon the salsa verde over it."],
- tip:"Swordfish goes from moist to dry fast. Pull it at 140°F; it coasts to 145°F.",src:["Barbecue Bible: Sicilian Grilled Swordfish","https://barbecuebible.com/recipe/sicilian-grilled-swordfish/"]}
+ tip:"Swordfish goes from moist to dry fast. Pull it at 140°F; it coasts to 145°F.",src:["Barbecue Bible: Sicilian Grilled Swordfish","https://barbecuebible.com/recipe/sicilian-grilled-swordfish/"]},
+/* ================= CURRY BATCH (2026-09-27) ================= */
+{id:"tikka-masala",name:"Chicken Tikka Masala",cooker:"GR",type:"Chicken",region:"Indian",mins:60,
+ desc:"Yogurt-marinated thighs charred over the fire, then simmered in a creamy, spiced tomato masala sauce.",
+ ing:["2 lb boneless chicken thighs","Marinade: 3/4 cup plain yogurt, 1 Tbsp garam masala, 2 tsp cumin, 2 tsp paprika, 1 tsp turmeric, 1 tsp salt, 3 garlic cloves, 1 Tbsp ginger","Sauce: 3 Tbsp butter, 1 onion finely chopped, 4 garlic cloves, 1 Tbsp ginger","2 tsp garam masala, 2 tsp cumin, 2 tsp paprika, 1 tsp coriander, 1/2 tsp chili powder","14 oz tomato puree, 1 cup heavy cream, 1 tsp sugar, salt","Cilantro, basmati rice, naan"],
+ steps:["Marinate the chicken 3 to 24 hours.","Grill over direct medium-high heat 4 to 5 minutes a side until charred in spots and 175°F. Rest it, then cut into bite-size pieces.","Meanwhile, in a skillet (side burner or right on the grill), melt the butter and cook the onion 5 minutes, then the garlic and ginger 1 minute.","Add the spices for 30 seconds, then the tomato puree. Simmer 10 minutes, then stir in the cream and sugar.","Add the grilled chicken, simmer 5 minutes and top with cilantro."],
+ tip:"Don't skip the char. The grill smoke is what makes it taste like the tandoor version.",src:["RecipeTin Eats: Chicken Tikka Masala","https://www.recipetineats.com/chicken-tikka-masala/"]},
+{id:"keema",name:"Beef Keema Matar",cooker:"BS",type:"Beef",region:"Indian",mins:35,
+ desc:"Spiced ground beef curry with peas, onion, ginger and tomato. A fast weeknight curry on the flat top.",
+ ing:["1.5 lb ground beef (85/15)","1 large onion, finely chopped","4 garlic cloves, 1 Tbsp ginger, 1 green chile","1 cup chopped tomatoes (or 1/2 cup crushed)","2 tsp garam masala, 2 tsp cumin, 2 tsp coriander, 1 tsp turmeric, 1/2 tsp chili powder, 1 tsp salt","2 cups frozen peas","2 Tbsp oil, cilantro, lemon","Rice or naan"],
+ steps:["Medium-high heat and oil. Cook the onion 5 to 7 minutes until golden.","Add the garlic, ginger and chile for 1 minute, then the spices for 30 seconds.","Add the beef, breaking it up, and cook until browned. Pile it together.","Add the tomatoes and a splash of water and simmer in a pile (or move it to a skillet) 5 minutes.","Stir in the peas for 3 minutes, then finish with cilantro and lemon."],
+ tip:"Toast the spices in the oil before the meat goes in. Raw spices taste dusty.",src:["Tea for Turmeric: Keema Matar","https://www.teaforturmeric.com/keema-matar/"]},
+{id:"green-curry",name:"Thai Green Curry with Chicken",cooker:"BS",type:"Chicken",region:"Thai",mins:35,
+ desc:"Tender chicken thighs braised in green curry paste and coconut milk with Thai eggplant and basil.",
+ ing:["1.5 lb boneless chicken thighs, bite size","1/4 cup green curry paste (Mae Ploy or Aroy-D)","1.5 cans (about 20 oz) full-fat coconut milk","1/2 cup chicken stock","2 Tbsp fish sauce, 1 Tbsp palm or brown sugar","1.5 cups Thai eggplant or regular eggplant, bamboo shoots or green beans","4 makrut lime leaves, 1 cup Thai basil, 1 red chile","Jasmine rice"],
+ steps:["Set a wok or deep skillet on a high zone. Fry the curry paste in 1/2 cup of the thickest coconut cream 2 to 3 minutes until fragrant and the oil separates.","Add the chicken and toss to coat, 2 minutes.","Add the rest of the coconut milk, the stock, half the fish sauce and the sugar. Simmer 10 minutes.","Add the eggplant and lime leaves and simmer until tender, 5 to 8 minutes. Season with the rest of the fish sauce.","Stir in the basil and chile and serve over rice."],
+ tip:"Fry the paste in the coconut cream first. That's where the flavor comes from.",src:["Hot Thai Kitchen: Green Curry","https://hot-thai-kitchen.com/green-curry-new-2/"]},
+{id:"panang-steak",name:"Grilled Steak Panang Curry",cooker:"GR",type:"Beef",region:"Thai",mins:40,
+ desc:"Charred flank steak sliced into a thick, peanutty panang curry sauce with makrut lime leaves.",
+ ing:["1.5 lb flank steak or sirloin","Salt, oil","3 Tbsp panang curry paste","1 can (13.5 oz) full-fat coconut milk","2 Tbsp crushed roasted peanuts (or 1 Tbsp peanut butter)","1.5 Tbsp fish sauce, 1 Tbsp palm or brown sugar","5 makrut lime leaves, thinly sliced; 1 red chile","Jasmine rice"],
+ steps:["Salt and oil the steak and grill over high heat 4 to 5 minutes a side to 130°F. Rest 10 minutes.","In a skillet, fry the curry paste in 1/2 cup of the coconut cream 2 to 3 minutes until the oil separates.","Add the rest of the coconut milk, the peanuts, fish sauce and sugar. Simmer until thick, 5 minutes.","Slice the steak thin against the grain and fold it into the sauce with the lime leaves.","Top with chile and serve over rice."],
+ tip:"Keep the sauce thick. Panang should coat the meat, not float it.",src:["Hot Thai Kitchen: Panang Beef","https://hot-thai-kitchen.com/panang-beef/"]}
 
 ];
 /* recipes added through the "Add a recipe" form (written by the GitHub automation) */
 if(Array.isArray(window.ADDED))window.ADDED.forEach(r=>{if(r&&r.id&&!R.some(x=>x.id===r.id))R.push({...r,added:1})});
 /* Per-serving macros: [calories, protein g, carbs g, fat g, servings, s=published by the source / e=estimate from the ingredient list, note] */
 const MACROS={
+ "tikka-masala":[670,49,16,43,4,"e","without rice"],"keema":[510,37,18,30,4,"e","without rice or naan"],
+ "green-curry":[565,37,14,40,4,"e","without rice"],"panang-steak":[520,39,9,36,4,"e","without rice"],
+ 
  "blackened-fish-tacos":[520,38,38,24,4,"s","3 tacos"],"seared-halibut":[330,45,1,15,4,"s"],"lobster-tails":[170,21,1,9,4,"s","1 tail"],
  "ahi-tuna":[530,53,8,31,2,"s","1 steak with dipping sauce"],"red-snapper":[310,42,1,13,4,"s","1 fillet"],"swordfish":[500,46,3,33,4,"e","with salsa verde"],
  
@@ -1296,6 +1323,7 @@ const MENUS = [
  {name:"California Burrito Night",s:"Cali Burritos",why:"San Diego style. Fries go inside, nachos to start.",ids:["california-burrito","elote","griddle-nachos"]},
  {name:"Surf Night",s:"Surf Night",why:"Lobster, halibut, snapper or swordfish. Everything cooks in under 15 minutes, so the sides go first.",ids:["lobster-tails","seared-halibut","red-snapper","swordfish","grilled-asparagus","foil-potatoes","chargrilled-oysters"]},
  {name:"Fish Taco Night",s:"Fish Tacos",why:"Blackened fish or chile shrimp tacos, street corn and grilled guac.",ids:["blackened-fish-tacos","shrimp-tacos","elote","grilled-guac"]},
+ {name:"Curry Night",s:"Curry Night",why:"Pick an Indian or Thai curry. Rice and naan soak up the sauce.",ids:["tikka-masala","keema","green-curry","panang-steak","yellow-rice","griddle-naan"]},
  {name:"Mediterranean Night",s:"Mediterranean",why:"One batch of tzatziki covers both dishes.",ids:["greek-gyros","veg-kebabs","greek-meatballs"]}
 ];
 
@@ -1628,6 +1656,7 @@ function spin(){
   w.addEventListener("transitionend",done);
 }
 $("#spin").onclick=spin;
+$("#spinCta").onclick=()=>{document.querySelector('nav.tabs [data-tab="menus"]').click();setTimeout(()=>{$(".wheelbox").scrollIntoView({behavior:"smooth",block:"start"});setTimeout(spin,500)},50)};
 
 const bState={region:"Any",setup:"Any",protein:"Any"};
 function single(el,opts,key){el.innerHTML=opts.map(o=>`<button class="chip" type="button" aria-pressed="${o===bState[key]}" data-v="${esc(o)}">${esc(o)}</button>`).join("");
