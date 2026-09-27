@@ -4,7 +4,7 @@ window.ADDED = [
   "id": "blackstone-pork-tenderloin",
   "name": "Blackstone Pork Tenderloin",
   "cooker": "BS",
-  "type": "Beef",
+  "type": "Other",
   "region": "American",
   "mins": 30,
   "desc": "Pork tenderloin seared on a Blackstone griddle at high heat for a golden crust, rested to a juicy 145°F internal temperature.",
