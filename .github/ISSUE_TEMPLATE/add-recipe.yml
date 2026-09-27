@@ -30,7 +30,9 @@ body:
         - Auto-detect
         - Beef main
         - Chicken main
-        - Other main (pork, seafood)
+        - Pork main
+        - Seafood main
+        - Other main (lamb, duck, tofu)
         - Side dish
         - Appetizer
       default: 0

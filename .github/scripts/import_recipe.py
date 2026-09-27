@@ -201,7 +201,9 @@ def site_name(page, rec, url):
 # ---------------- sorting ----------------
 BEEF = r"\b(beef|steak|brisket|burgers?|cheeseburgers?|ribeye|rib eye|sirloin|tri-?tip|short ribs?|carne asada|bulgogi|galbi|barbacoa|meatloaf|tenderloin|chuck|prime rib|kofta|pastrami|flank|skirt|picanha|cheesesteak|philly|london broil|porterhouse|t-bone|tomahawk|filet mignon|meatballs?)\b"
 CHICKEN = r"\b(chicken|wings?|thighs?|drumsticks?|poultry|pollo|turkey|hen)\b"
-OTHER = r"\b(pork|ribs|pulled pork|shrimp|prawns?|salmon|fish|tuna|ahi|mahi|cod|halibut|tilapia|snapper|grouper|trout|swordfish|catfish|walleye|scallops?|lobster|crab|clams?|mussels|oysters?|lamb|sausages?|kielbasa|brats?|bratwurst|ham|tofu|duck)\b"
+PORK = r"\b(pork|ribs|pulled pork|carnitas|al pastor|sausages?|kielbasa|brats?|bratwurst|ham|pork belly|samgyeopsal|chorizo)\b"
+SEAFOOD = r"\b(shrimp|prawns?|salmon|fish|tuna|ahi|mahi|cod|halibut|tilapia|snapper|grouper|trout|swordfish|catfish|walleye|scallops?|lobster|crab|clams?|mussels|oysters?|seafood)\b"
+OTHER = r"\b(lamb|tofu|duck|venison|bison|goat)\b"
 APP_WORDS = r"\b(dip|poppers?|bites|nachos|crostini|bruschetta|sliders|appetizers?|starters?|snacks?|queso|deviled|stuffed mushrooms|skewers? appetizer|flatbread|guacamole|salsa)\b"
 SIDE_WORDS = r"\b(salad|slaw|potatoes|fries|rice|beans|corn|vegetables|veggies|asparagus|broccoli|brussels|zucchini|squash|mac and cheese|mac n|coleslaw|greens|carrots|mushrooms|side)\b"
 
@@ -247,23 +249,27 @@ def pick_type(title, cat, ings):
         return "Side"
     if re.search(APP_WORDS, title):
         return "Appetizer"
-    # An explicit pork/seafood word wins over ambiguous cuts like "tenderloin" or "ribs"
-    if re.search(OTHER, title) and not re.search(CHICKEN, title) and not re.search(r"\b(beef|steak|burgers?|cheeseburgers?|brisket)\b", title):
-        return "Other"
+    beefy = re.search(r"\b(beef|steak|burgers?|cheeseburgers?|brisket)\b", title)
+    chickeny = re.search(CHICKEN, title)
+    # An explicit seafood/pork word wins over ambiguous cuts like "tenderloin" or "ribs"
+    if not beefy and not chickeny:
+        if re.search(SEAFOOD, title):
+            return "Seafood"
+        if re.search(PORK, title):
+            return "Pork"
+        if re.search(OTHER, title):
+            return "Other"
     if re.search(BEEF, title):
         return "Beef"
-    if re.search(CHICKEN, title):
+    if chickeny:
         return "Chicken"
-    if re.search(OTHER, title):
-        return "Other"
+    if re.search(SEAFOOD, title):
+        return "Seafood"
     if re.search(SIDE_WORDS, title):
         return "Side"
-    if re.search(BEEF, first):
-        return "Beef"
-    if re.search(CHICKEN, first):
-        return "Chicken"
-    if re.search(OTHER, first):
-        return "Other"
+    for pat, t in ((BEEF, "Beef"), (CHICKEN, "Chicken"), (SEAFOOD, "Seafood"), (PORK, "Pork"), (OTHER, "Other")):
+        if re.search(pat, first):
+            return t
     return "Side"
 
 
@@ -376,7 +382,8 @@ def main():
     guessed_cooker = False
     if not cooker_pick:
         cooker_pick, guessed_cooker = pick_cooker(title, text)
-    type_pick = {"beef main": "Beef", "chicken main": "Chicken", "other main (pork, seafood)": "Other",
+    type_pick = {"beef main": "Beef", "chicken main": "Chicken", "pork main": "Pork", "seafood main": "Seafood",
+                 "other main (lamb, duck, tofu)": "Other",
                  "side dish": "Side", "appetizer": "Appetizer"}.get(form.get("type", "").lower()) or pick_type(title, cat, ings)
     region_in = form.get("region (optional)", "").strip()
     region = REGION_NAMES.get(region_in.lower()) or (region_in.title() if region_in else pick_region(cuisine, title, text))
@@ -414,7 +421,8 @@ def main():
     save_added(items)
 
     cookers = {"BS": "Blackstone", "PBC": "Pit Barrel", "GR": "Grill"}
-    types = {"Beef": "Beef main", "Chicken": "Chicken main", "Other": "Other main", "Side": "Side dish", "Appetizer": "Appetizer"}
+    types = {"Beef": "Beef main", "Chicken": "Chicken main", "Pork": "Pork main", "Seafood": "Seafood main",
+             "Other": "Other main", "Side": "Side dish", "Appetizer": "Appetizer"}
     note = ("\n\nI couldn't tell which cooker this is for, so it's filed under **Grill**. "
             "To change it, submit the link again and pick the cooker in the form.") if guessed_cooker else ""
     verb = "Updated" if replacing is not None else "Added"
