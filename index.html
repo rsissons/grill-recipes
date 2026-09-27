@@ -117,7 +117,30 @@ footer{border-top:1px solid var(--line);padding:18px 0 30px;color:var(--ink-2);f
   .frow .lbl{width:100%;padding-top:0}
   .dlg-body{max-height:78vh}
 }
+.badge{background:var(--ember);color:var(--ember-ink);border-radius:999px;padding:0 7px;font-size:.75rem;margin-left:4px}
+.badge:empty{display:none}
+select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px 8px}
+.onlist{font-size:.78rem;color:var(--ember);font-weight:600}
+.night-actions{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
+.gwrap{display:grid;grid-template-columns:1fr 2fr;gap:14px;align-items:start}
+.gwrap h2{font-size:1.4rem}
+.gday h4,.aisle h4{margin:14px 0 4px;font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ember)}
+.prow{display:flex;gap:6px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)}
+.prow .nm{flex:1;min-width:0;text-align:left;background:none;border:0;color:var(--ink);padding:0;font-weight:600}
+.x{border:0;background:none;color:var(--ink-2);font-size:1.3rem;line-height:1;padding:0 6px}
+.ghead{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.gbtns{display:flex;gap:6px;flex-wrap:wrap}
+.gi{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.gi input{width:20px;height:20px;margin-top:2px;accent-color:var(--ember);flex:none}
+.gi span{flex:1;min-width:0}
+.gi small{display:block;color:var(--ink-2);font-size:.75rem}
+.gi.have span{text-decoration:line-through;color:var(--ink-2)}
+.gsum{color:var(--ink-2);font-size:.9rem;margin:10px 0 0}
+.gnote{color:var(--ink-2);font-size:.82rem;margin-top:14px}
+.gempty{color:var(--ink-2);padding:10px 0}
+@media (max-width:800px){.gwrap{grid-template-columns:1fr}}
 @media print{
+  .gbtns,#gAddForm,.x,.prow select,.gscope,.gnote,.night-actions{display:none!important}
   header.hero,nav.tabs,.filters,footer,.dlg-close,.dlg-actions,.pairs-wrap{display:none!important}
   dialog{box-shadow:none;max-width:none;width:100%}
   .dlg-body{max-height:none;overflow:visible}
@@ -137,7 +160,8 @@ footer{border-top:1px solid var(--line);padding:18px 0 30px;color:var(--ink-2);f
 <nav class="tabs" aria-label="Sections">
   <div class="wrap" role="tablist">
     <button role="tab" aria-selected="true" data-tab="recipes">Recipes</button>
-    <button role="tab" aria-selected="false" data-tab="menus">Menu Ideas</button>
+    <button role="tab" aria-selected="false" data-tab="menus">Meal Nights</button>
+    <button role="tab" aria-selected="false" data-tab="grocery">Grocery List<span class="badge" id="gCount"></span></button>
     <button role="tab" aria-selected="false" data-tab="sources">Sources</button>
   </div>
 </nav>
@@ -168,10 +192,28 @@ footer{border-top:1px solid var(--line);padding:18px 0 30px;color:var(--ink-2);f
       <div style="margin-top:12px"><button class="btn primary" id="build" type="button">Build the menu</button></div>
       <div class="out" id="buildOut"></div>
     </div>
-    <h2 style="margin-bottom:10px">Menu ideas</h2>
+    <h2 style="margin-bottom:10px">Meal nights</h2>
     <div class="menus" id="menus"></div>
   </section>
 
+
+  <section class="panel" id="tab-grocery" hidden>
+    <div class="gwrap">
+      <div class="menu">
+        <div class="ghead"><h2>Cook plan</h2><button class="btn" id="planClear" type="button">Clear plan</button></div>
+        <div id="planBox"></div>
+      </div>
+      <div class="menu">
+        <div class="ghead"><h2>Grocery list</h2>
+          <div class="gbtns"><button class="btn primary" id="gShare" type="button">Share to Keep</button><button class="btn" id="gCopy" type="button">Copy</button><button class="btn" id="gHide" type="button" aria-pressed="false">Hide what I have</button><button class="btn" id="gPrint" type="button">Print</button></div></div>
+        <div class="frow gscope" style="margin-top:10px"><span class="lbl">For</span><div class="chips" id="gScope"></div></div>
+        <form id="gAddForm" class="searchbar" style="margin-top:10px"><input id="gAdd" placeholder="Add an item (beer, charcoal, foil pans)" aria-label="Add an item"><button class="btn" type="submit">Add</button></form>
+        <p class="gsum" id="gSum"></p>
+        <div id="gItems"></div>
+        <p class="gnote">Check off what you already have. Share to Keep sends only what you still need: pick Keep on your phone's share sheet, then tap "Show checkboxes" in Keep. The list is saved in this browser only.</p>
+      </div>
+    </div>
+  </section>
 
   <section class="panel" id="tab-sources" hidden>
     <div class="sources" id="sourcesBox"></div>
@@ -602,7 +644,7 @@ const R = [
  tip:"Use a perforated pan so the fat drips out and smoke gets to the bottom.",src:["Hey Grill Hey: Jack'd Up Smoked Meatloaf","https://heygrillhey.com/jackd-up-smoked-meatloaf/"]},
 {id:"kra-pao",name:"Thai Basil Beef (Pad Kra Pao)",cooker:"BS",type:"Beef",region:"Thai",mins:20,
  desc:"Ground beef stir-fried hot with garlic, chiles and holy basil, over rice with a crispy fried egg.",
- ing:["1.5 lb ground beef","8 garlic cloves and 4 to 8 Thai chiles, pounded or minced","2 shallots, sliced","2 Tbsp oyster sauce, 1 Tbsp soy, 1 tsp dark soy, 2 tsp fish sauce, 2 tsp sugar","2 big handfuls holy basil (or Thai basil)","4 eggs, jasmine rice"],
+ ing:["1.5 lb ground beef","8 garlic cloves, minced","4 to 8 Thai chiles, minced","2 shallots, sliced","2 Tbsp oyster sauce, 1 Tbsp soy, 1 tsp dark soy, 2 tsp fish sauce, 2 tsp sugar","2 big handfuls holy basil (or Thai basil)","4 eggs, jasmine rice"],
  steps:["Mix the sauces and sugar.","High heat and oil. Fry the garlic, chiles and shallot 30 seconds.","Add the beef, break it up and let it brown hard.","Pour the sauce over and toss 1 minute, then fold in the basil until just wilted.","Fry the eggs in plenty of oil on high until the edges are lacy and crisp. Serve the beef on rice with an egg on top."],
  tip:"Fry the eggs in a lot of hot oil. The crispy edges are the Thai way.",src:["Hot Thai Kitchen: Pad Kra Pao","https://hot-thai-kitchen.com/pad-kra-pao-beef/"]},
 {id:"crying-tiger",name:"Crying Tiger Steak",cooker:"PBC",type:"Beef",region:"Thai",mins:60,
@@ -701,15 +743,23 @@ const R = [
 
 /* Hand-picked full menus */
 const MENUS = [
- {name:"The Two-Cooker Sunday",why:"Brisket hangs all day with the beans under it. Blackstone does the potatoes at the end.",ids:["hanging-brisket","drip-beans","smashed-potatoes","smoked-cream-cheese"]},
- {name:"Santa Maria Night",why:"Tri-tip, smoked corn salsa, hasselbacks, bacon dates. All on the barrel.",ids:["tri-tip","corn-bean-salsa","hasselback","bacon-dates"]},
- {name:"Takeout Killer (Chinese)",why:"All Blackstone, under 45 minutes. Lo mein goes last.",ids:["orange-chicken","mongolian-beef","lo-mein","lettuce-wraps"]},
- {name:"Hibachi at Home",why:"Make the yum yum sauce first, then run chicken, rice and veg on three zones.",ids:["hibachi-chicken","hibachi-rice","hibachi-veg","gyoza"]},
- {name:"Teppanyaki Night",why:"Steak and shrimp, fried rice and veg on three zones. Yakitori goes first while everyone gathers.",ids:["teppanyaki","hibachi-rice","hibachi-veg","yakitori"]},
- {name:"Steakhouse Night",why:"Salt the ribeyes early. Mushrooms and potatoes share the griddle with the steaks.",ids:["steakhouse-ribeye","garlic-mushrooms","smashed-potatoes","steak-bites"]},
- {name:"Taco Tuesday, Upgraded",why:"Barbacoa on the barrel. Tortillas, corn and rice on the Blackstone.",ids:["barbacoa","elote","mexican-rice","taco-queso"]},
- {name:"Southern Fried Saturday",why:"Nashville hot on the griddle, mac and pickle shots in the barrel.",ids:["nashville-hot","popper-mac","fried-cabbage","pickle-shots"]},
- {name:"Game Day Spread",why:"Wings and dip in the barrel, tots and sliders on the griddle. Feeds about 10.",ids:["smoked-wings","buffalo-dip","loaded-tots","pretzel-sliders"]},
+ {name:"Steakhouse Night",why:"Salt the ribeyes early. Mushrooms and potatoes share the griddle with the steaks; the dates go in the barrel.",ids:["steakhouse-ribeye","garlic-mushrooms","smashed-potatoes","bacon-dates"]},
+ {name:"Tomahawk Night",why:"The tomahawk hangs, then sears over the open barrel. Everything else is on the griddle.",ids:["tomahawk","honey-brussels","hash-browns","steak-bites"]},
+ {name:"Thai Street Food Night",why:"All Blackstone, fast. Make the peanut sauce and pad thai sauce first.",ids:["pad-thai","kra-pao","pineapple-rice","satay"]},
+ {name:"Isaan Cookout (Thai BBQ)",why:"Gai yang and crying tiger in the barrel, sticky rice and jaew on the side.",ids:["gai-yang","crying-tiger","pineapple-rice","thai-quesadillas"]},
+ {name:"Hibachi & Teppanyaki Night",why:"Four zones: steak and shrimp, chicken, fried rice, veg. Yakitori goes first while everyone gathers.",ids:["teppanyaki","hibachi-chicken","hibachi-rice","hibachi-veg","yakitori"]},
+ {name:"Burger & Sandwich Night",why:"Smash burgers and Phillys side by side on the flat top, with tots underneath the dome.",ids:["smash-burgers","philly","loaded-tots","pretzel-sliders"]},
+ {name:"Street Taco Night",why:"All griddle. Marinate the carne asada and al pastor in the morning.",ids:["carne-asada","chicken-al-pastor","elote","chorizo-fries"]},
+ {name:"Taco Tuesday, Low & Slow",why:"Barbacoa on the barrel all afternoon. Tortillas, corn and rice on the Blackstone.",ids:["barbacoa","mexican-rice","corn-bean-salsa","taco-queso"]},
+ {name:"Korean BBQ Night",why:"Galbi and bulgogi charred on high heat, with lettuce, rice and gochujang for wraps.",ids:["galbi","bulgogi","gyoza"]},
+ {name:"Takeout Killer (Chinese)",why:"All Blackstone, under 45 minutes. Lo mein goes last.",ids:["orange-chicken","beef-broccoli","lo-mein","lettuce-wraps"]},
+ {name:"Hawaiian Luau",why:"Huli huli hangs in the barrel; fried rice and veg on the griddle.",ids:["huli-huli","pineapple-rice","hibachi-veg"]},
+ {name:"Burnt Ends Sampler",why:"Three kinds of burnt ends, with the beans under them catching the drippings. A full-day barrel cook.",ids:["brisket-burnt-ends","chuck-burnt-ends","pork-belly-burnt-ends","drip-beans"]},
+ {name:"Low & Slow Saturday",why:"Brisket hangs all day with the beans under it. The mac and cream cheese go on for the last two hours.",ids:["hanging-brisket","drip-beans","popper-mac","smoked-cream-cheese"]},
+ {name:"Santa Maria Night",why:"Tri-tip, smoked corn salsa, hasselbacks and bacon dates. All on the barrel.",ids:["tri-tip","corn-bean-salsa","hasselback","bacon-dates"]},
+ {name:"Southern Fried Saturday",why:"Nashville hot on the griddle; mac, collards and pickle shots in the barrel.",ids:["nashville-hot","popper-mac","collards","pickle-shots"]},
+ {name:"Game Day Spread",why:"Wings and dip in the barrel, tots and sliders on the griddle. Feeds about 10.",ids:["smoked-wings","buffalo-dip","moink","lollipops"]},
+ {name:"Deli Night",why:"Pastrami steamed and piled on rye, patty melts on the griddle next to it.",ids:["pastrami","patty-melt","fried-potatoes-onions"]},
  {name:"Holiday Prime Rib",why:"The brie goes on the barrel while the roast rests.",ids:["prime-rib","honey-brussels","hasselback","smoked-brie"]},
  {name:"Island Jerk Cookout",why:"Jerk quarters in the barrel, shrimp and cabbage on the griddle.",ids:["jerk-chicken","yellow-rice","fried-cabbage","cajun-shrimp"]},
  {name:"Mediterranean Night",why:"One batch of tzatziki covers both dishes.",ids:["greek-gyros","veg-kebabs","greek-meatballs"]}
@@ -741,6 +791,7 @@ $("#themeBtn").onclick=()=>{
 document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>{
   document.querySelectorAll("nav.tabs button").forEach(x=>x.setAttribute("aria-selected",x===b));
   document.querySelectorAll("main .panel").forEach(p=>p.hidden=p.id!=="tab-"+b.dataset.tab);
+  if(b.dataset.tab==="grocery")renderGrocery();
   window.scrollTo({top:$("nav.tabs").offsetTop,behavior:"smooth"});
 });
 
@@ -778,7 +829,7 @@ function cardHTML(r){
   return `<button class="card" type="button" data-id="${r.id}">
     <div class="tags"><span class="tag ${r.cooker.toLowerCase()}">${COOKERS[r.cooker]}</span><span class="tag">${esc(r.region)}</span></div>
     <h3>${esc(r.name)}</h3>
-    <div class="meta"><span>⏱ ${fmtTime(r.mins)}</span><span>${favs.has(r.id)?'<span class="fav" title="Favorite">♥</span>':''}</span></div>
+    <div class="meta"><span>⏱ ${fmtTime(r.mins)}</span><span>${inPlan(r.id)?'<span class="onlist">🛒 On list</span> ':''}${favs.has(r.id)?'<span class="fav" title="Favorite">♥</span>':''}</span></div>
   </button>`;
 }
 function render(){
@@ -806,6 +857,131 @@ function pairsFor(r){
   return out;
 }
 
+/* ---------- plan + grocery list ---------- */
+const DAYS=["Tonight","Mon","Tue","Wed","Thu","Fri","Sat","Sun","Anytime"];
+let plan=store.get("ftb-plan",[]).filter(p=>byId[p.id]);
+let have=new Set(store.get("ftb-have",[]));
+let custom=store.get("ftb-custom",[]);
+let hideHave=store.get("ftb-hide",false);
+let gScope="All";
+const dayOpts=sel=>DAYS.map(d=>`<option${d===sel?" selected":""}>${d}</option>`).join("");
+const inPlan=id=>plan.find(p=>p.id===id);
+function savePlan(){store.set("ftb-plan",plan);$("#gCount").textContent=plan.length||"";if(!$("#tab-grocery").hidden)renderGrocery()}
+function addToPlan(id,day){const p=inPlan(id);if(p)p.day=day||p.day;else plan.push({id,day:day||"Anytime"});savePlan()}
+function removeFromPlan(id){plan=plan.filter(p=>p.id!==id);savePlan()}
+
+/* split ingredient lines into single shopping items */
+function splitTop(str){const out=[];let depth=0,cur="";for(const ch of str){if(ch==="(")depth++;if(ch===")")depth--;
+  if(ch===","&&depth===0){out.push(cur.trim());cur=""}else cur+=ch}if(cur.trim())out.push(cur.trim());return out}
+const MERGE=/^(in|into|cut|for|about|plus|or|with|to|at|each|then|half|thick|thin|tails|stems|skinless|skin-on|bone-in|fat|room|seeded|trimmed|optional|bite|split|dry|cold)\b|^\d+(\.\d+)?(\/\d+)?\s*(-?inch|in\b)|^[\d.\/]+(\s*to\s*[\d.\/]+)?\s*(lbs?|oz|inch(es)?)?(\s*\(|\s*thick|\s*each|$)|^[a-z]+ed\b(?<!red|dried|smoked|roasted|shredded|toasted|steamed|pickled|canned|grilled|fried)/;
+function splitIng(line){
+  const m=line.match(/^([A-Z][A-Za-z '’-]{1,30}):\s*(.+)$/);
+  const body=m?m[2]:line;
+  const out=[];
+  splitTop(body).forEach(p=>{if(out.length&&MERGE.test(p))out[out.length-1]+=", "+p;else out.push(p)});
+  return out.flatMap(p=>p.split(/;\s+|\s+(?:and|mixed with)\s+(?=\d)/));
+}
+const QTY=/^(the rest of an? [\d.]+ oz can of|juice of \d+|zest of \d+|a splash of|a little|a pinch of|pinch of|a squeeze of)\s+|^([\d\/.]+(\s*to\s*[\d\/.]+)?\s*)?(big\s+)?((cups?|tbsp|tsp|oz|lbs?|cans?|packets?|package|jar of|jars?|sticks?|handfuls?|bunch(es)?|heads?)\b)?\s*(\([^)]*\)\s*)?(of\s+)?/i;
+const stripQty=t=>{const x=t.replace(QTY,"").replace(/^each\s+/i,"").trim();return x?x.charAt(0).toUpperCase()+x.slice(1):t};
+const AISLES=["Meat & Seafood","Produce","Dairy & Eggs","Bread & Tortillas","Frozen","Pantry & Spices","Staples (you probably have these)","Extras"];
+const STAPLE_WORDS=new Set("salt pepper oil canola vegetable olive kosher fresh freshly ground black coarse cracked sea flaky and to taste of for cooking".split(" "));
+function aisle(t){
+  const x=t.toLowerCase();
+  const words=x.replace(/[^a-z\s]/g," ").split(/\s+/).filter(Boolean);
+  if(words.length&&words.every(w=>STAPLE_WORDS.has(w)))return 6;
+  if(/broth|stock|bouillon|powder|seasoning|sauce|\brub\b|paste|vinegar|peanut butter|coconut milk|\bbeans\b|mayo|ketchup|mustard|marinara|queso|whiz/.test(x))return 5;
+  if(/frozen|tater tots|\bfries\b|dumplings|peas and carrots/.test(x))return 4;
+  if(/beef|steak|brisket|chuck|ribeye|sirloin|flank|skirt|tri-tip|picanha|tenderloin|short rib|\bribs\b|chicken|thigh|drumstick|wings?\b|breast|bacon|sausage|andouille|chorizo|pork|lamb|shrimp|salmon|turkey|ground (beef|lamb|chicken|turkey|pork)|meatball|corned|prime rib|roast\b|tomahawk|cutlet|ham\b|duck|leg quarters/.test(x))return 0;
+  if(/lettuce/.test(x))return 1;
+  if(/cheese|cheddar|mozzarella|provolone|swiss|parmesan|cotija|\bjack\b|feta|brie|queso fresco|cream|butter|milk|yogurt|\beggs?\b|crema/.test(x))return 2;
+  if(/\bbuns?\b|\brolls?\b|tortilla|bread|pita|hoagie|baguette|\brye\b|brioche|naan|hero|ciabatta|puff pastry|crackers/.test(x))return 3;
+  if(/onion|garlic|shallot|bell pepper|peppers|jalape|habanero|scotch bonnet|chiles?\b|lime|lemon|orange|cilantro|parsley|basil|mint|dill|thyme|rosemary|chive|ginger|lemongrass|potato|cabbage|\bcorn\b|broccoli|mushroom|cremini|zucchini|carrot|tomato|avocado|pineapple|cucumber|\bpear\b|apple|dates|collard|brussels|asparagus|cauliflower|greens|scallion|sprouts|guac|pico|slaw|herbs|cilantro/.test(x))return 1;
+  return 5;
+}
+const keyOf=t=>t.toLowerCase().replace(/\s+/g," ").trim();
+const num=q=>q.includes("/")?q.split("/").reduce((x,y)=>+x/+y):parseFloat(q);
+const fmtN=n=>String(Math.round(n*100)/100);
+function norm(t){
+  t=t.replace(/\b80\/20\s+/,"");
+  const m=t.match(/^(?:[\d.\/]+\s*to\s*)?(\d+(?:\.\d+)?(?:\/\d+)?)\s*(?:(lbs?|oz|cups?|tbsp|tsp|big handfuls?|handfuls?|bunch(?:es)?|heads?)\b)?\s*(.+)$/i);
+  let qty=null,unit="",rest=t;
+  if(m&&!/^\d/.test(m[3])){qty=num(m[1]);unit=(m[2]||"").toLowerCase().replace(/^lbs$/,"lb").replace(/^cups$/,"cup").replace(/^big /,"").replace(/^handfuls$/,"handful").replace(/^bunches$/,"bunch").replace(/^heads$/,"head");rest=m[3]}
+  let name=rest.replace(/\s*\([^)]*\)/g,"").replace(/^((?:bone-in|boneless|skinless|skin-on|large|whole),\s*)+/i,"").replace(/,.*$/,"").replace(/\s+(minced|sliced|diced|chopped|grated|crushed|halved|peeled|smashed|pounded or minced)$/i,"").trim();
+  const sl=name.match(/^slices\s+(?:of\s+)?(?:thin\s+|thick\s+)?(.+)$/i);if(sl&&qty!=null&&!unit){name=sl[1];unit="slices"}
+  return {name:name.charAt(0).toUpperCase()+name.slice(1),qty,unit};
+}
+function buildItems(){
+  const recs=plan.filter(p=>gScope==="All"||p.day===gScope).map(p=>byId[p.id]);
+  const map=new Map();
+  recs.forEach(r=>r.ing.forEach(line=>splitIng(line).forEach(t=>{
+    const core=t.replace(/^[\d\/.\s]+(cups?|tbsp|tsp|oz)?\s*/i,"").replace(/^(a splash of|a little|hot|warm|cold)\s+/i,"");
+    if(/^water$/i.test(core.trim()))return;
+    let a=aisle(t),name,qty=null,unit="";
+    if(a>=5){name=stripQty(t);a=aisle(name)<5?5:aisle(name)}
+    else ({name,qty,unit}=norm(t));
+    const k=a+"|"+keyOf(name).replace(/(e?s)$/,"");
+    if(!map.has(k))map.set(k,{k,name,a,q:{},loose:false,from:new Set()});
+    const it=map.get(k);
+    if(qty!=null)it.q[unit]=(it.q[unit]||0)+qty;else if(a<5)it.loose=true;
+    it.from.add(r.name);
+  })));
+  const items=[...map.values()].map(it=>{
+    const parts=Object.entries(it.q).map(([u,n])=>fmtN(n)+(u?" "+u+(n>1&&/^(cup|handful|bunch|head)$/.test(u)?(u==="bunch"?"es":"s"):""):""));
+    return {...it,t:it.name+(parts.length?` (${parts.join(" + ")}${it.loose?" + more":""})`:"")};
+  });
+  custom.forEach(c=>{const k="custom:"+keyOf(c);if(!items.some(i=>i.k===k))items.push({k,t:c,a:7,from:new Set(),custom:true})});
+  return items;
+}
+function renderGrocery(){
+  $("#gCount").textContent=plan.length||"";
+  // plan box
+  if(!plan.length){$("#planBox").innerHTML=`<p class="gempty">Nothing planned yet. Use ＋ Add to list on any recipe or Meal Night.</p>`}
+  else $("#planBox").innerHTML=DAYS.map(d=>{const ps=plan.filter(p=>p.day===d);if(!ps.length)return "";
+    return `<div class="gday"><h4>${d}</h4>${ps.map(p=>{const r=byId[p.id];return `<div class="prow"><button class="nm" type="button" data-open="${r.id}">${esc(r.name)}<small style="display:block;font-weight:400;color:var(--ink-2)">${COOKERS[r.cooker]} · ${fmtTime(r.mins)}</small></button><select data-pday="${r.id}" aria-label="Day">${dayOpts(p.day)}</select><button class="x" type="button" data-rm="${r.id}" aria-label="Remove">×</button></div>`}).join("")}</div>`}).join("");
+  // scope chips
+  const usedDays=DAYS.filter(d=>plan.some(p=>p.day===d));
+  if(gScope!=="All"&&!usedDays.includes(gScope))gScope="All";
+  $("#gScope").innerHTML=["All",...usedDays].map(d=>`<button class="chip" type="button" aria-pressed="${d===gScope}" data-scope="${d}">${d==="All"?"Whole plan":d}</button>`).join("");
+  // items
+  const items=buildItems();
+  const need=items.filter(i=>!have.has(i.k)).length;
+  $("#gSum").textContent=items.length?`${need} to buy · ${items.length-need} already have`:"";
+  $("#gHide").setAttribute("aria-pressed",hideHave);$("#gHide").classList.toggle("primary",hideHave);
+  if(!items.length){$("#gItems").innerHTML=`<p class="gempty">Your list is empty. Add recipes to the plan and their ingredients show up here, sorted by store section.</p>`;return}
+  $("#gItems").innerHTML=AISLES.map((name,ai)=>{
+    let list=items.filter(i=>i.a===ai);
+    if(hideHave)list=list.filter(i=>!have.has(i.k));
+    if(!list.length)return "";
+    list.sort((x,y)=>(have.has(x.k)-have.has(y.k))||x.t.localeCompare(y.t));
+    return `<div class="aisle"><h4>${name}</h4>${list.map(i=>`<label class="gi${have.has(i.k)?" have":""}"><input type="checkbox" data-k="${esc(i.k)}"${have.has(i.k)?" checked":""}><span>${esc(i.t)}${i.from.size?`<small>${esc([...i.from].join(", "))}</small>`:""}</span>${i.custom?`<button class="x" type="button" data-cx="${esc(i.t)}" aria-label="Remove">×</button>`:""}</label>`).join("")}</div>`;
+  }).join("");
+}
+$("#planBox").addEventListener("click",e=>{
+  const o=e.target.closest("[data-open]");if(o)return openRecipe(o.dataset.open);
+  const x=e.target.closest("[data-rm]");if(x){removeFromPlan(x.dataset.rm);render()}
+});
+$("#planBox").addEventListener("change",e=>{const s=e.target.closest("[data-pday]");if(s){addToPlan(s.dataset.pday,s.value)}});
+$("#gScope").addEventListener("click",e=>{const c=e.target.closest("[data-scope]");if(c){gScope=c.dataset.scope;renderGrocery()}});
+$("#gItems").addEventListener("change",e=>{const c=e.target.closest("input[data-k]");if(!c)return;c.checked?have.add(c.dataset.k):have.delete(c.dataset.k);store.set("ftb-have",[...have]);renderGrocery()});
+$("#gItems").addEventListener("click",e=>{const x=e.target.closest("[data-cx]");if(!x)return;e.preventDefault();custom=custom.filter(c=>c!==x.dataset.cx);store.set("ftb-custom",custom);renderGrocery()});
+$("#gAddForm").onsubmit=e=>{e.preventDefault();const v=$("#gAdd").value.trim();if(v&&!custom.includes(v)){custom.push(v);store.set("ftb-custom",custom)}$("#gAdd").value="";renderGrocery()};
+$("#gHide").onclick=()=>{hideHave=!hideHave;store.set("ftb-hide",hideHave);renderGrocery()};
+$("#gPrint").onclick=()=>window.print();
+$("#planClear").onclick=()=>{if(plan.length&&confirm("Clear the cook plan and grocery list?")){plan=[];have=new Set();custom=[];store.set("ftb-have",[]);store.set("ftb-custom",[]);savePlan();renderGrocery();render()}};
+function listText(){
+  const items=buildItems().filter(i=>!have.has(i.k)).sort((x,y)=>x.a-y.a||x.t.localeCompare(y.t));
+  return items.map(i=>i.t).join("\n");
+}
+function listTitle(){const d=new Date();return `Grocery list${gScope!=="All"?" ("+gScope+")":""} ${d.getMonth()+1}/${d.getDate()}`}
+async function copyList(btn){const t=listText();if(!t){btn.textContent="Nothing to buy";return}
+  try{await navigator.clipboard.writeText(listTitle()+"\n"+t);btn.textContent="Copied!"}catch(_){prompt("Copy your list:",t)}
+  setTimeout(()=>{btn.textContent=btn.id==="gShare"?"Share to Keep":"Copy"},1800)}
+$("#gCopy").onclick=e=>copyList(e.currentTarget);
+$("#gShare").onclick=async e=>{const t=listText();if(!t){e.currentTarget.textContent="Nothing to buy";return}
+  if(navigator.share){try{await navigator.share({title:listTitle(),text:t})}catch(_){}}
+  else copyList(e.currentTarget)};
+$("#gCount").textContent=plan.length||"";
+
 /* ---------- recipe dialog ---------- */
 const dlg=$("#dlg");
 function openRecipe(id){
@@ -818,8 +994,10 @@ function openRecipe(id){
     <div class="tip"><b>Tip:</b> ${esc(r.tip)}</div>
     <div class="pairs-wrap"><h3>Pairs with</h3><div class="pairs">${pairsFor(r).map(p=>`<button type="button" data-id="${p.id}">${esc(p.name)}<small>${COOKERS[p.cooker]} · ${TYPE_LABEL[p.type]} · ${esc(p.region)}</small></button>`).join("")}</div></div>
     <p style="margin-top:16px;font-size:.88rem">Source: <a href="${esc(r.src[1])}" target="_blank" rel="noopener">${esc(r.src[0])}</a></p>
-    <div class="dlg-actions"><button class="btn ${isFav?'primary':''}" id="favBtn" type="button">${isFav?'♥ Saved':'♡ Save to favorites'}</button><button class="btn" type="button" onclick="window.print()">Print</button><button class="btn" id="shareBtn" type="button">Copy link</button></div>`;
+    <div class="dlg-actions"><select id="dayPick" aria-label="Which day">${dayOpts(inPlan(r.id)?inPlan(r.id).day:"Tonight")}</select><button class="btn primary" id="listBtn" type="button">${inPlan(r.id)?'✓ On list (remove)':'＋ Add to list'}</button><button class="btn ${isFav?'primary':''}" id="favBtn" type="button">${isFav?'♥ Saved':'♡ Save to favorites'}</button><button class="btn" type="button" onclick="window.print()">Print</button><button class="btn" id="shareBtn" type="button">Copy link</button></div>`;
   $("#dlgBody").querySelectorAll(".pairs button").forEach(b=>b.onclick=()=>openRecipe(b.dataset.id));
+  $("#listBtn").onclick=()=>{inPlan(r.id)?removeFromPlan(r.id):addToPlan(r.id,$("#dayPick").value);openRecipe(r.id);render()};
+  $("#dayPick").onchange=()=>{if(inPlan(r.id)){addToPlan(r.id,$("#dayPick").value);render()}};
   $("#favBtn").onclick=()=>{favs.has(r.id)?favs.delete(r.id):favs.add(r.id);store.set("ftb-favs",[...favs]);openRecipe(r.id);render()};
   $("#shareBtn").onclick=async e=>{const url=location.href.split("#")[0]+"#"+r.id;try{await navigator.clipboard.writeText(url);e.target.textContent="Copied!"}catch(_){prompt("Copy this link:",url)}};
   history.replaceState(null,"","#"+r.id);
@@ -831,8 +1009,15 @@ dlg.addEventListener("click",e=>{if(e.target===dlg)dlg.close()});
 dlg.addEventListener("close",()=>history.replaceState(null,"",location.pathname+location.search));
 
 /* ---------- menus ---------- */
-$("#menus").innerHTML=MENUS.map(m=>`<div class="menu"><h3>${esc(m.name)}</h3><p>${esc(m.why)}</p><ol>${m.ids.map(id=>{const r=byId[id];return `<li><button type="button" data-id="${id}">${esc(r.name)}</button> <small>${COOKERS[r.cooker]} · ${TYPE_LABEL[r.type]}</small></li>`}).join("")}</ol></div>`).join("");
-$("#menus").onclick=e=>{const b=e.target.closest("button[data-id]");if(b)openRecipe(b.dataset.id)};
+$("#menus").innerHTML=MENUS.map((m,i)=>`<div class="menu"><h3>${esc(m.name)}</h3><p>${esc(m.why)}</p><ol>${m.ids.map(id=>{const r=byId[id];return `<li><button type="button" data-id="${id}">${esc(r.name)}</button> <small>${COOKERS[r.cooker]} · ${TYPE_LABEL[r.type]}</small></li>`}).join("")}</ol>
+  <div class="night-actions"><select data-nday="${i}" aria-label="Which day">${dayOpts("Tonight")}</select><button class="btn primary" type="button" data-night="${i}">＋ Add night to list</button></div></div>`).join("");
+$("#menus").onclick=e=>{
+  const b=e.target.closest("button[data-id]");if(b)return openRecipe(b.dataset.id);
+  const n=e.target.closest("button[data-night]");if(!n)return;
+  const day=$(`select[data-nday="${n.dataset.night}"]`).value;
+  MENUS[+n.dataset.night].ids.forEach(id=>addToPlan(id,day));render();
+  n.textContent="✓ Added to list";setTimeout(()=>n.textContent="＋ Add night to list",1800);
+};
 
 const bState={region:"Any",setup:"Both",protein:"Either"};
 function single(el,opts,key){el.innerHTML=opts.map(o=>`<button class="chip" type="button" aria-pressed="${o===bState[key]}" data-v="${esc(o)}">${esc(o)}</button>`).join("");
@@ -855,7 +1040,8 @@ $("#build").onclick=()=>{
   const mixed=new Set(items.map(i=>i.cooker)).size>1;
   $("#buildOut").innerHTML=`${note?`<p class="section-intro">${esc(note)}</p>`:""}<div class="menu"><h3>Tonight's cook</h3><ol>${items.map(r=>`<li><button type="button" data-id="${r.id}">${esc(r.name)}</button> <small>${COOKERS[r.cooker]} · ${TYPE_LABEL[r.type]} · ${fmtTime(r.mins)}</small></li>`).join("")}</ol>
    <p style="margin-top:10px">${mixed?"Game plan: light the Pit Barrel first. Its items take longest. Fire the Blackstone about 30 minutes before the barrel stuff comes off.":"Game plan: start the longest item first and work down the list so it all lands hot together."}</p>
-   <button class="btn" type="button" id="again">Reroll</button></div>`;
+   <div class="night-actions"><select id="bDay" aria-label="Which day">${dayOpts("Tonight")}</select><button class="btn primary" type="button" id="bAdd">＋ Add to list</button><button class="btn" type="button" id="again">Reroll</button></div></div>`;
+  $("#bAdd").onclick=e=>{items.forEach(r=>addToPlan(r.id,$("#bDay").value));render();e.target.textContent="✓ Added to list"};
   $("#buildOut").querySelectorAll("button[data-id]").forEach(b=>b.onclick=()=>openRecipe(b.dataset.id));
   $("#again").onclick=()=>$("#build").click();
 };
@@ -887,7 +1073,7 @@ $("#sourcesBox").innerHTML=BOOKS.map(b=>`<div class="src"><h3><a href="${b[1]}" 
 
 /* ---------- stats + boot ---------- */
 const c=k=>R.filter(r=>r.cooker===k).length;
-$("#stats").innerHTML=`<span><b>${R.length}</b>recipes</span><span><b>${c("BS")}</b>Blackstone</span><span><b>${c("PBC")}</b>Pit Barrel</span><span><b>${REGIONS.length}</b>regions</span><span><b>${MENUS.length}</b>menus</span>`;
+$("#stats").innerHTML=`<span><b>${R.length}</b>recipes</span><span><b>${c("BS")}</b>Blackstone</span><span><b>${c("PBC")}</b>Pit Barrel</span><span><b>${REGIONS.length}</b>regions</span><span><b>${MENUS.length}</b>meal nights</span>`;
 render();
 if(location.hash&&byId[location.hash.slice(1)])openRecipe(location.hash.slice(1));
 </script>
