@@ -199,7 +199,7 @@ def site_name(page, rec, url):
 
 
 # ---------------- sorting ----------------
-BEEF = r"\b(beef|steak|brisket|burgers?|ribeye|rib eye|sirloin|tri-?tip|short ribs?|carne asada|bulgogi|galbi|barbacoa|meatloaf|tenderloin|chuck|prime rib|kofta|pastrami|flank|skirt|picanha|cheesesteak|philly|london broil|porterhouse|t-bone|tomahawk|filet mignon|meatballs?)\b"
+BEEF = r"\b(beef|steak|brisket|burgers?|cheeseburgers?|ribeye|rib eye|sirloin|tri-?tip|short ribs?|carne asada|bulgogi|galbi|barbacoa|meatloaf|tenderloin|chuck|prime rib|kofta|pastrami|flank|skirt|picanha|cheesesteak|philly|london broil|porterhouse|t-bone|tomahawk|filet mignon|meatballs?)\b"
 CHICKEN = r"\b(chicken|wings?|thighs?|drumsticks?|poultry|pollo|turkey|hen)\b"
 OTHER = r"\b(pork|ribs|bacon-wrapped pork|pulled pork|shrimp|salmon|fish|tuna|scallops?|lobster|crab|oysters?|lamb|sausage|brats?|bratwurst|ham|tofu|duck)\b"
 APP_WORDS = r"\b(dip|poppers?|bites|nachos|crostini|bruschetta|sliders|appetizers?|starters?|snacks?|queso|deviled|stuffed mushrooms|skewers? appetizer|flatbread|guacamole|salsa)\b"
@@ -247,6 +247,9 @@ def pick_type(title, cat, ings):
         return "Side"
     if re.search(APP_WORDS, title):
         return "Appetizer"
+    # An explicit pork/seafood word wins over ambiguous cuts like "tenderloin" or "ribs"
+    if re.search(OTHER, title) and not re.search(CHICKEN, title) and not re.search(r"\b(beef|steak|burgers?|cheeseburgers?|brisket)\b", title):
+        return "Other"
     if re.search(BEEF, title):
         return "Beef"
     if re.search(CHICKEN, title):
