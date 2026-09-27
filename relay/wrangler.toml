@@ -1,0 +1,12 @@
+name = "grill-recipes-relay"
+main = "worker.js"
+compatibility_date = "2026-09-01"
+
+# At most 3 submissions per visitor per minute (on top of the Turnstile human check)
+[[ratelimits]]
+name = "LIMITER"
+namespace_id = "1001"
+
+  [ratelimits.simple]
+  limit = 3
+  period = 60

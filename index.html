@@ -74,6 +74,13 @@ nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(-
 .tipcard li{margin:4px 0}
 .tipcard li b{color:var(--ink)}
 @media (max-width:400px){.tipgrid{grid-template-columns:1fr}}
+.fl{display:grid;gap:4px;font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-2);margin-bottom:10px}
+.fl input,.fl select{font:inherit;font-size:1rem;text-transform:none;letter-spacing:0;color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-weight:400}
+.frow2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.addstatus{background:var(--surface-2);border-radius:12px;padding:14px;margin-top:12px}
+.addstatus ul{margin:6px 0;padding-left:20px}
+.addstatus .spin{display:inline-block;width:14px;height:14px;border:2px solid var(--ember);border-right-color:transparent;border-radius:50%;animation:rot 0.8s linear infinite;vertical-align:-2px;margin-right:6px}
+@keyframes rot{to{transform:rotate(360deg)}}
 .macs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:4px 0 2px}
 .macs div{background:var(--surface-2);border-radius:10px;padding:8px 6px;text-align:center}
 .macs b{display:block;font-family:Oswald,Impact,sans-serif;font-size:1.25rem;line-height:1.1}
@@ -214,7 +221,7 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
         <button class="btn" id="fToggle" type="button" aria-expanded="false" aria-controls="fBody">Filters<span class="badge" id="fCount"></span> <span aria-hidden="true" id="fArrow">▾</span></button>
         <button class="btn" id="favOnly" type="button" aria-pressed="false">★ Favorites</button>
         <button class="btn" id="reset" type="button">Reset</button>
-        <a class="btn" href="https://github.com/rsissons/grill-recipes/issues/new?template=add-recipe.yml" target="_blank" rel="noopener">＋ Add a recipe</a>
+        <a class="btn" id="addBtn" href="https://github.com/rsissons/grill-recipes/issues/new?template=add-recipe.yml" target="_blank" rel="noopener">＋ Add a recipe</a>
       </div>
       <div id="fBody" class="fbody" hidden>
       <div class="frow"><span class="lbl">Cooker</span><div class="chips" id="f-cooker"></div></div>
@@ -275,6 +282,26 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
 </main>
 
 <footer><div class="wrap">Recipes adapted and condensed from the credited sources. Safe temps: chicken 165°F (thighs and wings are better at 175 to 195°F), ground beef 160°F, whole beef cuts 130°F+ for medium rare.</div></footer>
+
+<dialog id="addDlg" aria-labelledby="addTitle">
+  <div class="dlg-head">
+    <button class="dlg-close" id="addClose" type="button" aria-label="Close">×</button>
+    <h2 id="addTitle">Add a recipe</h2>
+  </div>
+  <div class="dlg-body">
+    <form id="addForm">
+      <p class="section-intro" style="margin:0 0 12px">Paste a link to any recipe page. It gets read, sorted and added to the site for everyone, macros included when the site publishes them. Links that aren't recipes get turned away.</p>
+      <label class="fl">Recipe link<input id="addUrl" type="url" required placeholder="https://" autocomplete="off"></label>
+      <div class="frow2">
+        <label class="fl">Cooker<select id="addCooker"><option>Auto-detect</option><option>Blackstone</option><option>Pit Barrel</option><option>Grill</option></select></label>
+        <label class="fl">Type<select id="addType"><option>Auto-detect</option><option>Beef main</option><option>Chicken main</option><option>Pork main</option><option>Seafood main</option><option>Side dish</option><option>Appetizer</option></select></label>
+      </div>
+      <div id="tsBox" style="margin:12px 0"></div>
+      <button class="btn primary" id="addGo" type="submit">Add it</button>
+    </form>
+    <div id="addStatus" class="addstatus" hidden></div>
+  </div>
+</dialog>
 
 <dialog id="dlg" aria-labelledby="dlgTitle">
   <div class="dlg-head">
@@ -1135,6 +1162,7 @@ const R = [
 if(Array.isArray(window.ADDED))window.ADDED.forEach(r=>{if(r&&r.id&&!R.some(x=>x.id===r.id))R.push({...r,added:1})});
 /* Per-serving macros: [calories, protein g, carbs g, fat g, servings, s=published by the source / e=estimate from the ingredient list, note] */
 const MACROS={
+ "thai-yellow-curry-from-scratch":[420,20,21,28,4,"e","without rice"],
  "tikka-masala":[670,49,16,43,4,"e","without rice"],"keema":[510,37,18,30,4,"e","without rice or naan"],
  "green-curry":[565,37,14,40,4,"e","without rice"],"panang-steak":[520,39,9,36,4,"e","without rice"],
  
@@ -1686,6 +1714,58 @@ $("#build").onclick=()=>{
   $("#again").onclick=()=>$("#build").click();
 };
 
+
+/* ---------- add a recipe (in-site form -> relay -> GitHub automation) ---------- */
+const RELAY="";            // relay address, e.g. https://grill-recipes-relay.<account>.workers.dev (empty = fall back to the GitHub form)
+const TURNSTILE_KEY="";    // Cloudflare Turnstile site key (public)
+const addDlg=$("#addDlg");
+let tsToken="",tsWidget=null,pollTimer=null;
+function mdLite(t){
+  return esc(t).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/(https?:\/\/[^\s)<]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>')
+    .split(/\n{2,}/).map(par=>/^- /m.test(par)?"<ul>"+par.split("\n").filter(l=>l.startsWith("- ")).map(l=>"<li>"+l.slice(2)+"</li>").join("")+"</ul>":"<p style=\"margin:6px 0\">"+par.replace(/\n/g,"<br>")+"</p>").join("");
+}
+function loadTurnstile(){
+  if(!TURNSTILE_KEY||tsWidget!==null)return;
+  const render=()=>{tsWidget=turnstile.render("#tsBox",{sitekey:TURNSTILE_KEY,callback:t=>{tsToken=t},"expired-callback":()=>{tsToken=""}})};
+  if(window.turnstile)return render();
+  const sc=document.createElement("script");sc.src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";sc.async=true;sc.onload=render;document.head.appendChild(sc);
+}
+function addStatus(html){const b=$("#addStatus");b.hidden=false;b.innerHTML=html}
+$("#addBtn").addEventListener("click",e=>{
+  if(!RELAY)return;            // no relay yet: the link opens the GitHub form
+  e.preventDefault();
+  $("#addForm").hidden=false;$("#addStatus").hidden=true;$("#addGo").disabled=false;$("#addUrl").value="";
+  if(!addDlg.open)addDlg.showModal();loadTurnstile();setTimeout(()=>$("#addUrl").focus(),50);
+});
+$("#addClose").onclick=()=>addDlg.close();
+addDlg.addEventListener("click",e=>{if(e.target===addDlg)addDlg.close()});
+addDlg.addEventListener("close",()=>{clearTimeout(pollTimer)});
+$("#addForm").onsubmit=async e=>{
+  e.preventDefault();
+  if(TURNSTILE_KEY&&!tsToken){addStatus("Hang on, the human check is still loading. Try again in a second.");return}
+  $("#addGo").disabled=true;addStatus('<span class="spin"></span>Checking the link…');
+  let res;
+  try{
+    const r=await fetch(RELAY+"/add",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({url:$("#addUrl").value.trim(),cooker:$("#addCooker").value,type:$("#addType").value,token:tsToken})});
+    res=await r.json();
+  }catch(_){res={ok:false,reason:"Couldn't reach the recipe service. Check your connection and try again."}}
+  if(window.turnstile&&tsWidget!==null){turnstile.reset(tsWidget);tsToken=""}
+  if(!res.ok){addStatus("<b>Not added.</b> "+esc(res.reason||"Something went wrong."));$("#addGo").disabled=false;return}
+  $("#addForm").hidden=true;
+  addStatus('<span class="spin"></span>Reading the recipe and sorting it. This takes about a minute…');
+  const started=Date.now();
+  const poll=async()=>{
+    let st=null;
+    try{st=await (await fetch(RELAY+"/status?issue="+res.issue)).json()}catch(_){}
+    if(st&&st.ok&&st.state!=="working"){
+      addStatus((st.state==="added"?"<b>Added!</b> It shows up on the site within a few minutes (refresh the page).":"<b>Not added.</b>")+mdLite(st.reply.replace(/^Couldn't add that one: /,"")));
+      return;
+    }
+    if(Date.now()-started>4*60*1000){addStatus("It's taking longer than usual. It will still be added if it's a good recipe. Check back in a few minutes.");return}
+    pollTimer=setTimeout(poll,5000);
+  };
+  pollTimer=setTimeout(poll,8000);
+};
 
 /* ---------- cooker tips ---------- */
 const TIPS=[

@@ -49,7 +49,8 @@ def fail(reason):
 # ---------------- parse the issue form ----------------
 def parse_form(body):
     fields, cur = {}, None
-    for line in (body or "").splitlines():
+    body = re.sub(r"<!--.*?-->", "", body or "", flags=re.S)
+    for line in body.splitlines():
         m = re.match(r"^###\s+(.+?)\s*$", line)
         if m:
             cur = m.group(1).lower()
@@ -265,12 +266,18 @@ def pick_type(title, cat, ings):
         return "Chicken"
     if re.search(SEAFOOD, title):
         return "Seafood"
-    if re.search(SIDE_WORDS, title):
+    main_cat = re.search(r"\b(main|dinner|entr[eé]e|supper)", cat)
+    if re.search(SIDE_WORDS, title) and not main_cat:
         return "Side"
     for pat, t in ((BEEF, "Beef"), (CHICKEN, "Chicken"), (SEAFOOD, "Seafood"), (PORK, "Pork"), (OTHER, "Other")):
         if re.search(pat, first):
             return t
-    return "Side"
+    # Protein further down the list. Skip seasoning lines like "chicken stock" or "shrimp paste".
+    rest = " ".join(i for i in ings if not re.search(r"\b(stock|broth|bouillon|paste|sauce|powder|seasoning|fat|drippings)\b", i.lower())).lower()
+    for pat, t in ((BEEF, "Beef"), (CHICKEN, "Chicken"), (SEAFOOD, "Seafood"), (PORK, "Pork"), (OTHER, "Other")):
+        if re.search(pat, rest):
+            return t
+    return "Other" if main_cat else "Side"
 
 
 def pick_region(cuisine, title, text):

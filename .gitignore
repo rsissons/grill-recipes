@@ -1,2 +1,5 @@
 comment.md
 __pycache__/
+relay/node_modules/
+relay/.dev.vars
+relay/.wrangler/

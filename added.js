@@ -84,7 +84,7 @@ window.ADDED = [
   "id": "thai-yellow-curry-from-scratch",
   "name": "Thai Yellow Curry (from scratch!)",
   "cooker": "BS",
-  "type": "Side",
+  "type": "Seafood",
   "region": "Thai",
   "mins": 60,
   "desc": "Recipe video above. Thai curries are famous for the sublime aromatic flavours balancing sweet, tart, savoury and spiciness. Thai Yellow Curry is one such magnificent example, with…",
@@ -141,7 +141,7 @@ window.ADDED = [
   "name": "Blackstone Kielbasa",
   "cooker": "BS",
   "type": "Pork",
-  "region": "_No Response_\n\n<!-- Submitted From The Site Form -->",
+  "region": "American",
   "mins": 17,
   "desc": "Kielbasa scored in a diamond crosshatch, seared on a Blackstone griddle, and finished with a honey mustard glaze.",
   "ing": [
