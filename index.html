@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flat Top & Barrel</title>
+<meta name="description" content="Top-rated Blackstone griddle and Pit Barrel Cooker recipes: beef and chicken mains, sides and appetizers, filterable by cooker, type and region.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f1ea; --surface:#ffffff; --surface-2:#efe7dc; --ink:#231c16; --ink-2:#5c5148; --line:#ddd1c2;
+  --ember:#c2410c; --ember-ink:#fff; --bs:#1f2937; --pbc:#7c2d12; --gold:#b45309; --focus:#2563eb;
+  --shadow:0 1px 2px rgba(0,0,0,.06),0 4px 14px rgba(0,0,0,.06);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#15120f; --surface:#1f1a16; --surface-2:#2a231d; --ink:#f3ece4; --ink-2:#b9ab9c; --line:#3a3129;
+    --ember:#f97316; --ember-ink:#1a0f06; --bs:#94a3b8; --pbc:#fb923c; --gold:#fbbf24; --focus:#60a5fa;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#15120f; --surface:#1f1a16; --surface-2:#2a231d; --ink:#f3ece4; --ink-2:#b9ab9c; --line:#3a3129;
+  --ember:#f97316; --ember-ink:#1a0f06; --bs:#94a3b8; --pbc:#fb923c; --gold:#fbbf24; --focus:#60a5fa;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.3);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Inter,system-ui,sans-serif}
+h1,h2,h3{font-family:Oswald,Impact,sans-serif;letter-spacing:.02em;margin:0}
+a{color:var(--ember)}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+header.hero{background:linear-gradient(135deg,#1c1410 0%,#3b1d0e 60%,#7c2d12 100%);color:#fff7ed;padding:36px 0 28px}
+.hero h1{font-size:clamp(2rem,6vw,3.4rem);text-transform:uppercase;line-height:1}
+.hero h1 span{color:#fb923c}
+.hero p{max-width:720px;color:#fde6d3;margin:10px 0 0}
+.hero .stats{display:flex;gap:18px;flex-wrap:wrap;margin-top:16px;font-size:.9rem;color:#fed7aa}
+.hero .stats b{color:#fff;font-size:1.15rem;margin-right:4px}
+.theme-toggle{position:absolute;top:14px;right:16px;background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:6px 12px;font-size:.85rem}
+header.hero{position:relative}
+
+nav.tabs{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
+nav.tabs .wrap{display:flex;gap:4px;overflow-x:auto}
+nav.tabs button{background:none;border:0;border-bottom:3px solid transparent;padding:12px 14px;color:var(--ink-2);font-weight:600;white-space:nowrap}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ember)}
+
+.panel{padding:20px 0 48px}
+.filters{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:var(--shadow);display:grid;gap:10px}
+.frow{display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap}
+.frow .lbl{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-2);font-weight:600;width:64px;padding-top:7px;flex:none}
+.chips{display:flex;gap:6px;flex-wrap:wrap;flex:1;min-width:0}
+.chip{border:1px solid var(--line);background:var(--surface-2);color:var(--ink);border-radius:999px;padding:5px 12px;font-size:.88rem}
+.chip[aria-pressed="true"]{background:var(--ember);border-color:var(--ember);color:var(--ember-ink)}
+.chip .n{opacity:.6;font-size:.78rem;margin-left:4px}
+.searchbar{display:flex;gap:8px;flex-wrap:wrap}
+.searchbar input{flex:1 1 240px;min-width:0;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);border-radius:10px;padding:9px 12px;font:inherit}
+.btn{border:1px solid var(--line);background:var(--surface-2);color:var(--ink);border-radius:10px;padding:8px 14px;font-weight:600}
+.btn.primary{background:var(--ember);border-color:var(--ember);color:var(--ember-ink)}
+.count{color:var(--ink-2);font-size:.9rem;margin:14px 2px 10px}
+
+.group h2{font-size:1.5rem;text-transform:uppercase;margin:22px 0 10px;border-bottom:2px solid var(--ember);padding-bottom:4px}
+.group h2 small{font-family:Inter,sans-serif;font-size:.85rem;color:var(--ink-2);text-transform:none;margin-left:6px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px;text-align:left;color:inherit;width:100%}
+.card:hover{border-color:var(--ember)}
+.card h3{font-size:1.2rem;line-height:1.2}
+.card p{margin:0;color:var(--ink-2);font-size:.92rem}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;padding:2px 8px;border-radius:6px;background:var(--surface-2);color:var(--ink-2)}
+.tag.bs{background:var(--bs);color:var(--bg)}
+.tag.pbc{background:var(--pbc);color:var(--bg)}
+.meta{display:flex;justify-content:space-between;font-size:.82rem;color:var(--ink-2);margin-top:auto}
+.fav{color:var(--gold)}
+.pick{color:var(--gold);font-size:.78rem;font-weight:600}
+.empty{padding:40px;text-align:center;color:var(--ink-2)}
+
+dialog{border:0;border-radius:16px;padding:0;max-width:760px;width:calc(100% - 24px);background:var(--surface);color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.4)}
+dialog::backdrop{background:rgba(10,6,3,.6)}
+.dlg-head{padding:18px 20px 12px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--surface)}
+.dlg-head h2{font-size:1.7rem;padding-right:40px}
+.dlg-close{position:absolute;top:12px;right:12px;border:0;background:var(--surface-2);color:var(--ink);border-radius:999px;width:36px;height:36px;font-size:1.2rem}
+.dlg-body{padding:16px 20px 22px;max-height:72vh;overflow:auto}
+.dlg-body h3{font-size:1.05rem;text-transform:uppercase;margin:16px 0 6px;color:var(--ember)}
+.dlg-body ul,.dlg-body ol{margin:0;padding-left:22px}
+.dlg-body li{margin:3px 0}
+.tip{background:var(--surface-2);border-left:4px solid var(--ember);padding:10px 12px;border-radius:8px;margin-top:14px}
+.pairs{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+.pairs button{text-align:left;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);border-radius:10px;padding:8px 10px;font-size:.9rem}
+.pairs small{display:block;color:var(--ink-2);font-size:.75rem}
+.dlg-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+
+.menus{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.menu{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:var(--shadow)}
+.menu h3{font-size:1.3rem}
+.menu p{color:var(--ink-2);margin:6px 0 10px;font-size:.92rem}
+.menu ol{margin:0;padding-left:20px}
+.menu li{margin:4px 0}
+.menu li button{background:none;border:0;padding:0;color:var(--ember);text-decoration:underline;text-align:left}
+.menu li small{color:var(--ink-2)}
+.builder{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:18px;box-shadow:var(--shadow)}
+.builder .out{margin-top:12px}
+.section-intro{color:var(--ink-2);max-width:760px;margin:0 0 16px}
+.sources{display:grid;gap:12px}
+.src{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px}
+.src h3{font-size:1.1rem}
+.src p{margin:4px 0 0;color:var(--ink-2);font-size:.92rem}
+.basics{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-bottom:18px}
+.basics .src ul{margin:6px 0 0;padding-left:20px;color:var(--ink-2);font-size:.92rem}
+footer{border-top:1px solid var(--line);padding:18px 0 30px;color:var(--ink-2);font-size:.85rem}
+[hidden]{display:none!important}
+@media (max-width:560px){
+  .frow .lbl{width:100%;padding-top:0}
+  .dlg-body{max-height:78vh}
+}
+@media print{
+  header.hero,nav.tabs,.filters,footer,.dlg-close,.dlg-actions,.pairs-wrap{display:none!important}
+  dialog{box-shadow:none;max-width:none;width:100%}
+  .dlg-body{max-height:none;overflow:visible}
+}
+</style>
+</head>
+<body>
+<header class="hero">
+  <button class="theme-toggle" id="themeBtn" type="button" aria-label="Toggle dark mode">Theme</button>
+  <div class="wrap">
+    <h1>Flat Top <span>&amp;</span> Barrel</h1>
+    <p>Blackstone griddle and Pit Barrel Cooker recipes. Beef, chicken, sides, appetizers.</p>
+    <div class="stats" id="stats"></div>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Sections">
+  <div class="wrap" role="tablist">
+    <button role="tab" aria-selected="true" data-tab="recipes">Recipes</button>
+    <button role="tab" aria-selected="false" data-tab="menus">Menu Ideas</button>
+    <button role="tab" aria-selected="false" data-tab="sources">Sources</button>
+  </div>
+</nav>
+
+<main class="wrap">
+  <section class="panel" id="tab-recipes">
+    <div class="filters">
+      <div class="searchbar">
+        <input id="q" type="search" placeholder="Search recipes or ingredients (e.g. jalapeño, brisket, soy)" aria-label="Search recipes">
+        <button class="btn" id="favOnly" type="button" aria-pressed="false">★ Favorites</button>
+        <button class="btn" id="reset" type="button">Reset</button>
+      </div>
+      <div class="frow"><span class="lbl">Cooker</span><div class="chips" id="f-cooker"></div></div>
+      <div class="frow"><span class="lbl">Type</span><div class="chips" id="f-type"></div></div>
+      <div class="frow"><span class="lbl">Region</span><div class="chips" id="f-region"></div></div>
+      <div class="frow"><span class="lbl">Time</span><div class="chips" id="f-time"></div></div>
+    </div>
+    <div class="count" id="count" aria-live="polite"></div>
+    <div id="grid"></div>
+  </section>
+
+  <section class="panel" id="tab-menus" hidden>
+    <div class="builder">
+      <h2>Build me a cook</h2>
+      <div class="frow"><span class="lbl">Region</span><div class="chips" id="b-region"></div></div>
+      <div class="frow" style="margin-top:8px"><span class="lbl">Setup</span><div class="chips" id="b-setup"></div></div>
+      <div class="frow" style="margin-top:8px"><span class="lbl">Protein</span><div class="chips" id="b-protein"></div></div>
+      <div style="margin-top:12px"><button class="btn primary" id="build" type="button">Build the menu</button></div>
+      <div class="out" id="buildOut"></div>
+    </div>
+    <h2 style="margin-bottom:10px">Menu ideas</h2>
+    <div class="menus" id="menus"></div>
+  </section>
+
+
+  <section class="panel" id="tab-sources" hidden>
+    <div class="sources" id="sourcesBox"></div>
+  </section>
+</main>
+
+<footer><div class="wrap">Recipes adapted and condensed from the credited sources. Safe temps: chicken 165°F (thighs and wings are better at 175 to 195°F), ground beef 160°F, whole beef cuts 130°F+ for medium rare.</div></footer>
+
+<dialog id="dlg" aria-labelledby="dlgTitle">
+  <div class="dlg-head">
+    <button class="dlg-close" id="dlgClose" type="button" aria-label="Close">×</button>
+    <h2 id="dlgTitle"></h2>
+    <div class="tags" id="dlgTags" style="margin-top:8px"></div>
+  </div>
+  <div class="dlg-body" id="dlgBody"></div>
+</dialog>
+
+<script>
+/* ---------- Recipe data ----------
+   cooker: BS = Blackstone griddle, PBC = Pit Barrel Cooker
+   type: Beef / Chicken / Side / Appetizer
+   mins: total active + cook time, rough */
+const SRC = {
+  pdf:   ["Blackstone Griddle Essentials Cookbook (PDF)", "https://www.qvc.com/footers/cd/pdf/K63533_CookbookRecipes.pdf"],
+  gs:    ["Griddle Sizzle: 30 Best Blackstone Recipes", "https://griddlesizzle.com/top-lists/best-blackstone-recipes/"],
+  mich:  ["From Michigan To The Table", "https://frommichigantothetable.com/blackstone-griddle-recipes/"],
+  pbc:   ["Pit Barrel Cooker Co. recipes", "https://pitbarrelcooker.com/blogs/food"],
+  bsp:   ["Blackstone Products recipes", "https://blackstoneproducts.com/blogs/recipes"],
+  owyd:  ["Or Whatever You Do: Blackstone recipes", "https://www.orwhateveryoudo.com/2021/07/50-delicious-blackstone-recipes.html"],
+  bs101: ["Blackstone Griddle 101: The Official Cookbook", "https://www.simonandschuster.com/books/Blackstone-Griddle-101-The-Official-Cookbook/Nathan-Lippy/9781507226513"],
+  gg:    ["If You Give a Girl a Grill: Blackstone sides", "https://ifyougiveagirlagrill.com/2023/04/08/blackstone-griddle-side-dishes/"],
+  goad:  ["Grill on a Dime: Blackstone appetizers", "https://grillonadime.com/blackstone-appetizers/"],
+  tw:    ["ThermoWorks: hanging whole smoked chicken", "https://blog.thermoworks.com/hanging-whole-smoked-chicken/"]
+};
+const u = p => "https://pitbarrelcooker.com/blogs/food/" + p;
+
+const R = [
+/* ================= BLACKSTONE: BEEF ================= */
+{id:"smash-burgers",name:"Classic Smash Burgers",cooker:"BS",type:"Beef",region:"American",mins:20,pick:1,
+ desc:"Loose balls of 80/20 beef smashed flat on screaming-hot steel for a lacy, caramelized crust.",
+ ing:["2 lb 80/20 ground beef, in 3 oz balls (don't pack them)","Salt and pepper","8 slices American cheese","8 potato buns, buttered","1 sweet onion, shaved paper thin","Pickles, burger sauce"],
+ steps:["Heat the griddle to high (450°F+). Toast buns in butter on a cooler zone and set aside.","Set a ball on the steel, lay parchment on it and smash hard and flat within the first 10 seconds. Don't press again after that.","Season the top. Optional: press shaved onion into the raw side.","After about 2 minutes, when the edges are dark brown, scrape under the crust with a sharp spatula and flip.","Add cheese right away, stack two patties, dome for 30 seconds and bun it."],
+ tip:"Smash only once, in the first seconds. Pressing later just squeezes out the juice.",src:SRC.gs},
+{id:"philly",name:"Philly Cheesesteak",cooker:"BS",type:"Beef",region:"American",mins:30,pick:1,
+ desc:"Shaved ribeye, peppers and onions cooked side by side, piled into toasted hoagies under melted provolone and Whiz.",
+ ing:["2 lb shaved ribeye (partially freeze a roast and slice thin)","1 onion and 1 green + 1 red bell pepper, sliced","2 Tbsp butter plus oil","3 Tbsp red wine vinegar","1 tsp garlic powder, salt, pepper","12 to 18 slices provolone and a jar of Cheez Whiz","6 hoagie rolls"],
+ steps:["Medium-high griddle. Butter and oil on one side; add the onions and peppers, season with salt, pepper, vinegar and half the garlic powder.","Butter and oil on the other side; add the beef, chop it with two spatulas as it cooks, and season with the rest.","When the meat is done, split it into 6 piles and drop the heat to medium.","Spoon Whiz over each pile, add the veggies, then 2 to 3 slices of provolone.","Toast the split rolls, then scoop each pile straight into a roll."],
+ tip:"Slide the open roll over the cheesy pile and flip the whole thing with a spatula. That's the clean way to load it.",src:SRC.pdf},
+{id:"carne-asada",name:"Carne Asada",cooker:"BS",type:"Beef",region:"Mexican",mins:25,pick:1,
+ desc:"Citrus and garlic marinated skirt steak seared hard and chopped for tacos.",
+ ing:["2 lb skirt or flank steak","Juice of 2 oranges and 3 limes","4 garlic cloves, minced","1 jalapeño, minced","1 bunch cilantro, chopped","2 tsp cumin, 1 tsp chili powder, salt","1/4 cup oil","Corn tortillas, onion, cilantro, salsa"],
+ steps:["Whisk everything but the steak into a marinade and marinate 2 to 8 hours (not longer, the citrus turns it mushy).","Heat the griddle to high. Pat the steak dry.","Sear 3 to 4 minutes a side without moving it, to 130 to 135°F.","Rest 5 minutes, slice thin against the grain, then chop.","Warm tortillas in the rendered fat and build tacos with onion, cilantro and salsa."],
+ tip:"Skirt steak has two grain directions. Cut it into 5 inch sections first, then slice each across its grain.",src:SRC.gs},
+{id:"mongolian-beef",name:"Mongolian Beef",cooker:"BS",type:"Beef",region:"Chinese",mins:25,
+ desc:"Cornstarch-crisped flank steak tossed in a sticky brown sugar, soy and ginger glaze with scallions.",
+ ing:["1.5 lb flank steak, sliced thin against the grain","1/3 cup cornstarch","1/2 cup soy sauce (low sodium)","1/2 cup brown sugar","1/3 cup water","1 Tbsp fresh ginger, 4 garlic cloves, minced","1 bunch green onions, 2 inch pieces","Oil, steamed rice"],
+ steps:["Simmer soy, water, brown sugar, ginger and garlic 2 minutes on a side burner until the sugar dissolves.","Toss the beef in cornstarch until coated.","Heat the griddle to medium-high, add a generous slick of oil and spread the beef in one layer. Don't crowd it.","Cook until crisp on both sides, about 4 minutes.","Pile it up, pour the sauce over, add the green onions and toss 1 minute until glossy. Serve on rice."],
+ tip:"Keep the sauce contained by pushing the meat into a tight pile before you pour.",src:SRC.gs},
+{id:"bulgogi",name:"Korean Beef Bulgogi",cooker:"BS",type:"Beef",region:"Korean",mins:30,
+ desc:"Thin ribeye marinated in pear, soy and sesame, charred fast for lettuce wraps or rice bowls.",
+ ing:["2 lb ribeye, shaved thin","1/2 Asian pear (or apple), grated","1/2 cup soy sauce","3 Tbsp brown sugar","2 Tbsp sesame oil","5 garlic cloves and 1 Tbsp ginger, grated","1 onion, sliced; 4 green onions","Gochujang, lettuce, rice, sesame seeds"],
+ steps:["Mix pear, soy, sugar, sesame oil, garlic and ginger. Marinate the beef and sliced onion 1 to 4 hours.","Heat the griddle to high and oil it.","Lay the beef out in a thin layer. Let it char 1 to 2 minutes before moving it.","Toss until just cooked through, add the green onions at the end.","Serve with rice, lettuce leaves, gochujang and sesame seeds."],
+ tip:"The grated pear is the tenderizer. Don't skip it, and don't go past 4 hours.",src:SRC.owyd},
+{id:"patty-melt",name:"Patty Melt",cooker:"BS",type:"Beef",region:"American",mins:45,
+ desc:"Thin beef patties, deeply caramelized onions and Swiss on buttery griddled rye.",
+ ing:["1.5 lb ground beef, in thin oval patties","2 large yellow onions, sliced","12 slices rye bread","12 slices Swiss (or half Swiss, half American)","Butter, salt, pepper, Worcestershire"],
+ steps:["Start the onions on low-medium with butter and a pinch of salt. Cook 25 to 30 minutes until jammy brown, splashing with water or Worcestershire.","Heat another zone to medium-high and cook the patties about 3 minutes a side.","Butter the rye and lay it on medium heat. Add Swiss, a patty, onions and more Swiss, then close it.","Griddle 2 to 3 minutes a side, pressing lightly, until the bread is golden and the cheese runs."],
+ tip:"Start the onions first. They need the full 25 minutes.",src:SRC.pdf},
+{id:"flank-chimichurri",name:"Flank Steak with Chimichurri",cooker:"BS",type:"Beef",region:"South American",mins:30,
+ desc:"Hard-seared flank steak sliced thin under a bright parsley, garlic and vinegar chimichurri.",
+ ing:["2 lb flank steak","Kosher salt, fresh pepper, canola oil","Chimichurri: 2 cups packed parsley, 1/2 cup olive oil, 1/3 cup red wine vinegar, 4 garlic cloves, 1 tsp dried oregano, 1/2 tsp red pepper flakes, salt"],
+ steps:["Pulse the chimichurri ingredients until finely chopped (not pureed). Let it sit 20 minutes.","Salt the steak well, at least 40 minutes ahead if you can.","Heat the griddle to high, oil it and sear 4 to 5 minutes a side to 130°F.","Rest 10 minutes, slice thin against the grain and spoon chimichurri over it."],
+ tip:"Make the chimichurri an hour ahead. The garlic mellows and it tastes better.",src:SRC.pdf},
+{id:"birria-tacos",name:"Birria Quesatacos",cooker:"BS",type:"Beef",region:"Mexican",mins:240,
+ desc:"Braised chile beef tucked into consommé-dipped tortillas, crisped on the flat top with cheese, served with dipping broth.",
+ ing:["3 lb chuck roast, cubed","4 guajillo and 2 ancho chiles, stemmed and seeded","1 can crushed tomatoes, 1 onion, 6 garlic cloves","2 tsp cumin, 1 tsp oregano, 2 bay leaves, cinnamon stick","4 cups beef broth","Corn tortillas, Oaxaca or mozzarella cheese","Onion, cilantro, lime"],
+ steps:["Toast the chiles, then simmer them with tomatoes, onion, garlic and spices 10 minutes and blend smooth.","Brown the beef, add the chile sauce and broth, and braise covered 3 hours (or pressure cook 60 minutes) until it shreds.","Shred the beef. Skim the red fat off the top of the consommé and save it.","Medium griddle: dip each tortilla in the fat, lay it down, add cheese and beef and fold.","Crisp 2 minutes a side and serve with a cup of hot consommé for dipping."],
+ tip:"Braise the day before. The fat sets on top overnight in the fridge and lifts right off for dipping.",src:SRC.gs},
+{id:"chopped-cheese",name:"NYC Chopped Cheese",cooker:"BS",type:"Beef",region:"American",mins:20,
+ desc:"The bodega classic: ground beef and onions chopped on the flat top, smothered in American cheese on a hero.",
+ ing:["1.5 lb 80/20 ground beef","1 onion, diced","Salt, pepper, garlic powder, adobo","8 slices American cheese","4 hero or hoagie rolls","Shredded lettuce, tomato, mayo, ketchup"],
+ steps:["Medium-high heat. Cook the onions until soft.","Add the beef in big pieces, season, and chop it up with two spatulas as it browns.","Mix in the onions, form 4 long piles and cover each with 2 slices of cheese. Dome until melted.","Toast the rolls, load them with lettuce, tomato and sauces, and scoop the meat in."],
+ tip:"Chop it fine. That's what makes it a chopped cheese.",src:SRC.gs},
+{id:"yakisoba",name:"Teriyaki Steak Yakisoba",cooker:"BS",type:"Beef",region:"Japanese",mins:25,
+ desc:"Seared sirloin, cabbage and chewy yakisoba noodles tossed in a sweet teriyaki sauce.",
+ ing:["1.5 lb sirloin, thin strips","3 packs yakisoba noodles (or 1 lb ramen-style)","3 cups shredded cabbage, 1 carrot, 1 onion","1/2 cup teriyaki sauce plus 2 Tbsp yakisoba or oyster sauce","Sesame oil, green onions, sesame seeds"],
+ steps:["High heat and oil. Sear the steak 2 minutes and move it to a cool zone.","Cook the onion, carrot and cabbage 3 to 4 minutes.","Loosen the noodles with a splash of water on the griddle.","Combine everything, pour the sauces over and toss 2 minutes until it's glazed.","Finish with sesame oil, green onions and sesame seeds."],
+ tip:"Rinse packaged noodles under hot water first so they separate without breaking.",src:SRC.owyd},
+{id:"crunchwrap",name:"Crunchwrap Supremes",cooker:"BS",type:"Beef",region:"Mexican",mins:30,
+ desc:"Seasoned beef, nacho cheese and a crunchy tostada folded into a giant tortilla and griddled into a sealed hexagon.",
+ ing:["1 lb ground beef and 1 packet taco seasoning","6 burrito-size flour tortillas plus 2 extra, cut into patches","6 tostada shells","Nacho cheese sauce, sour cream","Shredded lettuce, diced tomato, shredded cheese"],
+ steps:["Brown the beef with the taco seasoning.","Lay a big tortilla flat: beef, nacho cheese, tostada, sour cream, lettuce, tomato, cheese.","Cap the center with a tortilla patch and fold the edges over in pleats.","Place it seam side down on a medium, oiled griddle, press lightly and cook 2 to 3 minutes a side until crisp."],
+ tip:"Always start seam side down. The heat seals the folds before you flip.",src:SRC.bsp},
+
+/* ================= BLACKSTONE: CHICKEN ================= */
+{id:"chicken-fajitas",name:"Chicken Fajitas",cooker:"BS",type:"Chicken",region:"Mexican",mins:30,pick:1,
+ desc:"Chile-lime chicken strips and charred peppers and onions, all finishing at the same time.",
+ ing:["2 lb chicken thighs, sliced into strips","3 bell peppers and 1 large onion, sliced","Juice of 2 limes, 3 Tbsp oil","2 tsp chili powder, 1 tsp each cumin, smoked paprika, garlic powder; salt","Flour tortillas, guac, sour cream, pico"],
+ steps:["Toss the chicken with the lime, oil and spices. Rest 30 minutes.","Heat the griddle to medium-high. Veggies on one side with oil and salt, chicken on the other.","Let the chicken sear 4 minutes before flipping; toss the veggies now and then until charred at the edges.","When the chicken hits 175°F, combine everything and squeeze fresh lime over it.","Warm the tortillas on the edge of the griddle and serve."],
+ tip:"Use thighs. They stay juicy on high heat where breasts dry out.",src:SRC.pdf},
+{id:"hibachi-chicken",name:"Hibachi Chicken & Fried Rice",cooker:"BS",type:"Chicken",region:"Japanese",mins:35,pick:1,
+ desc:"Steakhouse-style garlic butter chicken with egg fried rice and yum yum sauce, all on one griddle.",
+ ing:["2 lb chicken breast or thigh, 1 inch cubes","6 cups day-old cooked rice","3 eggs, 1 cup peas and carrots, 1 onion","1 stick butter mixed with 4 cloves minced garlic","Soy sauce, teriyaki, sesame oil","Yum yum sauce: 1 cup mayo, 1 Tbsp tomato paste, 1 Tbsp melted butter, 1 tsp sugar, garlic powder, paprika, a splash of water"],
+ steps:["Stir the yum yum sauce together and chill it.","Medium-high heat. Rice zone: a pat of garlic butter, onion, peas and carrots, then the rice. Spread it out and let it crisp.","Push the rice aside, scramble the eggs and fold them in with soy sauce and more garlic butter.","Chicken zone: garlic butter, then the chicken. Sear, then finish with soy and a splash of teriyaki until it hits 165°F.","Serve with yum yum sauce."],
+ tip:"Cold rice is non-negotiable. Fresh rice steams and turns to paste.",src:["The Food Hussy: Hibachi on the Blackstone","https://www.thefoodhussy.com/hibachi-on-the-blackstone/"]},
+{id:"orange-chicken",name:"Orange Chicken",cooker:"BS",type:"Chicken",region:"Chinese",mins:30,
+ desc:"Cornstarch-crisped chicken glazed in a zesty orange, ginger and brown sugar sauce.",
+ ing:["3 lb chicken breast, 1 inch chunks","1/2 cup cornstarch","Sauce: 3/4 cup water, 1/4 cup soy, 1/2 cup brown sugar, 1/3 cup white vinegar, zest of 1 orange, 2 Tbsp orange juice, 2 tsp each garlic and ginger, 1 tsp red pepper flakes","Oil, white rice"],
+ steps:["Mix the sauce and set it aside.","Toss the chicken in cornstarch until fully coated.","Medium-high griddle with a couple tablespoons of oil. Cook the chicken until golden.","At about 90% done, pour half the sauce over and toss, then add the rest.","Toss 1 to 2 minutes until the sauce thickens and serve over rice."],
+ tip:"Add the sauce in two pours so it glazes instead of pooling and running off the griddle.",src:SRC.pdf},
+{id:"general-tso",name:"General Tso's Chicken",cooker:"BS",type:"Chicken",region:"Chinese",mins:30,
+ desc:"The takeout favorite with a sweet, tangy, chile-flecked sauce made right on the flat top.",
+ ing:["3 lb chicken breast, 1 inch chunks","1/2 cup cornstarch, 1 cup green onions","Sauce: 3/4 cup sugar, 1/2 cup soy, 1/4 cup white vinegar, 1/4 cup Shaoxing wine or sherry, 14.5 oz chicken broth, 1.5 tsp garlic, 1 tsp ginger, 2 to 3 tsp red pepper flakes","Oil, white rice"],
+ steps:["Mix the sauce ingredients.","Coat the chicken in cornstarch.","Medium-high heat with oil. Brown the chicken until golden and about 90% cooked.","Pour half the sauce and toss, then the rest with the green onions.","Keep it moving 1 to 2 minutes until it's thick and glossy."],
+ tip:"For more kick, blister a handful of dried red chiles in the oil before the chicken goes on.",src:SRC.pdf},
+{id:"chicken-piccata",name:"Chicken Piccata Pasta",cooker:"BS",type:"Chicken",region:"European",mins:30,
+ desc:"Floured chicken cutlets in a lemon, caper and butter pan sauce over pasta.",
+ ing:["2 large chicken breasts, butterflied into thin cutlets","1/2 cup flour, salt, pepper","2 Tbsp olive oil, 4 Tbsp butter","1/2 cup chicken broth, juice of 2 lemons, 3 Tbsp capers","3 garlic cloves","1 lb angel hair or linguine, cooked; parsley"],
+ steps:["Season and dredge the cutlets in flour.","Medium-high heat with oil and a little butter. Cook 3 to 4 minutes a side until golden and 165°F. Move to a cool zone.","In the same spot, add the garlic, then broth, lemon and capers, and corral it with spatulas (or use a small pan on the griddle).","Swirl in the rest of the butter and toss the pasta through it.","Lay the chicken on top and spoon the sauce over."],
+ tip:"A cheap half-sheet pan or skillet set right on the griddle holds the sauce.",src:SRC.pdf},
+{id:"cajun-pasta",name:"Creamy Cajun Chicken Pasta",cooker:"BS",type:"Chicken",region:"Cajun",mins:30,
+ desc:"Blackened chicken, andouille and peppers in a spicy parmesan cream sauce.",
+ ing:["1.5 lb chicken thighs, bite size","8 oz andouille sausage, sliced","1 bell pepper and 1 onion, diced","2 Tbsp Cajun seasoning","1.5 cups heavy cream, 1 cup parmesan","1 lb penne, cooked al dente","Butter, green onions"],
+ steps:["Toss the chicken in half the Cajun seasoning.","Medium-high heat with butter. Brown the andouille, then the chicken, until blackened at the edges.","Add the peppers and onions and cook until soft.","In a pan on the griddle, reduce the cream with the rest of the seasoning 3 minutes, then stir in the parmesan.","Toss the pasta, meat and veggies in the sauce and top with green onions."],
+ tip:"Cajun blends vary a lot in salt. Taste before adding any more.",src:SRC.bs101},
+{id:"greek-gyros",name:"Greek Chicken Gyros",cooker:"BS",type:"Chicken",region:"Mediterranean",mins:40,
+ desc:"Lemon-oregano chicken seared crisp and piled into warm pitas with homemade tzatziki.",
+ ing:["2 lb chicken thighs","Marinade: 1/3 cup olive oil, juice of 2 lemons, 4 garlic cloves, 2 tsp oregano, 1 tsp each paprika and cumin, salt","Tzatziki: 2 cups Greek yogurt, 2 cucumbers peeled, seeded and grated and squeezed, 1 garlic clove, 2 Tbsp white wine vinegar, dill","Pitas, tomato, red onion, feta"],
+ steps:["Marinate the chicken 2 to 8 hours.","Make the tzatziki. Wring the cucumber dry so it isn't watery.","Medium-high heat: cook the thighs 5 to 6 minutes a side to 175°F. Rest, then slice thin.","Put the sliced chicken back on the griddle for 1 minute to crisp the edges.","Warm the pitas with a little oil and build the gyros."],
+ tip:"The second sear on the sliced meat mimics shaved gyro meat from a spit.",src:SRC.pdf},
+{id:"nashville-hot",name:"Nashville Hot Chicken Sandwiches",cooker:"BS",type:"Chicken",region:"Southern",mins:40,
+ desc:"Pounded thigh cutlets pan-fried crisp on the flat top and brushed with cayenne hot oil, with pickles and slaw.",
+ ing:["6 boneless thighs, pounded even","2 cups buttermilk plus 1 Tbsp hot sauce","2 cups flour seasoned with salt, pepper, garlic powder, paprika","Hot oil: 1/2 cup oil, 2 to 3 Tbsp cayenne, 1 Tbsp brown sugar, 1 tsp each paprika and garlic powder","Brioche buns, dill pickles, coleslaw"],
+ steps:["Soak the chicken in buttermilk and hot sauce 1 to 12 hours.","Dredge in seasoned flour, dip back in the buttermilk, and dredge again.","Medium heat (350 to 375°F) with 1/4 inch of oil pooled on the griddle. Cook 5 to 6 minutes a side until deep golden and 175°F.","Warm the hot oil ingredients in a small pan and brush them over the chicken.","Build on toasted buns with pickles and slaw."],
+ tip:"Keep the heat at medium. Too hot and the breading burns before the thigh is done.",src:SRC.mich},
+{id:"chicken-al-pastor",name:"Chicken al Pastor Tacos",cooker:"BS",type:"Chicken",region:"Mexican",mins:35,
+ desc:"Achiote-pineapple marinated chicken charred with fresh pineapple on the flat top.",
+ ing:["2 lb chicken thighs","3 Tbsp achiote paste, 1/2 cup pineapple juice, 2 Tbsp vinegar, 2 chipotles in adobo, 3 garlic cloves, 1 tsp cumin, 1 tsp oregano, salt","1/2 fresh pineapple, sliced into rings","Corn tortillas, white onion, cilantro, lime, salsa verde"],
+ steps:["Blend everything but the chicken and pineapple, and marinate the chicken 2 to 12 hours.","Medium-high heat: sear the chicken 5 to 6 minutes a side to 175°F; char the pineapple rings next to it.","Rest the chicken, chop it fine with the pineapple, and crisp it on the griddle 1 more minute.","Serve on warm tortillas with onion, cilantro, lime and salsa verde."],
+ tip:"Chop the meat and pineapple together on the griddle. The juice glazes the edges.",src:SRC.pdf},
+
+/* ================= BLACKSTONE: SIDES ================= */
+{id:"elote",name:"Mexican Street Corn (Elote)",cooker:"BS",type:"Side",region:"Mexican",mins:15,pick:1,
+ desc:"Charred corn slathered in mayo and lime, rolled in cotija with chili powder.",
+ ing:["6 ears corn, husked","1/2 cup mayo (or half mayo, half crema)","1 cup cotija, crumbled","Chili powder or Tajín","2 limes, cilantro","Butter"],
+ steps:["Heat the griddle to high and butter it.","Roll the corn around every minute or so until charred in spots, 8 to 10 minutes.","Brush it with mayo, then roll it in cotija.","Dust with chili powder or Tajín, finish with a lime squeeze and cilantro."],
+ tip:"For esquites, cut the kernels off, char them flat and toss everything in a bowl.",src:SRC.gs},
+{id:"smashed-potatoes",name:"Loaded Smashed Potatoes",cooker:"BS",type:"Side",region:"American",mins:40,
+ desc:"Parboiled baby potatoes smashed flat and fried crispy, then loaded with cheddar and bacon.",
+ ing:["2 lb baby gold potatoes","4 Tbsp butter plus oil","Salt, pepper, garlic powder","1.5 cups shredded cheddar","6 slices bacon, cooked and crumbled","Sour cream, chives"],
+ steps:["Boil the potatoes in salted water 15 to 20 minutes until fork tender. Drain and let them steam dry.","Medium-high griddle with butter and oil. Set the potatoes down and smash each one flat with a burger press or spatula.","Season and leave them alone 5 to 6 minutes until crusty, then flip and crisp the other side.","Top with cheddar and bacon, dome until melted, and finish with sour cream and chives."],
+ tip:"Let them fully steam dry after boiling. Wet potatoes won't crisp.",src:SRC.mich},
+{id:"hibachi-veg",name:"Hibachi Vegetables",cooker:"BS",type:"Side",region:"Japanese",mins:15,
+ desc:"Zucchini, onion, mushrooms and broccoli seared in garlic butter and soy, steakhouse style.",
+ ing:["2 zucchini, half moons","1 large onion, thick slices","8 oz mushrooms, sliced","2 cups broccoli florets","3 Tbsp butter mixed with 2 minced garlic cloves","2 Tbsp soy sauce, 1 Tbsp teriyaki, sesame seeds"],
+ steps:["High heat, a little oil. Start the broccoli and onions first, since they take the longest. Add a splash of water and dome 2 minutes to steam the broccoli.","Add the zucchini and mushrooms, then the garlic butter.","Toss until charred at the edges but still crisp, 5 to 6 minutes.","Finish with soy and teriyaki and a pinch of sesame seeds."],
+ tip:"Don't crowd them. Give the veggies room so they sear instead of steaming.",src:["Homemade Food Junkie: Blackstone Hibachi","https://www.homemadefoodjunkie.com/ultimate-blackstone-hibachi-recipe/"]},
+{id:"honey-brussels",name:"Black Pepper Honey Brussels Sprouts",cooker:"BS",type:"Side",region:"American",mins:20,
+ desc:"Halved sprouts seared cut side down until deeply caramelized, glazed in honey and cracked pepper.",
+ ing:["1.5 lb Brussels sprouts, trimmed and halved","3 Tbsp oil","3 Tbsp honey","1 tsp coarse black pepper, salt","1 Tbsp balsamic (optional), parmesan"],
+ steps:["Medium-high heat and oil. Place the sprouts cut side down and leave them alone 5 to 6 minutes until dark brown.","Toss, add 2 Tbsp of water and dome 2 minutes to finish cooking through.","Uncover, drizzle the honey, pepper and balsamic, and toss 1 minute until glazed.","Top with shaved parmesan."],
+ tip:"Cut side down and hands off. That flat, dark sear is where the flavor is.",src:SRC.gg},
+{id:"fried-potatoes-onions",name:"Southern Fried Potatoes & Onions",cooker:"BS",type:"Side",region:"Southern",mins:35,
+ desc:"Skillet-style diced potatoes and onions fried in bacon grease until crispy and golden.",
+ ing:["2.5 lb russet or gold potatoes, 1/2 inch dice","1 large onion, diced","4 slices bacon (for the grease)","Salt, pepper, paprika, garlic powder","Green onions"],
+ steps:["Cook the bacon on medium, then crumble it and leave the grease on the griddle.","Spread the potatoes in the grease in one layer, season them and dome 8 minutes to steam them tender.","Uncover, add the onions and fry, flipping in sections every few minutes, until crispy, about 15 minutes.","Toss the bacon back in and top with green onions."],
+ tip:"Parboil or microwave the potatoes 5 minutes first to cut the griddle time in half.",src:SRC.mich},
+{id:"fried-cabbage",name:"Southern Fried Cabbage with Bacon",cooker:"BS",type:"Side",region:"Southern",mins:25,
+ desc:"Tender, caramelized cabbage and onion tossed in bacon fat with a touch of vinegar and heat.",
+ ing:["1 head green cabbage, chopped","1 onion, sliced","6 slices bacon, chopped","2 Tbsp butter","1 Tbsp apple cider vinegar, pinch of sugar","Salt, pepper, red pepper flakes"],
+ steps:["Medium heat: render the bacon until crisp and set it aside.","Cook the onion in the bacon fat until soft.","Pile on the cabbage with the butter and seasoning, dome it 5 minutes, then toss.","Cook uncovered until tender and browned in spots, 10 minutes more.","Finish with the vinegar, sugar and bacon."],
+ tip:"It cooks down to about a third. Pile it high.",src:SRC.gg},
+{id:"lo-mein",name:"Garlic Lo Mein",cooker:"BS",type:"Side",region:"Chinese",mins:15,
+ desc:"Chewy egg noodles, cabbage and carrots tossed in a garlicky soy and oyster sauce.",
+ ing:["1 lb lo mein or spaghetti noodles, cooked and rinsed","2 cups shredded cabbage, 1 carrot julienned, 4 green onions","4 garlic cloves","Sauce: 3 Tbsp soy, 2 Tbsp oyster sauce, 1 Tbsp dark soy, 1 tsp sugar, 2 tsp sesame oil"],
+ steps:["Mix the sauce.","High heat and oil. Flash the garlic 30 seconds, then add the cabbage and carrot for 2 minutes.","Add the noodles and toss them apart with two spatulas.","Pour the sauce over and toss 2 minutes until the noodles are coated and slightly charred. Add the green onions."],
+ tip:"Toss the cooked noodles with a little oil first so they don't clump on the steel.",src:SRC.gs},
+{id:"mexican-rice",name:"Griddle Mexican Rice",cooker:"BS",type:"Side",region:"Mexican",mins:15,
+ desc:"Cooked rice fried with green chiles, tomato sauce and cumin until toasty.",
+ ing:["4 cups cooked rice, cold","2 cans (4 oz) diced green chiles","2 cans (4 oz) tomato sauce","1/2 onion, diced; 2 garlic cloves","1 tsp cumin, 1 tsp chicken bouillon, salt, pepper","Oil, cilantro"],
+ steps:["Medium-high heat with oil. Soften the onion and garlic.","Add the rice and spread it thin so it toasts a couple of minutes.","Add the chiles, tomato sauce, cumin and bouillon and toss until the liquid cooks off and the rice turns orange.","Finish with cilantro."],
+ tip:"From the fajita page of Blackstone's own cookbook. Serve with the fajitas.",src:SRC.pdf},
+
+/* ================= BLACKSTONE: APPETIZERS ================= */
+{id:"lettuce-wraps",name:"Mongolian Chicken Lettuce Wraps",cooker:"BS",type:"Appetizer",region:"Chinese",mins:25,
+ desc:"Crispy cornstarch-coated chicken in a sweet soy-ginger glaze, spooned into butter lettuce cups.",
+ ing:["2.5 lb chicken thighs, 2 inch pieces","1/2 cup cornstarch, 1/4 cup oil","3/4 cup soy sauce, 1/2 cup brown sugar, 1/2 cup water","1 Tbsp ginger, 2 to 4 garlic cloves","4 green onions","2 heads butter lettuce"],
+ steps:["Heat the soy, water, sugar, garlic and ginger until the sugar dissolves.","Coat the chicken in cornstarch.","Medium-high heat with oil: cook until crispy outside.","Add the sauce and half the green onions and let it thicken 1 minute.","Spoon into lettuce leaves and top with the rest of the onions."],
+ tip:"Serve with rice and sriracha on the side.",src:SRC.pdf},
+{id:"thai-quesadillas",name:"Thai Chicken Quesadillas",cooker:"BS",type:"Appetizer",region:"Thai",mins:25,
+ desc:"Sweet chili chicken, Monterey Jack, cilantro and carrots in crispy tortillas, cut into wedges.",
+ ing:["1 lb chicken breast, diced","2 cups sweet chili sauce (Mae Ploy)","4 cups shredded Monterey Jack","1 cup shredded carrots, 4 green onions, cilantro","8 flour tortillas","Peanuts (optional)"],
+ steps:["Medium-high heat: cook the chicken, then toss it in about half the sweet chili sauce.","Drop to medium. Lay the tortillas down and cover half of each with cheese, chicken, carrots, onions and cilantro, then more cheese.","Fold and cook 2 to 3 minutes a side until golden and melted.","Cut into wedges and serve with the rest of the sweet chili sauce for dipping."],
+ tip:"Sprinkle a little cheese straight on the griddle under each one for a crispy cheese crust.",src:SRC.pdf},
+{id:"gyoza",name:"Crispy Potstickers (Gyoza)",cooker:"BS",type:"Appetizer",region:"Korean",mins:20,
+ desc:"Dumplings seared crisp on the bottom and steamed under the dome, with a soy-vinegar dip. Kimchi-pork gyoza are the pick.",
+ ing:["30 frozen or homemade dumplings (kimchi or pork)","2 Tbsp oil, 1/3 cup water","Dip: 1/4 cup soy, 2 Tbsp rice vinegar, 1 tsp sesame oil, chili crisp, green onions"],
+ steps:["Medium-high heat with oil. Set the dumplings flat side down, close together.","Sear 2 minutes until the bottoms are golden.","Splash the water around them and dome immediately. Steam 4 to 5 minutes until the water is gone.","Uncover and crisp 1 more minute. Serve with the dip."],
+ tip:"Sear, steam, sear.",src:["Or Whatever You Do: Blackstone Kimchi Gyoza","https://www.orwhateveryoudo.com/2021/03/blackstone-kimchi-gyoza.html"]},
+{id:"loaded-tots",name:"Loaded Tater Tots",cooker:"BS",type:"Appetizer",region:"American",mins:25,
+ desc:"Crispy griddled tots buried in cheddar, bacon, jalapeño, sour cream and green onions.",
+ ing:["2 lb bag frozen tater tots","3 Tbsp oil","2 cups cheddar","6 slices bacon, crumbled","Pickled jalapeños, sour cream, green onions, ranch"],
+ steps:["Medium heat with oil. Spread the tots out while still frozen.","Cook 15 to 18 minutes, turning every few minutes, until crunchy on all sides.","Pile them together, cover with cheese and bacon, and dome until melted.","Top with jalapeños, sour cream and green onions."],
+ tip:"Medium, not high. High heat burns the outside while the middle is still frozen.",src:SRC.mich},
+{id:"chorizo-fries",name:"Chorizo Queso Loaded Fries",cooker:"BS",type:"Appetizer",region:"Mexican",mins:30,
+ desc:"Griddle-crisped fries topped with spicy chorizo, melted queso, pickled onions and cilantro.",
+ ing:["2 lb frozen fries","8 oz Mexican chorizo","2 cups queso (store-bought or white American plus milk)","Pickled red onions, jalapeños, cilantro, crema, lime"],
+ steps:["Medium heat with oil: crisp the fries, turning often, 15 minutes.","Brown the chorizo on the other side, breaking it up.","Warm the queso in a pan on the griddle.","Pile the fries up and cover them with chorizo, queso and the toppings."],
+ tip:"Drain the chorizo on paper towels or it turns the fries soggy.",src:["Blackstone: Chorizo Queso Loaded Fries","https://blackstoneproducts.com/blogs/recipes/chorizo-queso-loaded-fries"]},
+{id:"pretzel-sliders",name:"Pretzel Bun Sliders",cooker:"BS",type:"Appetizer",region:"American",mins:25,
+ desc:"Mini bacon cheeseburgers stacked with three cheeses on soft pretzel slider buns.",
+ ing:["2 lb ground beef, in 12 small patties","1 package bacon","Cheddar, provolone and baby Swiss slices","12 pretzel slider buns","Grainy mustard, pickles"],
+ steps:["Cook the bacon and cut it to fit the buns.","Medium-high heat: smash the slider patties thin and season them.","Flip, stack a slice of each cheese, and dome until melted.","Toast the buns, add mustard, a patty, bacon and a pickle."],
+ tip:"Use grainy beer mustard, not ketchup.",src:SRC.pdf},
+{id:"cajun-shrimp",name:"Cajun Garlic Butter Shrimp",cooker:"BS",type:"Appetizer",region:"Cajun",mins:10,
+ desc:"Jumbo shrimp seared fast in garlic butter and Cajun spice with a hit of lemon. Serve with toothpicks and bread.",
+ ing:["2 lb jumbo shrimp, peeled, tails on","1 stick butter, 6 garlic cloves minced","1.5 Tbsp Cajun seasoning","Juice of 1 lemon, parsley","Crusty bread"],
+ steps:["Toss the shrimp with the Cajun seasoning.","High heat: melt half the butter with the garlic.","Lay the shrimp down 1.5 minutes, flip, and add the rest of the butter.","Pull as soon as they curl into a C (an O means overcooked), and finish with lemon and parsley."],
+ tip:"Total cook time is under 4 minutes. Have the platter ready.",src:SRC.gs},
+
+/* ================= PIT BARREL: BEEF ================= */
+{id:"hanging-brisket",name:"Hanging Brisket",cooker:"PBC",type:"Beef",region:"BBQ",mins:600,pick:1,
+ desc:"A whole packer split into point and flat, hung on hooks and smoked in its own drippings, then wrapped and rested.",
+ ing:["12 to 14 lb whole packer brisket","Salt and 16-mesh black pepper (50/50), or PBC Beef & Game rub","Butcher paper or foil","2 PBC hooks"],
+ steps:["Trim the hard fat to 1/4 inch and split the point from the flat along the fat seam so each piece fits in the barrel.","Season heavily and let it sit while the fire lights.","Light the PBC the standard way (see Cooker Basics). Hook each piece through the thick end and hang both from the rebar.","Smoke about 5 hours until the bark is set and the flat reads 165 to 170°F.","Pull, wrap tight in paper or foil, and set it on the grate (or back on hooks in foil) until it probes like butter, 200 to 205°F.","Rest wrapped in a cooler at least 1 hour, better 2 or 3. Slice the flat against the grain; cube the point for burnt ends."],
+ tip:"Hanging lets the fat drip onto the coals and smoke back onto the meat. That's the Pit Barrel flavor. Keep the lid shut.",src:[ "Pit Barrel Cooker Co. recipes", u("")]},
+{id:"tri-tip",name:"Santa Maria Tri-Tip",cooker:"PBC",type:"Beef",region:"American",mins:75,pick:1,
+ desc:"Hung and smoked to medium rare, then seared over the open barrel. A California classic that suits the PBC perfectly.",
+ ing:["2.5 to 3 lb tri-tip","Santa Maria rub: 1 Tbsp each kosher salt, black pepper, garlic powder; 1 tsp each onion powder and dried rosemary; 1/2 tsp cayenne","Pinquito beans, salsa and garlic bread on the side"],
+ steps:["Season the tri-tip well, ideally the night before.","Light the PBC. Hook the thick end and hang it.","Smoke until the thickest part reads 120 to 125°F, about 45 to 60 minutes.","Pull the rebar, set the grate on and sear the tri-tip over the open barrel 1 to 2 minutes a side to 130 to 135°F.","Rest 10 minutes and slice across the grain. The grain changes direction at the bend, so turn your knife there."],
+ tip:"Slice it in two halves at the bend where the grain changes direction, then cut each half against its grain.",src:["Pit Barrel: Tri-Tip Steak",u("tri-tip-steak")]},
+{id:"dino-ribs",name:"Beef Dino Ribs",cooker:"PBC",type:"Beef",region:"BBQ",mins:420,
+ desc:"Massive beef plate short ribs hung whole, smoked to a jiggly, peppery bark.",
+ ing:["1 rack beef plate ribs (3 to 4 bones, about 5 lb)","Coarse salt and pepper, or a beef rub","Beef broth or apple cider vinegar in a spray bottle (optional)"],
+ steps:["Peel the membrane off the bone side and trim the loose fat.","Season heavily on all sides.","Hang the rack from two hooks through the meat between the bones.","Smoke 6 to 8 hours, spritzing after the bark sets if it looks dry, until a probe slides in like butter at 203 to 208°F.","Rest wrapped 45 to 60 minutes before cutting between the bones."],
+ tip:"Temperature is only a guide. Probe tender is the real test. It should feel like probing soft butter.",src:["Pit Barrel: Beef Dino Ribs",u("beef-ribs-1")]},
+{id:"prime-rib",name:"Smoked Prime Rib",cooker:"PBC",type:"Beef",region:"American",mins:240,
+ desc:"A bone-in rib roast crusted in garlic and herbs, hung in the barrel to an edge-to-edge pink center.",
+ ing:["1 bone-in prime rib roast (3 to 4 bones, 7 to 9 lb)","Kosher salt, dry-brined overnight","Paste: 1/4 cup olive oil, 8 garlic cloves, 2 Tbsp each fresh rosemary and thyme, coarse pepper","Horseradish cream: sour cream, prepared horseradish, lemon, salt"],
+ steps:["Dry brine uncovered in the fridge overnight with 1 tsp kosher salt per pound.","Rub on the garlic-herb paste. Tie between the bones if they're loose.","Hang with two hooks under the bones, or smoke it on the grate bone side down.","Smoke to 120°F for medium rare, about 3 to 4 hours.","Rest 20 to 30 minutes (it climbs to about 130°F), then carve off the bones and slice thick."],
+ tip:"Carve the bones off and put them back on the grate while the roast rests.",src:["Pit Barrel: Delicious Smoked Prime Rib",u("delicious-smoked-prime-rib")]},
+{id:"picanha",name:"Brazilian Picanha",cooker:"PBC",type:"Beef",region:"South American",mins:60,
+ desc:"Top sirloin cap bent into horseshoe steaks with the fat cap on, salted and smoked hot, churrascaria style.",
+ ing:["1 whole picanha (sirloin cap), 2.5 to 3 lb, fat cap on","Coarse sea salt","Salsa criolla: tomato, onion and bell pepper finely diced, parsley, red wine vinegar, olive oil, salt"],
+ steps:["Cut the picanha with the grain into 3 thick steaks (about 2 inches).","Score the fat in a crosshatch and salt it heavily.","Bend each steak into a C with the fat outside and thread onto a skewer, or hook each one and hang it.","Smoke to 125°F, about 35 to 45 minutes, then sear fat side down on the grate until it crackles.","Slice thin against the grain and serve with salsa criolla."],
+ tip:"Leave the fat cap on. It renders and bastes the meat.",src:["Pit Barrel: Brazilian-Style Picanha",u("%F0%9F%94%A5-brazilian-style-picanha-with-a-classic-chimichurri-sauce")]},
+{id:"barbacoa",name:"Beef Barbacoa Tacos",cooker:"PBC",type:"Beef",region:"Mexican",mins:360,
+ desc:"Chuck roast hung for smoke, then braised in a chipotle, cumin and lime broth until it pulls apart.",
+ ing:["3 to 4 lb chuck roast","Rub: salt, pepper, cumin, chili powder","Braise: 3 chipotles in adobo, 1 cup beef broth, juice of 2 limes, 1 Tbsp cider vinegar, 5 garlic cloves, 2 tsp oregano, 1 tsp cumin, 2 bay leaves","Corn tortillas, onion, cilantro, lime"],
+ steps:["Rub the chuck and hang it 2.5 to 3 hours until it reads about 165°F with a dark bark.","Blend the braise ingredients (except the bay leaves).","Set the chuck in a foil pan, pour the braise over, add the bay leaves and cover tightly with foil.","Return it to the grate for 2 to 3 hours until it shreds easily (about 205°F).","Shred it in the juices and serve on tortillas with onion, cilantro and lime."],
+ tip:"Dip the tortillas in the braising liquid and crisp them on the Blackstone.",src:["Pit Barrel: Beef Barbacoa Tacos",u("beef-barbacoa-tacos")]},
+{id:"coffee-tenderloin",name:"Coffee-Rubbed Beef Tenderloin",cooker:"PBC",type:"Beef",region:"Mexican",mins:75,
+ desc:"Whole tenderloin crusted in espresso, brown sugar and ancho, served with charred chipotle salsa.",
+ ing:["1 whole beef tenderloin, trimmed and tied (3 to 4 lb)","Rub: 2 Tbsp finely ground coffee, 1 Tbsp each brown sugar, ancho chile powder and kosher salt; 2 tsp each black pepper and garlic powder; 1 tsp cumin","Salsa: tomatoes, onion, jalapeño and garlic charred on the grate, blended with 1 to 2 chipotles, lime and cilantro"],
+ steps:["Tie the tenderloin every 1.5 inches so it cooks evenly. Coat it in the rub.","Hang from one hook through the thick end (or lay it on the grate).","Char the salsa veggies on the grate while it cooks.","Pull at 125°F for medium rare, 45 to 60 minutes.","Rest 10 minutes, slice into medallions and serve with the blended salsa."],
+ tip:"Fold the thin tail under and tie it so the whole roast is one even thickness.",src:["Pit Barrel: Coffee-Rubbed Beef Tenderloin",u("coffee-rubbed-beef-tenderloin-with-charred-chipotle-salsa")]},
+{id:"chuck-burnt-ends",name:"Poor Man's Burnt Ends",cooker:"PBC",type:"Beef",region:"BBQ",mins:420,
+ desc:"Chuck roast hung for bark, cubed and finished in a pan with butter, brown sugar and BBQ sauce. Candy.",
+ ing:["3 to 4 lb chuck roast","BBQ rub","1 cup Kansas City style BBQ sauce","1/4 cup brown sugar, 4 Tbsp butter, 2 Tbsp honey"],
+ steps:["Rub the chuck and hang it until it reaches 165 to 175°F with a deep bark, 3 to 4 hours.","Cut into 1 inch cubes and put them in a foil pan.","Toss with the sauce, brown sugar, butter and honey.","Set the uncovered pan on the grate for 1.5 to 2 hours, stirring once, until the cubes are tender and the sauce is sticky."],
+ tip:"Brisket-style burnt ends in half the time and cost.",src:SRC.pbc},
+
+/* ================= PIT BARREL: CHICKEN ================= */
+{id:"hanging-chicken",name:"Hanging Whole Chicken",cooker:"PBC",type:"Chicken",region:"BBQ",mins:120,pick:1,
+ desc:"The Pit Barrel signature: a whole bird hung by the neck over the coals for juicy meat and genuinely crisp skin.",
+ ing:["1 whole chicken, 4 to 5 lb","2 Tbsp oil","Poultry rub (salt, sugar, paprika, garlic, onion, pepper) or PBC All-Purpose","Kosher salt (for an overnight dry brine)"],
+ steps:["Optional but worth it: dry brine uncovered in the fridge overnight so the skin dries.","Oil and rub the bird inside and out.","Hook it through the neck cavity and one breast, going between the rib bones. Hang it from the rebar.","Smoke 1.5 to 2 hours (PBC runs about 275 to 310°F) until the breast reads 160 to 165°F and the thigh 175°F+.","Rest 10 minutes and carve."],
+ tip:"The PBC runs hotter than most smokers. That's why the skin actually crisps here. No need to finish it on a grill.",src:SRC.tw},
+{id:"smoked-wings",name:"Famous Smoked Wings",cooker:"PBC",type:"Chicken",region:"BBQ",mins:60,pick:1,
+ desc:"Wings smoked on the grate over the coals until rendered and crisp, sauced in the last few minutes.",
+ ing:["3 to 4 lb wings, split into flats and drums","2 Tbsp oil","All-purpose rub","1 cup BBQ or buffalo sauce (or hot honey: honey, hot sauce, butter)"],
+ steps:["Pat the wings very dry, then oil and season them.","Light the PBC and put the grate on. Lay the wings on it with the lid on.","Cook about 25 minutes, flip, and cook 15 to 20 minutes more to 185 to 195°F.","Toss in sauce and give them 5 to 10 more minutes to set it."],
+ tip:"Wings are better at 185 to 195°F than at 165°F. The collagen renders and the skin tightens.",src:["Pit Barrel: Famous Smoked Wings",u("famous-pbc-wings")]},
+{id:"jerk-chicken",name:"Jamaican Jerk Chicken",cooker:"PBC",type:"Chicken",region:"Caribbean",mins:90,
+ desc:"Leg quarters soaked in a fiery scotch bonnet, allspice and thyme marinade and hung over the coals.",
+ ing:["6 chicken leg quarters","Jerk paste: 1 bunch green onions, 2 to 4 scotch bonnets, 6 garlic cloves, 2 Tbsp ginger, 1/4 cup soy, 1/4 cup lime juice, 2 Tbsp brown sugar, 1 Tbsp allspice, 1 Tbsp thyme, 1 tsp cinnamon, 1/4 cup oil","Lime wedges"],
+ steps:["Blend the paste. Score the chicken to the bone and marinate 12 to 24 hours.","Hook each quarter through the thick end of the thigh and hang them.","Smoke 60 to 80 minutes until the thighs reach 180°F and the skin is dark and blistered.","Rest 5 minutes and serve with lime."],
+ tip:"Wear gloves with scotch bonnets. For less heat, seed them or use habaneros.",src:["Pit Barrel: Jamaican Jerk Ribs and Wings",u("jamaican-jerk-ribs-and-wings")]},
+{id:"tandoori",name:"Tandoori Chicken Kebabs",cooker:"PBC",type:"Chicken",region:"Indian",mins:60,
+ desc:"Yogurt-spiced chicken skewers with the smoky char of a tandoor, served over smoked yellow rice.",
+ ing:["2 lb chicken thighs, 1.5 inch chunks","Marinade: 1 cup plain yogurt, juice of 1 lemon, 4 garlic cloves, 1 Tbsp ginger, 2 tsp garam masala, 2 tsp smoked paprika, 1 tsp each cumin, coriander and turmeric, cayenne, salt","Red onion and bell pepper chunks, skewers"],
+ steps:["Marinate the chicken 4 to 12 hours.","Thread onto skewers alternating with onion and pepper.","Hang the skewers from hooks or lay them on the grate.","Cook 25 to 35 minutes, turning once, to 175°F with charred edges.","Serve with rice, naan and a cucumber raita."],
+ tip:"Hook the skewer through the top loop or tip and hang it. They cook evenly and char nicely.",src:["Pit Barrel: Tandoori Chicken Kebabs",u("tandoori-chicken-kebabs-with-easy-smoked-yellow-rice")]},
+{id:"alabama-white",name:"Alabama White Sauce Chicken",cooker:"PBC",type:"Chicken",region:"Southern",mins:100,
+ desc:"Split chicken halves smoked to crisp skin and dunked in tangy mayo, vinegar and horseradish white sauce.",
+ ing:["2 chickens, split in half lengthwise","BBQ rub","White sauce: 1.5 cups mayo, 1/3 cup cider vinegar, 1 Tbsp prepared horseradish, 1 Tbsp lemon juice, 2 tsp coarse pepper, 1 tsp each Dijon and garlic powder, pinch of cayenne"],
+ steps:["Whisk the white sauce and chill it at least an hour.","Season the chicken halves and hook each through the thick part of the leg.","Hang and smoke 75 to 90 minutes until the breast is 160°F and the thigh 175°F.","Dunk or brush with white sauce as they come off, and serve extra on the side."],
+ tip:"Sauce it at the end only. Mayo breaks and turns greasy over long heat.",src:SRC.pbc},
+{id:"chicken-tinga",name:"Smoked Chicken Tinga",cooker:"PBC",type:"Chicken",region:"Mexican",mins:120,
+ desc:"Smoked chicken thighs shredded into a smoky chipotle-tomato sauce for tostadas and tacos.",
+ ing:["3 lb boneless chicken thighs","Rub: salt, cumin, chili powder, garlic","Sauce: 1 can (14 oz) fire-roasted tomatoes, 3 chipotles in adobo, 1 onion (sliced), 3 garlic cloves, 1/2 cup chicken broth, 1 tsp oregano","Tostadas, refried beans, crema, queso fresco, avocado"],
+ steps:["Season the thighs and smoke on the grate or hooks 60 to 75 minutes to 175°F.","Blend the tomatoes, chipotles, garlic, oregano and broth.","Soften the onion in a pan, add the sauce and simmer 10 minutes (on the side burner or right on the griddle).","Shred the chicken into the sauce and simmer 5 minutes.","Pile onto tostadas with beans, crema, queso fresco and avocado."],
+ tip:"Smoke a double batch. Tinga freezes great for fast weeknight tacos.",src:["Pit Barrel: Chicken Tinga",u("chicken-tinga")]},
+{id:"char-siu-chicken",name:"Char Siu Chicken Thighs",cooker:"PBC",type:"Chicken",region:"Chinese",mins:75,
+ desc:"Chinese BBQ-style thighs glazed in hoisin, honey and five-spice, lacquered red and sticky.",
+ ing:["3 lb bone-in, skin-on chicken thighs","Marinade: 1/3 cup hoisin, 3 Tbsp soy, 3 Tbsp honey, 2 Tbsp Shaoxing wine or sherry, 1 Tbsp oyster sauce, 1 tsp five-spice, 3 garlic cloves, 1/2 tsp red food coloring (optional)","Extra honey for glazing, sesame seeds, green onions"],
+ steps:["Marinate overnight, saving 1/3 of the marinade separately for glazing (not from the raw chicken).","Hook each thigh through the thick end and hang it, or set it on the grate.","Cook 45 to 60 minutes to 175°F.","Mix the saved marinade with 2 Tbsp honey, brush it on and cook 10 more minutes to lacquer.","Top with sesame seeds and green onions."],
+ tip:"Adapted from Pit Barrel's Asian Duck. Works on a whole duck too.",src:["Pit Barrel: Asian Duck",u("asian-duck")]},
+
+/* ================= PIT BARREL: SIDES ================= */
+{id:"popper-mac",name:"Smoked Jalapeño Popper Mac n' Cheese",cooker:"PBC",type:"Side",region:"Southern",mins:75,pick:1,
+ desc:"Creamy three-cheese mac with cream cheese, jalapeños and bacon, smoked with a crispy top.",
+ ing:["1 lb cavatappi or elbows, cooked 2 minutes under","8 oz cream cheese","2 cups sharp cheddar, 1 cup pepper jack, 1/2 cup parmesan","2 cups whole milk, 4 Tbsp butter, 3 Tbsp flour","3 to 4 jalapeños, diced (some reserved in rings)","6 slices bacon, cooked and crumbled","Panko and butter for topping"],
+ steps:["Make a roux with the butter and flour, whisk in the milk until thick, then melt in the cream cheese and most of the cheddar and pepper jack.","Fold in the pasta, diced jalapeños and most of the bacon.","Pour into a foil pan and top with the rest of the cheese, the jalapeño rings, the bacon and buttered panko.","Set on the grate for 45 to 60 minutes until bubbling and smoky."],
+ tip:"Set it under hanging meat so the drippings season it.",src:["Pit Barrel: Smoked Jalapeño Popper Mac",u("smoked-jalapeno-popper-mac-n-cheese")]},
+{id:"drip-beans",name:"Pit Barrel Drip Beans",cooker:"PBC",type:"Side",region:"BBQ",mins:180,
+ desc:"BBQ baked beans set on the grate under hanging meat to catch the drippings. The best beans you'll ever make.",
+ ing:["3 cans (28 oz total) pork and beans, drained a bit","1 can kidney beans, drained","1/2 lb bacon or leftover brisket, chopped","1 onion and 1 bell pepper, diced","1 cup BBQ sauce, 1/3 cup brown sugar, 2 Tbsp molasses, 1 Tbsp mustard, 1 Tbsp Worcestershire"],
+ steps:["Mix everything in a foil pan.","Set the pan on the grate directly under hanging ribs, a butt or a brisket.","Cook uncovered 2 to 3 hours, stirring once or twice, until thick and smoky.","Stir in any trimmings from the meat before serving."],
+ tip:"Only worth it with meat hanging above. The drippings are the point.",src:SRC.pbc},
+{id:"hasselback",name:"Hasselback Potatoes with Chive Salsa",cooker:"PBC",type:"Side",region:"American",mins:90,
+ desc:"Accordion-sliced russets brushed with garlic butter, smoked crispy and topped with chive salsa and jalapeño sour cream.",
+ ing:["6 russet potatoes","6 Tbsp butter, 3 garlic cloves, melted together","Salt, pepper","Chive salsa: chives, shallot, olive oil, lemon","Jalapeño sour cream: sour cream, minced jalapeño, lime, salt"],
+ steps:["Lay each potato between two chopsticks and slice thin, stopping at the chopsticks.","Brush the garlic butter into the cuts and season well.","Set on the grate and cook 60 to 75 minutes, brushing again halfway, until the edges fan out and crisp.","Top with chive salsa and jalapeño sour cream."],
+ tip:"The chopsticks keep you from cutting all the way through. Use them.",src:["Pit Barrel: Hasselback Potatoes",u("hasselback-potatoes-with-chive-salsa-jalapeno-sour-cream")]},
+{id:"smoked-sweet-potatoes",name:"Smoked Sweet Potatoes",cooker:"PBC",type:"Side",region:"Southern",mins:90,
+ desc:"Whole sweet potatoes smoked until soft, then split and loaded with cinnamon-honey butter and pecans.",
+ ing:["6 sweet potatoes","Oil, kosher salt","Cinnamon butter: 1 stick softened butter, 2 Tbsp honey, 1 Tbsp brown sugar, 1 tsp cinnamon, pinch of salt","Toasted pecans"],
+ steps:["Scrub, dry, oil and salt the potatoes, then prick them with a fork.","Set on the grate (or hang in a mesh bag) for 75 to 90 minutes until squeeze soft.","Mix the cinnamon butter.","Split, fluff and load with cinnamon butter and pecans."],
+ tip:"Hang the potatoes in a mesh bag from a hook and the meat can have the grate.",src:["Pit Barrel: Smoked Sweet Potatoes",u("smoked-sweet-potatoes")]},
+{id:"yellow-rice",name:"Easy Smoked Yellow Rice",cooker:"PBC",type:"Side",region:"Indian",mins:60,
+ desc:"Turmeric-gold rice baked in a covered pan in the barrel so it picks up a gentle smoke.",
+ ing:["2 cups long-grain or basmati rice, rinsed","3.5 cups hot chicken broth","2 Tbsp butter","1 tsp turmeric, 1/2 tsp cumin, 1/2 tsp garlic powder, salt","Peas, cilantro, toasted almonds"],
+ steps:["Stir the rice, butter, spices and broth together in a foil pan.","Cover tightly with foil and poke 3 or 4 small holes to let a little smoke in.","Set on the grate for 40 to 50 minutes until the liquid is absorbed.","Fluff with peas, cilantro and almonds."],
+ tip:"Written as a pair with the Tandoori kebabs.",src:["Pit Barrel: Easy Smoked Yellow Rice",u("easy-smoked-yellow-rice")]},
+{id:"veg-kebabs",name:"Vegetable Kebabs with Yogurt Sauce",cooker:"PBC",type:"Side",region:"Mediterranean",mins:40,
+ desc:"Hung skewers of zucchini, peppers, onion, mushrooms and tomato with a garlicky herb-yogurt sauce.",
+ ing:["2 zucchini, 2 bell peppers, 1 red onion, 8 oz mushrooms, cherry tomatoes","1/4 cup olive oil, 2 Tbsp lemon, 2 tsp oregano, salt, pepper","Sauce: 1 cup Greek yogurt, 1 garlic clove, lemon, dill, mint, salt"],
+ steps:["Cut everything into chunks and toss with the oil, lemon and seasonings.","Thread onto metal skewers.","Hang from the hooks or lay on the grate and cook 20 to 30 minutes until tender and charred.","Mix the yogurt sauce and drizzle it over or serve it for dipping."],
+ tip:"Group veggies with similar cook times on the same skewer so nothing's raw or mushy.",src:["Pit Barrel: Vegetable Kebabs",u("vegetable-kebabs-with-creamy-yogurt-sauce")]},
+{id:"corn-bean-salsa",name:"Smoked Corn & Black Bean Salsa",cooker:"PBC",type:"Side",region:"Mexican",mins:45,
+ desc:"Smoke-charred corn, black beans, tomato, red onion and lime. Works as a side, a topping or a dip.",
+ ing:["4 ears corn","1 can black beans, rinsed","2 Roma tomatoes and 1/2 red onion, diced","1 jalapeño, minced","Juice of 2 limes, 2 Tbsp olive oil, 1 tsp cumin, salt","Cilantro, avocado (optional)"],
+ steps:["Oil and salt the corn and smoke it on the grate 25 to 35 minutes, turning, until charred in spots.","Cut the kernels off the cob.","Toss with the beans, tomato, onion, jalapeño, lime, oil, cumin and salt.","Rest 15 minutes, then add cilantro and avocado."],
+ tip:"Doubles as a taco topper for the barbacoa or tinga.",src:["Pit Barrel: Smoked Corn and Black Bean Salsa",u("smoked-corn-and-black-bean-salsa")]},
+
+/* ================= PIT BARREL: APPETIZERS ================= */
+{id:"jalapeno-poppers",name:"Bacon-Wrapped Jalapeño Poppers",cooker:"PBC",type:"Appetizer",region:"Mexican",mins:60,pick:1,
+ desc:"Halved jalapeños stuffed with seasoned cream cheese and cheddar, wrapped in bacon and smoked until crisp.",
+ ing:["12 large jalapeños, halved and seeded","8 oz cream cheese, softened","1 cup shredded cheddar","1 tsp BBQ rub, 2 green onions","12 slices thin bacon, halved","BBQ sauce or hot honey (optional)"],
+ steps:["Mix the cream cheese, cheddar, rub and green onions. Fill the jalapeño halves.","Wrap each in half a slice of bacon and secure with a toothpick.","Set on the grate (a jalapeño rack helps) and cook 45 to 60 minutes until the bacon is crisp.","Brush with a little BBQ sauce or hot honey in the last 5 minutes if you like."],
+ tip:"Thin bacon, not thick-cut. Thick bacon won't crisp before the peppers go limp.",src:["Pit Barrel: Mummy Jalapeño Poppers",u("mummy-jalapeno-poppers")]},
+{id:"smoked-cream-cheese",name:"Smoked Cream Cheese",cooker:"PBC",type:"Appetizer",region:"American",mins:120,
+ desc:"A whole block scored, rubbed and smoked into a savory crust. Spread it on crackers with pepper jelly.",
+ ing:["2 blocks (8 oz) cream cheese","1 Tbsp olive oil","2 Tbsp BBQ rub (or everything-bagel seasoning)","Pepper jelly or hot honey","Crackers, pita chips"],
+ steps:["Score the top of each block in a crosshatch.","Brush with oil and coat all sides in rub.","Set in a small foil pan on the grate for about 1.5 to 2 hours, until the top is golden and the rub crusted.","Top with pepper jelly and serve with crackers."],
+ tip:"Use full-fat blocks. Low-fat cream cheese weeps and slumps.",src:["Pit Barrel: Smoked Cream Cheese",u("smoked-cream-cheese")]},
+{id:"buffalo-dip",name:"Smoked Buffalo Chicken Dip",cooker:"PBC",type:"Appetizer",region:"BBQ",mins:60,
+ desc:"Shredded chicken, cream cheese, ranch, hot sauce and cheddar, smoked bubbling in a skillet.",
+ ing:["3 cups shredded cooked chicken (leftover smoked chicken is ideal)","8 oz cream cheese, softened","1/2 cup Frank's RedHot, 1/2 cup ranch","1.5 cups cheddar, split","Green onions, blue cheese crumbles","Tortilla chips, celery"],
+ steps:["Stir the cream cheese, hot sauce and ranch together, then fold in the chicken and 1 cup of cheddar.","Spread into a cast iron skillet or foil pan and top with the rest of the cheese.","Smoke on the grate 30 to 45 minutes until bubbling.","Top with green onions and blue cheese and serve with chips and celery."],
+ tip:"Leftover Hanging Whole Chicken makes the best version.",src:["Pit Barrel: Smoked Buffalo Chicken Dip",u("smoked-buffalo-chicken-dip")]},
+{id:"pickle-shots",name:"Bacon-Wrapped Pickle Shots",cooker:"PBC",type:"Appetizer",region:"Southern",mins:60,
+ desc:"Hollowed dill pickle cups stuffed with cheese and sausage, wrapped in bacon and smoked.",
+ ing:["6 large whole dill pickles","8 oz cream cheese mixed with 1/2 cup cheddar and 1/2 lb cooked breakfast sausage","12 slices bacon","BBQ rub"],
+ steps:["Cut the pickles into 1.5 inch rounds and hollow each into a cup with a melon baller, leaving the bottom intact.","Wrap each cup in bacon and secure it with a toothpick.","Fill with the cheese and sausage mix and dust with rub.","Smoke on the grate 45 to 60 minutes until the bacon is crisp."],
+ tip:"Pat the pickles dry inside and out, or the bacon slides off.",src:["Pit Barrel: Bacon Wrapped Pickle Shots",u("pickle-shots")]},
+{id:"cajun-nuts",name:"Smoked Cajun Nuts",cooker:"PBC",type:"Appetizer",region:"Cajun",mins:60,
+ desc:"Mixed nuts tossed in butter, Worcestershire and Cajun spice, smoked for a snack that disappears fast.",
+ ing:["4 cups mixed nuts (pecans, cashews, almonds, peanuts)","4 Tbsp butter, melted","1 Tbsp Worcestershire","2 tsp Cajun seasoning, 1 tsp brown sugar, pinch of cayenne"],
+ steps:["Toss the nuts with the butter, Worcestershire and seasonings.","Spread them in a single layer in a perforated pan or foil pan.","Smoke on the grate 45 to 60 minutes, stirring every 15, until toasted.","Cool completely. They crisp as they cool."],
+ tip:"Stir every 15 minutes. The PBC runs hot and nuts go from toasted to burnt fast.",src:["Pit Barrel: Smoked Cajun Nuts",u("smoked-cajun-nuts")]},
+{id:"stuffed-mushrooms",name:"Sausage-Stuffed Mushrooms",cooker:"PBC",type:"Appetizer",region:"European",mins:50,
+ desc:"Cremini caps stuffed with Italian sausage, cream cheese, parmesan and herbs, smoked golden.",
+ ing:["24 large cremini mushrooms, stems removed and chopped","1 lb Italian sausage, browned","4 oz cream cheese, 1/2 cup parmesan","2 garlic cloves, parsley, panko"],
+ steps:["Brown the sausage with the chopped stems and garlic. Drain.","Mix in the cream cheese, parmesan and parsley.","Stuff the caps generously and top with panko.","Set in a pan on the grate for 30 to 40 minutes until golden and the mushrooms are tender."],
+ tip:"Brown the sausage on the Blackstone while the PBC lights.",src:["Pit Barrel: Sausage-Stuffed Mushrooms",u("sausage-stuffed-mushrooms")]},
+{id:"smoked-brie",name:"Smoked Brie with Apricot",cooker:"PBC",type:"Appetizer",region:"European",mins:40,
+ desc:"A wheel of brie smoked until molten and topped with apricot preserves, pecans and a drizzle of honey.",
+ ing:["1 wheel brie (8 to 13 oz)","1/3 cup apricot preserves","Chopped pecans, fresh thyme, honey","Baguette slices, crackers"],
+ steps:["Score the top rind lightly and set the wheel in a small cast iron pan or on foil.","Smoke on the grate 20 to 30 minutes until it's soft and jiggles.","Spoon the preserves over, then pecans, thyme and a honey drizzle.","Serve right away with baguette."],
+ tip:"Pull it while it still holds its shape.",src:["Pit Barrel: Smoked Brie with Apricot Preserves",u("smoked-brie-with-apricot-preserves")]},
+{id:"greek-meatballs",name:"Greek Meatballs with Tzatziki",cooker:"PBC",type:"Appetizer",region:"Mediterranean",mins:50,
+ desc:"Lamb and beef meatballs with feta, oregano and mint, smoked and served with cool tzatziki.",
+ ing:["1 lb ground beef and 1 lb ground lamb","1/2 cup feta, 1/3 cup breadcrumbs, 1 egg","1/2 red onion grated, 3 garlic cloves, 2 tsp oregano, 2 Tbsp mint, salt, pepper","Tzatziki for dipping, lemon"],
+ steps:["Mix everything gently and roll into 1.5 inch balls.","Set on the grate (a perforated pan helps) and cook 25 to 30 minutes to 160°F.","Serve on toothpicks with tzatziki and lemon."],
+ tip:"Grate the onion. Chunks make the meatballs fall apart.",src:["Pit Barrel: Greek Meatballs with Tzatziki",u("greek-meatballs-w-tzatziki-and-rosemary-potatoes")]},
+{id:"taco-queso",name:"Smoked Taco Queso",cooker:"PBC",type:"Appetizer",region:"Mexican",mins:60,
+ desc:"Velvety queso with taco-seasoned beef, Rotel and green chiles, smoked in a pan with lime crema.",
+ ing:["1 lb ground beef and taco seasoning, browned","1 lb white American or Velveeta, cubed","8 oz cream cheese","1 can Rotel, 1 can diced green chiles","1/2 cup milk","Lime crema (sour cream, lime, salt), cilantro, chips"],
+ steps:["Put everything except the crema and cilantro in a foil pan or cast iron skillet.","Smoke on the grate 45 to 60 minutes, stirring every 15 minutes, until it's smooth and melted.","Swirl in lime crema and cilantro. Serve with chips."],
+ tip:"Stir it every 15 minutes or you get a skin on top that won't smoke through.",src:["Pit Barrel: Smoked Taco Queso",u("roasted-taco-queso-with-cilantro-pesto-lime-crema-1")]},
+{id:"bacon-dates",name:"Bacon-Wrapped Dates",cooker:"PBC",type:"Appetizer",region:"Mediterranean",mins:40,
+ desc:"Medjool dates stuffed with goat cheese or almonds, wrapped in bacon, sweet, salty and smoky.",
+ ing:["20 Medjool dates, pitted","4 oz goat cheese (or 20 almonds)","10 slices thin bacon, halved","Balsamic glaze (optional)"],
+ steps:["Stuff each date with goat cheese or an almond.","Wrap it in half a slice of bacon and pin it with a toothpick.","Smoke on the grate 30 to 40 minutes, turning once, until the bacon is crisp.","Drizzle with balsamic glaze."],
+ tip:"Use thin bacon so it crisps before the dates scorch.",src:["Pit Barrel: Bacon-Wrapped Dates",u("bacon-dates")]}
+];
+
+/* Hand-picked full menus */
+const MENUS = [
+ {name:"The Two-Cooker Sunday",why:"Brisket hangs all day with the beans under it. Blackstone does the potatoes at the end.",ids:["hanging-brisket","drip-beans","smashed-potatoes","smoked-cream-cheese"]},
+ {name:"Santa Maria Night",why:"Tri-tip, smoked corn salsa, hasselbacks, bacon dates. All on the barrel.",ids:["tri-tip","corn-bean-salsa","hasselback","bacon-dates"]},
+ {name:"Takeout Killer (Chinese)",why:"All Blackstone, under 45 minutes. Lo mein goes last.",ids:["orange-chicken","mongolian-beef","lo-mein","lettuce-wraps"]},
+ {name:"Hibachi at Home",why:"Make the yum yum sauce first, then run chicken, rice and veg on three zones.",ids:["hibachi-chicken","hibachi-veg","gyoza"]},
+ {name:"Taco Tuesday, Upgraded",why:"Barbacoa on the barrel. Tortillas, corn and rice on the Blackstone.",ids:["barbacoa","elote","mexican-rice","taco-queso"]},
+ {name:"Southern Fried Saturday",why:"Nashville hot on the griddle, mac and pickle shots in the barrel.",ids:["nashville-hot","popper-mac","fried-cabbage","pickle-shots"]},
+ {name:"Game Day Spread",why:"Wings and dip in the barrel, tots and sliders on the griddle. Feeds about 10.",ids:["smoked-wings","buffalo-dip","loaded-tots","pretzel-sliders"]},
+ {name:"Holiday Prime Rib",why:"The brie goes on the barrel while the roast rests.",ids:["prime-rib","honey-brussels","hasselback","smoked-brie"]},
+ {name:"Island Jerk Cookout",why:"Jerk quarters in the barrel, shrimp and cabbage on the griddle.",ids:["jerk-chicken","yellow-rice","fried-cabbage","cajun-shrimp"]},
+ {name:"Mediterranean Night",why:"One batch of tzatziki covers both dishes.",ids:["greek-gyros","veg-kebabs","greek-meatballs"]}
+];
+
+const COOKERS={BS:"Blackstone",PBC:"Pit Barrel"};
+const TYPES=["Beef","Chicken","Side","Appetizer"];
+const TYPE_LABEL={Beef:"Beef Main",Chicken:"Chicken Main",Side:"Side Dish",Appetizer:"Appetizer"};
+const TIMES=[["q","Under 30 min",m=>m<30],["h","30 to 90 min",m=>m>=30&&m<=90],["l","Low & slow (90+)",m=>m>90]];
+const REGIONS=[...new Set(R.map(r=>r.region))].sort();
+const byId=Object.fromEntries(R.map(r=>[r.id,r]));
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmtTime=m=>m<60?m+" min":(m%60?Math.floor(m/60)+" hr "+(m%60)+" min":(m/60)+" hr"+(m>=120?"s":""));
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let favs=new Set(store.get("ftb-favs",[]));
+const state={cooker:new Set(),type:new Set(),region:new Set(),time:new Set(),q:"",favOnly:false};
+
+/* ---------- theme ---------- */
+(function(){const t=store.get("ftb-theme",null);if(t)document.documentElement.dataset.theme=t;})();
+$("#themeBtn").onclick=()=>{
+  const cur=document.documentElement.dataset.theme||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+  const nxt=cur==="dark"?"light":"dark";document.documentElement.dataset.theme=nxt;store.set("ftb-theme",nxt);
+};
+
+/* ---------- tabs ---------- */
+document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("nav.tabs button").forEach(x=>x.setAttribute("aria-selected",x===b));
+  document.querySelectorAll("main .panel").forEach(p=>p.hidden=p.id!=="tab-"+b.dataset.tab);
+  window.scrollTo({top:$("nav.tabs").offsetTop,behavior:"smooth"});
+});
+
+/* ---------- filters ---------- */
+function chipRow(el,items,key){
+  el.innerHTML=items.map(([v,l])=>`<button class="chip" type="button" aria-pressed="false" data-v="${esc(v)}">${esc(l)}<span class="n"></span></button>`).join("");
+  el.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{
+    const v=c.dataset.v;state[key].has(v)?state[key].delete(v):state[key].add(v);
+    c.setAttribute("aria-pressed",state[key].has(v));render();
+  });
+}
+chipRow($("#f-cooker"),Object.entries(COOKERS),"cooker");
+chipRow($("#f-type"),TYPES.map(t=>[t,TYPE_LABEL[t]]),"type");
+chipRow($("#f-region"),REGIONS.map(r=>[r,r]),"region");
+chipRow($("#f-time"),TIMES.map(t=>[t[0],t[1]]),"time");
+
+function matches(r,skip){
+  if(skip!=="cooker"&&state.cooker.size&&!state.cooker.has(r.cooker))return false;
+  if(skip!=="type"&&state.type.size&&!state.type.has(r.type))return false;
+  if(skip!=="region"&&state.region.size&&!state.region.has(r.region))return false;
+  if(skip!=="time"&&state.time.size&&!TIMES.some(t=>state.time.has(t[0])&&t[2](r.mins)))return false;
+  if(state.favOnly&&!favs.has(r.id))return false;
+  if(state.q){const hay=(r.name+" "+r.desc+" "+r.region+" "+r.ing.join(" ")).toLowerCase();
+    if(!state.q.split(/\s+/).every(w=>hay.includes(w)))return false;}
+  return true;
+}
+function updateCounts(){
+  const cnt=(key,test)=>R.filter(r=>matches(r,key)&&test(r)).length;
+  document.querySelectorAll("#f-cooker .chip").forEach(c=>c.querySelector(".n").textContent=cnt("cooker",r=>r.cooker===c.dataset.v));
+  document.querySelectorAll("#f-type .chip").forEach(c=>c.querySelector(".n").textContent=cnt("type",r=>r.type===c.dataset.v));
+  document.querySelectorAll("#f-region .chip").forEach(c=>c.querySelector(".n").textContent=cnt("region",r=>r.region===c.dataset.v));
+  document.querySelectorAll("#f-time .chip").forEach(c=>{const t=TIMES.find(x=>x[0]===c.dataset.v);c.querySelector(".n").textContent=cnt("time",r=>t[2](r.mins))});
+}
+function cardHTML(r){
+  return `<button class="card" type="button" data-id="${r.id}">
+    <div class="tags"><span class="tag ${r.cooker.toLowerCase()}">${COOKERS[r.cooker]}</span><span class="tag">${esc(r.region)}</span></div>
+    <h3>${esc(r.name)}</h3>
+    <div class="meta"><span>⏱ ${fmtTime(r.mins)}</span><span>${favs.has(r.id)?'<span class="fav" title="Favorite">♥</span>':''}</span></div>
+  </button>`;
+}
+function render(){
+  const list=R.filter(r=>matches(r)).sort((a,b)=>a.cooker.localeCompare(b.cooker)||a.name.localeCompare(b.name));
+  const GROUP={Beef:"Beef Mains",Chicken:"Chicken Mains",Side:"Side Dishes",Appetizer:"Appetizers"};
+  $("#grid").innerHTML=list.length?TYPES.map(t=>{const g=list.filter(r=>r.type===t);return g.length?`<section class="group"><h2>${GROUP[t]}<small>${g.length}</small></h2><div class="grid">${g.map(cardHTML).join("")}</div></section>`:""}).join(""):`<div class="empty">No matches. Clear a filter or hit Reset.</div>`;
+  $("#count").textContent=`${list.length} of ${R.length} recipes`;
+  updateCounts();
+}
+$("#q").oninput=e=>{state.q=e.target.value.trim().toLowerCase();render()};
+$("#favOnly").onclick=e=>{state.favOnly=!state.favOnly;e.currentTarget.setAttribute("aria-pressed",state.favOnly);e.currentTarget.classList.toggle("primary",state.favOnly);render()};
+$("#reset").onclick=()=>{["cooker","type","region","time"].forEach(k=>state[k].clear());state.q="";state.favOnly=false;$("#q").value="";
+  document.querySelectorAll(".filters .chip").forEach(c=>c.setAttribute("aria-pressed","false"));$("#favOnly").classList.remove("primary");$("#favOnly").setAttribute("aria-pressed","false");render()};
+$("#grid").onclick=e=>{const c=e.target.closest(".card");if(c)openRecipe(c.dataset.id)};
+
+/* ---------- pairing suggestions ---------- */
+function score(a,b){let s=0;if(a.region===b.region)s+=5;
+  const fam={"BBQ":"bbq","Southern":"bbq","Cajun":"bbq","American":"bbq","Mexican":"mx","Chinese":"asia","Japanese":"asia","Korean":"asia","Thai":"asia","Mediterranean":"med","European":"med","Indian":"med","South American":"sa","Caribbean":"sa"};
+  if(fam[a.region]&&fam[a.region]===fam[b.region])s+=3;
+  if(a.cooker!==b.cooker)s+=1; return s;}
+function pairsFor(r){
+  const want=r.type==="Beef"||r.type==="Chicken"?["Side","Appetizer"]:["Beef","Chicken"];
+  const out=[];
+  want.forEach(t=>{R.filter(x=>x.type===t&&x.id!==r.id).map(x=>[x,score(r,x)]).sort((a,b)=>b[1]-a[1]||a[0].name.localeCompare(b[0].name)).slice(0,2).forEach(([x])=>out.push(x))});
+  return out;
+}
+
+/* ---------- recipe dialog ---------- */
+const dlg=$("#dlg");
+function openRecipe(id){
+  const r=byId[id];if(!r)return;
+  $("#dlgTitle").textContent=r.name;
+  $("#dlgTags").innerHTML=`<span class="tag ${r.cooker.toLowerCase()}">${COOKERS[r.cooker]}</span><span class="tag">${TYPE_LABEL[r.type]}</span><span class="tag">${esc(r.region)}</span><span class="tag">⏱ ${fmtTime(r.mins)}</span>`;
+  const isFav=favs.has(r.id);
+  $("#dlgBody").innerHTML=`<h3 style="margin-top:0">Ingredients</h3><ul>${r.ing.map(i=>`<li>${esc(i)}</li>`).join("")}</ul>
+    <h3>Steps</h3><ol>${r.steps.map(s=>`<li>${esc(s)}</li>`).join("")}</ol>
+    <div class="tip"><b>Tip:</b> ${esc(r.tip)}</div>
+    <div class="pairs-wrap"><h3>Pairs with</h3><div class="pairs">${pairsFor(r).map(p=>`<button type="button" data-id="${p.id}">${esc(p.name)}<small>${COOKERS[p.cooker]} · ${TYPE_LABEL[p.type]} · ${esc(p.region)}</small></button>`).join("")}</div></div>
+    <p style="margin-top:16px;font-size:.88rem">Source: <a href="${esc(r.src[1])}" target="_blank" rel="noopener">${esc(r.src[0])}</a></p>
+    <div class="dlg-actions"><button class="btn ${isFav?'primary':''}" id="favBtn" type="button">${isFav?'♥ Saved':'♡ Save to favorites'}</button><button class="btn" type="button" onclick="window.print()">Print</button><button class="btn" id="shareBtn" type="button">Copy link</button></div>`;
+  $("#dlgBody").querySelectorAll(".pairs button").forEach(b=>b.onclick=()=>openRecipe(b.dataset.id));
+  $("#favBtn").onclick=()=>{favs.has(r.id)?favs.delete(r.id):favs.add(r.id);store.set("ftb-favs",[...favs]);openRecipe(r.id);render()};
+  $("#shareBtn").onclick=async e=>{const url=location.href.split("#")[0]+"#"+r.id;try{await navigator.clipboard.writeText(url);e.target.textContent="Copied!"}catch(_){prompt("Copy this link:",url)}};
+  history.replaceState(null,"","#"+r.id);
+  $("#dlgBody").scrollTop=0;
+  if(!dlg.open)dlg.showModal();
+}
+$("#dlgClose").onclick=()=>dlg.close();
+dlg.addEventListener("click",e=>{if(e.target===dlg)dlg.close()});
+dlg.addEventListener("close",()=>history.replaceState(null,"",location.pathname+location.search));
+
+/* ---------- menus ---------- */
+$("#menus").innerHTML=MENUS.map(m=>`<div class="menu"><h3>${esc(m.name)}</h3><p>${esc(m.why)}</p><ol>${m.ids.map(id=>{const r=byId[id];return `<li><button type="button" data-id="${id}">${esc(r.name)}</button> <small>${COOKERS[r.cooker]} · ${TYPE_LABEL[r.type]}</small></li>`}).join("")}</ol></div>`).join("");
+$("#menus").onclick=e=>{const b=e.target.closest("button[data-id]");if(b)openRecipe(b.dataset.id)};
+
+const bState={region:"Any",setup:"Both",protein:"Either"};
+function single(el,opts,key){el.innerHTML=opts.map(o=>`<button class="chip" type="button" aria-pressed="${o===bState[key]}" data-v="${esc(o)}">${esc(o)}</button>`).join("");
+  el.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{bState[key]=c.dataset.v;el.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",x===c))});}
+single($("#b-region"),["Any",...REGIONS],"region");
+single($("#b-setup"),["Both","Blackstone only","Pit Barrel only"],"setup");
+single($("#b-protein"),["Either","Beef","Chicken"],"protein");
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+$("#build").onclick=()=>{
+  const okCooker=r=>bState.setup==="Both"||(bState.setup==="Blackstone only"?r.cooker==="BS":r.cooker==="PBC");
+  let mains=R.filter(r=>(r.type==="Beef"||r.type==="Chicken")&&okCooker(r)&&(bState.protein==="Either"||r.type===bState.protein));
+  const inRegion=mains.filter(r=>bState.region==="Any"||r.region===bState.region);
+  let note="";
+  if(bState.region!=="Any"&&!inRegion.length)note=`No ${bState.region} main fits that setup, so here's the closest match.`;
+  const pool=inRegion.length?inRegion:mains;
+  if(!pool.length){$("#buildOut").innerHTML="<p>Nothing fits that setup. Loosen a filter.</p>";return}
+  const main=rnd(pool);
+  const pick=t=>{const c=R.filter(r=>r.type===t&&okCooker(r)).map(x=>[x,score(main,x)+Math.random()*2]).sort((a,b)=>b[1]-a[1]);return c.length?c[0][0]:null};
+  const items=[main,pick("Side"),pick("Appetizer")].filter(Boolean);
+  const mixed=new Set(items.map(i=>i.cooker)).size>1;
+  $("#buildOut").innerHTML=`${note?`<p class="section-intro">${esc(note)}</p>`:""}<div class="menu"><h3>Tonight's cook</h3><ol>${items.map(r=>`<li><button type="button" data-id="${r.id}">${esc(r.name)}</button> <small>${COOKERS[r.cooker]} · ${TYPE_LABEL[r.type]} · ${fmtTime(r.mins)}</small></li>`).join("")}</ol>
+   <p style="margin-top:10px">${mixed?"Game plan: light the Pit Barrel first. Its items take longest. Fire the Blackstone about 30 minutes before the barrel stuff comes off.":"Game plan: start the longest item first and work down the list so it all lands hot together."}</p>
+   <button class="btn" type="button" id="again">Reroll</button></div>`;
+  $("#buildOut").querySelectorAll("button[data-id]").forEach(b=>b.onclick=()=>openRecipe(b.dataset.id));
+  $("#again").onclick=()=>$("#build").click();
+};
+
+
+/* ---------- sources ---------- */
+const BOOKS=[
+ ["Blackstone Griddle Essentials Cookbook (free official PDF, 2018)","https://www.qvc.com/footers/cd/pdf/K63533_CookbookRecipes.pdf","Blackstone's own 31-recipe cookbook. The source for the Philly, patty melt, fajitas and Mexican rice, orange and General Tso's chicken, Mongolian lettuce wraps, Thai quesadillas, piccata, gyros, flank with chimichurri and pretzel sliders."],
+ ["Blackstone Griddle 101: The Official Cookbook (Lippy, Frazier, Toven, Hussey, Ruberti)","https://www.simonandschuster.com/books/Blackstone-Griddle-101-The-Official-Cookbook/Nathan-Lippy/9781507226513","The newer official book, with 100+ recipes by Blackstone's chef and on-camera crew. Worth owning. Its Creamy Cajun Pasta inspired the Cajun chicken pasta here."],
+ ["The \"I Love My Blackstone Griddle\" Cookbook","https://ifyougiveagirlagrill.com/2025/06/11/the-i-love-my-blackstone-griddle-cookbook/","175 recipes from the If You Give a Girl a Grill author, with deep sides and appetizer chapters."],
+ ["Pit Barrel Cooker Co. recipe library","https://pitbarrelcooker.com/blogs/food","The official collection by type (beef, poultry, sides, appetizers). The source for most barrel recipes here. PBC doesn't publish a standalone PDF cookbook, and this library is its equivalent."],
+ ["Pit Barrel Cooker instructions and altitude guide","https://pitbarrelcooker.com/pages/instructions","Official lighting, vent and hanging instructions."],
+ ["The Hungry Hussey: free e-cookbook and printable charts","https://www.thehungryhussey.com/downloads","Free griddle e-cookbook plus temp-zone, meat-temp and oil smoke-point charts from a Blackstone co-author."],
+ ["Griddle Sizzle: 30 Best Blackstone Recipes","https://griddlesizzle.com/top-lists/best-blackstone-recipes/","A curated best-of list that was the main cross-check for which griddle recipes people rate highest."],
+ ["From Michigan To The Table: 140+ Blackstone recipes","https://frommichigantothetable.com/blackstone-griddle-recipes/","Huge tested library, sorted by category and cuisine."],
+ ["Or Whatever You Do: 120 Blackstone recipes","https://www.orwhateveryoudo.com/2021/07/50-delicious-blackstone-recipes.html","Strong on Asian and Mexican griddle dishes (yakisoba, kimchi gyoza, street tacos)."],
+ ["ThermoWorks: Hanging whole smoked chicken","https://blog.thermoworks.com/hanging-whole-smoked-chicken/","The science of why hung birds come out juicy with crisp skin."]
+];
+$("#sourcesBox").innerHTML=BOOKS.map(b=>`<div class="src"><h3><a href="${b[1]}" target="_blank" rel="noopener">${esc(b[0])}</a></h3><p>${esc(b[2])}</p></div>`).join("")+
+"";
+
+/* ---------- stats + boot ---------- */
+const c=k=>R.filter(r=>r.cooker===k).length;
+$("#stats").innerHTML=`<span><b>${R.length}</b>recipes</span><span><b>${c("BS")}</b>Blackstone</span><span><b>${c("PBC")}</b>Pit Barrel</span><span><b>${REGIONS.length}</b>regions</span><span><b>${MENUS.length}</b>menus</span>`;
+render();
+if(location.hash&&byId[location.hash.slice(1)])openRecipe(location.hash.slice(1));
+</script>
+</body>
+</html>
