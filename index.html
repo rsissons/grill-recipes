@@ -1716,8 +1716,8 @@ $("#build").onclick=()=>{
 
 
 /* ---------- add a recipe (in-site form -> relay -> GitHub automation) ---------- */
-const RELAY="";            // relay address, e.g. https://grill-recipes-relay.<account>.workers.dev (empty = fall back to the GitHub form)
-const TURNSTILE_KEY="";    // Cloudflare Turnstile site key (public)
+const RELAY="https://grill-recipes-relay.rgs-a5c.workers.dev";            // relay address, e.g. https://grill-recipes-relay.<account>.workers.dev (empty = fall back to the GitHub form)
+const TURNSTILE_KEY="0x4AAAAAAAFFhICetVS7mBy2G";    // Cloudflare Turnstile site key (public)
 const addDlg=$("#addDlg");
 let tsToken="",tsWidget=null,pollTimer=null;
 function mdLite(t){
