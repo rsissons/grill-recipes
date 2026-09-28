@@ -226,7 +226,7 @@ window.ADDED = [
   "name": "Kielbasa Cowboy Stir Fry",
   "cooker": "BS",
   "type": "Pork",
-  "region": "American",
+  "region": "Mexican",
   "mins": 30,
   "desc": "Try out this great meat and potatoes meal with veggies made right on the flat top griddle",
   "ing": [
