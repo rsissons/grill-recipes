@@ -3316,5 +3316,37 @@ window.ADDED = [
    "n": 41
   },
   "curated": 1
+ },
+ {
+  "id": "blt-sandwich",
+  "name": "BLT Sandwich",
+  "cooker": "BS",
+  "type": "Side",
+  "region": "American",
+  "mins": 15,
+  "serves": 2,
+  "desc": "",
+  "ing": [
+   "8 slices bacon",
+   "4 slices sourdough bread",
+   "Mayonnaise, as needed",
+   "Lettuce",
+   "1 large tomato, sliced",
+   "Salt and black pepper, to taste (optional)"
+  ],
+  "steps": [
+   "Preheat your Blackstone griddle to medium heat.",
+   "Add the bacon and cook until crispy, flipping as needed. Remove from the griddle and set aside.",
+   "Spread mayonnaise on one side of each slice of sourdough. Place the bread mayonnaise-side down on the griddle and toast until golden and crispy.",
+   "Remove the toasted bread from the griddle and spread additional mayonnaise on the untoasted sides.",
+   "Layer the bacon, lettuce, and sliced tomato onto two slices of bread. Season the tomato with salt and black pepper, if desired.",
+   "Top with the remaining slices of bread, cut each sandwich in half, and serve immediately."
+  ],
+  "tip": "",
+  "src": [
+   "Blackstone Products: BLT Sandwich",
+   "https://blackstoneproducts.com/blogs/recipes/blt-sandwich"
+  ],
+  "added_on": "2026-09-28"
  }
 ];
