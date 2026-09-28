@@ -203,6 +203,8 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
 .night-actions{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
 .ntime{font-size:.85rem;font-weight:600;color:var(--ink);margin:-4px 0 6px}
 .smk{font-size:.88rem;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin:0 0 12px}
+.inghead{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.serves select{border:1px solid var(--line);background:var(--surface-2);color:var(--ink);border-radius:8px;padding:4px 6px}
 .nh{margin:10px 0 4px;font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-2)}
 .opt{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;padding:4px 0;cursor:pointer}
 .opt input{accent-color:var(--ember);width:18px;height:18px;flex:none;margin:0}
@@ -1684,7 +1686,7 @@ let gScope="All";
 const dayOpts=sel=>DAYS.map(d=>`<option${d===sel?" selected":""}>${d}</option>`).join("");
 const inPlan=id=>plan.find(p=>p.id===id);
 function savePlan(){store.set("ftb-plan",plan);$("#gCount").textContent=plan.length||"";if(!$("#tab-grocery").hidden)renderGrocery()}
-function addToPlan(id,day){const p=inPlan(id);if(p)p.day=day||p.day;else plan.push({id,day:day||"Anytime"});savePlan()}
+function addToPlan(id,day,sv){const p=inPlan(id);if(p){p.day=day||p.day;if(sv)p.serves=sv}else plan.push({id,day:day||"Anytime",...((sv||household)?{serves:sv||household}:{})});savePlan()}
 function removeFromPlan(id){plan=plan.filter(p=>p.id!==id);savePlan()}
 
 /* split ingredient lines into single shopping items */
@@ -1718,6 +1720,50 @@ function aisle(t){
 const keyOf=t=>t.toLowerCase().replace(/\s+/g," ").trim();
 const num=q=>q.includes("/")?q.split("/").reduce((x,y)=>+x/+y):parseFloat(q);
 const fmtN=n=>String(Math.round(n*100)/100);
+/* ---------- servings ---------- */
+let household=store.get("ftb-serves",0);            // 0 = as written
+const SERVE_OPTS=[1,2,3,4,5,6,8,10,12];
+const nativeServes=r=>(r.mac&&r.mac.s)||r.serves||4;
+function setHousehold(n){household=n;store.set("ftb-serves",n);document.querySelectorAll("[data-serves]").forEach(x=>{if([...x.options].some(o=>+o.value===n))x.value=n})}
+const servesFor=id=>{const p=inPlan(id);return (p&&p.serves)||household||nativeServes(byId[id])};
+const UF={"½":.5,"¼":.25,"¾":.75,"⅓":1/3,"⅔":2/3,"⅛":.125};
+const FR8=["","1/8","1/4","3/8","1/2","5/8","3/4","7/8"];
+function fmtQty(n,dec){
+  if(n>=10)return String(Math.round(n));
+  if(dec)return String(Math.round(n*(n<1?8:4))/(n<1?8:4));
+  const q=n<1?8:4;let r=Math.round(n*q)/q;if(!r)r=1/8;
+  const w=Math.floor(r),f=FR8[Math.round((r-w)*8)];
+  return w?(f?w+" "+f:String(w)):f;
+}
+// Multiply the amounts in one ingredient line. Leaves alone sizes in parentheses, inches, temps, times and ratios like 80/20.
+function scaleLine(line,f,dec){
+  if(!f||Math.abs(f-1)<.01)return line;
+  let depth=0,out="",i=0;
+  const re=/(\d+\s+\d+\/\d+|\d+\/\d+|\d+(?:\.\d+)?\s?[½¼¾⅓⅔⅛]|\d+(?:\.\d+)?|[½¼¾⅓⅔⅛])/g;
+  let m;
+  while((m=re.exec(line))){
+    for(const ch of line.slice(i,m.index)){if(ch==="(")depth++;if(ch===")")depth--}
+    out+=line.slice(i,m.index);i=m.index+m[0].length;
+    const tok=m[0],after=line.slice(i);
+    const skip=depth>0||/^\s*-?\s*(inch|in\b|"|°|degrees|%|minutes?|mins?\b|hours?|hrs?\b|seconds?|x\b)/i.test(after)||/[\d.]$/.test(line.slice(0,m.index))||/\d\/\d/.test(tok)&&(()=>{const [a,b]=tok.split(/\s+/).pop().split("/").map(Number);return b>16||a>=b})();
+    if(skip){out+=tok;continue}
+    let v=0;
+    tok.replace(/\s+/g," ").split(" ").forEach(part=>{
+      const u=part.match(/^(\d+(?:\.\d+)?)?([½¼¾⅓⅔⅛])$/);
+      if(u)v+=(u[1]?+u[1]:0)+UF[u[2]];else if(part.includes("/")){const [a,b]=part.split("/");v+=a/b}else v+=+part});
+    // measured amounts keep fractions; counted things (limes, eggs, packages) round to whole, at least 1
+    const measured=/^\s*(lbs?|pounds?|oz|ounces?|cups?|c\b|tbsp|tablespoons?|tsp|teaspoons?|g\b|grams?|kg|ml|l\b|liters?|quarts?|qt|pints?|gallons?|sticks?|pinch|dash|handfuls?|big handfuls?)/i.test(after.replace(/^\s*(to|-|–)\s*[\d.\/½¼¾⅓⅔⅛ ]+/,""));
+    // spoons and cups: nearest quarter (no 5/8 Tbsp)
+    const spoon=/^\s*(cups?|c\b|tbsp|tablespoons?|tsp|teaspoons?)/i.test(after.replace(/^\s*(to|-|–)\s*[\d.\/½¼¾⅓⅔⅛ ]+/,""));
+    const val=spoon&&v*f<10?Math.max(.25,Math.round(v*f*4)/4):v*f;
+    out+=measured?fmtQty(val,dec):String(Math.max(1,Math.round(v*f)));
+  }
+  return out+line.slice(i);
+}
+function servesSelect(cur,nat,attr){
+  const opts=[...new Set([...SERVE_OPTS,nat,cur])].sort((a,b)=>a-b);
+  return `<label class="rb serves">Serves <select ${attr} aria-label="Servings">${opts.map(n=>`<option value="${n}"${n===cur?" selected":""}>${n}${n===nat?" (as written)":""}</option>`).join("")}</select></label>`;
+}
 function norm(t){
   t=t.replace(/\b80\/20\s+/,"");
   const m=t.match(/^(?:[\d.\/]+\s*to\s*)?(\d+(?:\.\d+)?(?:\/\d+)?)\s*(?:(lbs?|oz|cups?|tbsp|tsp|big handfuls?|handfuls?|bunch(?:es)?|heads?)\b)?\s*(.+)$/i);
@@ -1728,9 +1774,9 @@ function norm(t){
   return {name:name.charAt(0).toUpperCase()+name.slice(1),qty,unit};
 }
 function buildItems(){
-  const recs=plan.filter(p=>gScope==="All"||p.day===gScope).map(p=>byId[p.id]);
+  const recs=plan.filter(p=>gScope==="All"||p.day===gScope).map(p=>[byId[p.id],servesFor(p.id)/nativeServes(byId[p.id])]);
   const map=new Map();
-  recs.forEach(r=>r.ing.forEach(line=>splitIng(line).forEach(t=>{
+  recs.forEach(([r,f])=>r.ing.forEach(line=>splitIng(scaleLine(line,f,true)).forEach(t=>{
     const core=t.replace(/^[\d\/.\s]+(cups?|tbsp|tsp|oz)?\s*/i,"").replace(/^(a splash of|a little|hot|warm|cold)\s+/i,"");
     if(/^water$/i.test(core.trim()))return;
     let a=aisle(t),name,qty=null,unit="";
@@ -1754,7 +1800,7 @@ function renderGrocery(){
   // plan box
   if(!plan.length){$("#planBox").innerHTML=`<p class="gempty">Nothing planned yet. Use ＋ Add to list on any recipe or Meal Night.</p>`}
   else $("#planBox").innerHTML=DAYS.map(d=>{const ps=plan.filter(p=>p.day===d);if(!ps.length)return "";
-    return `<div class="gday" data-gday="${d}"><h4>${d}</h4>${ps.map(p=>{const r=byId[p.id];return `<div class="prow"><button class="nm" type="button" data-open="${r.id}">${esc(r.name)}<small style="display:block;font-weight:400;color:var(--ink-2)">${COOKERS[r.cooker]} · ${fmtTime(r.mins)}</small></button><select data-pday="${r.id}" aria-label="Day">${dayOpts(p.day)}</select><button class="x" type="button" data-rm="${r.id}" aria-label="Remove">×</button></div>`}).join("")}
+    return `<div class="gday" data-gday="${d}"><h4>${d}</h4>${ps.map(p=>{const r=byId[p.id];return `<div class="prow"><button class="nm" type="button" data-open="${r.id}">${esc(r.name)}<small style="display:block;font-weight:400;color:var(--ink-2)">${COOKERS[r.cooker]} · ${fmtTime(r.mins)} · serves ${servesFor(r.id)}</small></button><select data-pday="${r.id}" aria-label="Day">${dayOpts(p.day)}</select><button class="x" type="button" data-rm="${r.id}" aria-label="Remove">×</button></div>`}).join("")}
       <div class="night-actions"><label class="rb">Ready by <input type="time" value="17:00" data-ready></label><button class="btn" type="button" data-ptime>⏰ Plan my timing</button></div><div data-timeline></div></div>`}).join("");
   // scope chips
   const usedDays=DAYS.filter(d=>plan.some(p=>p.day===d));
@@ -1952,6 +1998,10 @@ $("#gCount").textContent=plan.length||"";
 
 /* ---------- macros ---------- */
 const siteOf=r=>(r.src&&r.src[0]||"").split(":")[0];
+function ingHTML(r,n){
+  const nat=nativeServes(r),f=n/nat;
+  return `<ul>${r.ing.map(i=>`<li>${esc(scaleLine(i,f))}</li>`).join("")}</ul>${Math.abs(f-1)>.01?`<p class="macnote">Scaled from ${nat} servings to ${n}. Steps still say the original amounts, and smaller cuts finish sooner, so go by temp.</p>`:""}`;
+}
 function macHTML(r){
   const m=r.mac;if(!m)return "";
   const from=m.from==="s"?`from ${esc(siteOf(r))}`:"Estimate from the ingredient list";
@@ -1978,7 +2028,7 @@ function openRecipe(id){
   $("#dlgTags").innerHTML=`<span class="tag ${r.cooker.toLowerCase()}">${cookerLabel(r)}</span><span class="tag">${TYPE_LABEL[r.type]}</span><span class="tag">${esc(r.region)}</span><span class="tag">⏱ ${fmtTime(r.mins)}</span>`+
     `${ratingLineHTML(r)}${rateMeHTML(r)}`;
   const isFav=favs.has(r.id);
-  $("#dlgBody").innerHTML=`${macHTML(r)}${smokerHTML(r)}<h3${r.mac?"":' style="margin-top:0"'}>Ingredients</h3><ul>${r.ing.map(i=>`<li>${esc(i)}</li>`).join("")}</ul>
+  $("#dlgBody").innerHTML=`${macHTML(r)}${smokerHTML(r)}<div class="inghead"><h3${r.mac?"":' style="margin-top:0"'}>Ingredients</h3>${servesSelect(servesFor(r.id),nativeServes(r),'id="dlgServes"')}</div><div id="dlgIng">${ingHTML(r,servesFor(r.id))}</div>
     <h3>Steps</h3><ol>${r.steps.map(s=>`<li>${esc(s)}</li>`).join("")}</ol>
     ${r.tip?`<div class="tip"><b>Tip:</b> ${esc(r.tip)}</div>`:""}
     <div class="pairs-wrap"><h3>Pairs with</h3><div class="pairs">${pairsFor(r).map(p=>`<button type="button" data-id="${p.id}">${esc(p.name)}<small>${COOKERS[p.cooker]} · ${TYPE_LABEL[p.type]} · ${esc(p.region)}</small></button>`).join("")}</div></div>
@@ -1986,7 +2036,8 @@ function openRecipe(id){
     <div class="dlg-actions"><select id="dayPick" aria-label="Which day">${dayOpts(inPlan(r.id)?inPlan(r.id).day:"Tonight")}</select><button class="btn primary" id="listBtn" type="button">${inPlan(r.id)?'✓ On list (remove)':'＋ Add to list'}</button><button class="btn ${isFav?'primary':''}" id="favBtn" type="button">${isFav?'♥ Saved':'♡ Save to favorites'}</button><button class="btn" type="button" onclick="window.print()">Print</button><button class="btn" id="shareBtn" type="button">Copy link</button></div>
     <div class="dlg-actions"><label class="rb">Ready by <input type="time" value="17:00" id="dlgReady"></label><button class="btn" type="button" id="dlgTime">⏰ Plan my timing</button></div><div id="dlgTimeline"></div>`;
   $("#dlgBody").querySelectorAll(".pairs button").forEach(b=>b.onclick=()=>openRecipe(b.dataset.id));
-  $("#listBtn").onclick=()=>{inPlan(r.id)?removeFromPlan(r.id):addToPlan(r.id,$("#dayPick").value);openRecipe(r.id);render()};
+  $("#listBtn").onclick=()=>{inPlan(r.id)?removeFromPlan(r.id):addToPlan(r.id,$("#dayPick").value,+$("#dlgServes").value);openRecipe(r.id);render()};
+  $("#dlgServes").onchange=e=>{const n=+e.target.value;setHousehold(n);const p=inPlan(r.id);if(p){p.serves=n;savePlan()}$("#dlgIng").innerHTML=ingHTML(r,n)};
   $("#dayPick").onchange=()=>{if(inPlan(r.id)){addToPlan(r.id,$("#dayPick").value);render()}};
   $("#dlgTime").onclick=()=>{$("#dlgTimeline").innerHTML=timelineHTML([r.id],$("#dlgReady").value,$("#dayPick").value)};
   $("#dlgTimeline").onclick=e=>{const b=e.target.closest("[data-ics]");if(b)downloadIcs(b)};
@@ -1997,19 +2048,19 @@ function openRecipe(id){
   if(!dlg.open)dlg.showModal();
 }
 // One page for the whole night: the timing order, then every recipe in the order you start it.
-function openCookAll(title,ids,ready,day){
+function openCookAll(title,ids,ready,day,sv){
   if(!ids.length)return;
   const {at}=buildSteps(ids,ready,day),M=6e4;
   const startOf=r=>new Date(at-(r.mins+(r.cooker==="SC"&&r.finish?(r.finish==="PBC"?30:12):0))*M);
   const rs=ids.map(id=>byId[id]).filter(Boolean).sort((a,b)=>startOf(a)-startOf(b));
   $("#dlgTitle").textContent=title;
-  $("#dlgTags").innerHTML=`<span class="tag">👨‍🍳 Cook it all</span><span class="tag">${rs.length} dishes</span><span class="tag">Ready at ${fmtClock(at,at)}</span>`;
+  $("#dlgTags").innerHTML=`<span class="tag">👨‍🍳 Cook it all</span><span class="tag">${rs.length} dishes</span><span class="tag">Ready at ${fmtClock(at,at)}</span>${sv?`<span class="tag">Serves ${sv}</span>`:""}`;
   $("#dlgBody").innerHTML=`<p style="margin-top:0;font-size:.9rem;color:var(--ink-2)">Everything starts on its own clock so it all lands at once. Follow the timeline, then jump to each recipe.</p>
     ${timelineHTML(ids,ready,day)}
     <div class="nh">Recipes, in start order</div><div class="chips" style="margin-bottom:6px">${rs.map(r=>`<button class="chip" type="button" data-jump="ca-${r.id}">${esc(r.name)}</button>`).join("")}</div>
     ${rs.map((r,n)=>`<section id="ca-${r.id}" style="border-top:1px solid var(--line);margin-top:16px;padding-top:12px">
       <h3 style="margin-top:0">${n+1}. ${esc(r.name)} <small style="font-weight:400;color:var(--ink-2)">· ${COOKERS[r.cooker]}${r.finish?" → "+COOKERS[r.finish]:""} · ${fmtTime(r.mins)} · start ${fmtClock(startOf(r),at)}</small></h3>
-      ${smokerHTML(r)}<h4 style="margin:8px 0 4px">Ingredients</h4><ul>${r.ing.map(i=>`<li>${esc(i)}</li>`).join("")}</ul>
+      ${smokerHTML(r)}<h4 style="margin:8px 0 4px">Ingredients</h4>${ingHTML(r,sv||servesFor(r.id))}
       <h4 style="margin:8px 0 4px">Steps</h4><ol>${r.steps.map(x=>`<li>${esc(x)}</li>`).join("")}</ol>
       ${r.tip?`<div class="tip"><b>Tip:</b> ${esc(r.tip)}</div>`:""}</section>`).join("")}`;
   $("#dlgBody").querySelectorAll("[data-jump]").forEach(b=>b.onclick=()=>$("#"+b.dataset.jump).scrollIntoView({behavior:"smooth",block:"start"}));
@@ -2040,7 +2091,7 @@ function nightCard(m,i,pfx,chosen){
     ${mains.map(id=>row(id,`<input type="radio" name="m-${pfx}${i}" value="${id}"${id===sel?" checked":""}${mains.length===1?" hidden":""}>`)).join("")}
     <div data-with>${withHTML(extras)}</div>
     <p class="plate" data-plate>${plateText([sel,...extras])}</p>
-    <div class="night-actions"><select aria-label="Which day">${dayOpts("Tonight")}</select><button class="btn primary" type="button" data-add>＋ Add to list</button>${pfx==="w"?'<button class="btn" type="button" data-respin>Spin again</button>':""}</div>
+    <div class="night-actions">${servesSelect(household||4,0,"data-serves")}<select aria-label="Which day">${dayOpts("Tonight")}</select><button class="btn primary" type="button" data-add>＋ Add to list</button>${pfx==="w"?'<button class="btn" type="button" data-respin>Spin again</button>':""}</div>
     <div class="night-actions"><label class="rb">Ready by <input type="time" value="17:00" data-ready></label><button class="btn" type="button" data-time>⏰ Plan my timing</button><button class="btn${pfx==="w"?" primary":""}" type="button" data-cookall>👨‍🍳 Cook it all</button></div>
     <div data-timeline></div></div>`;
 }
@@ -2079,22 +2130,24 @@ function nightClick(e){
   const tb=e.target.closest("[data-time]");
   if(tb){const card=tb.closest("[data-card]");const main=card.querySelector('input[type=radio]:checked');
     const ids=[main&&main.value,...[...card.querySelectorAll("input[data-x]:checked")].map(x=>x.dataset.x)].filter(Boolean);
-    card.querySelector("[data-timeline]").innerHTML=timelineHTML(ids,card.querySelector("[data-ready]").value,card.querySelector("select").value);return}
+    card.querySelector("[data-timeline]").innerHTML=timelineHTML(ids,card.querySelector("[data-ready]").value,card.querySelector("select:not([data-serves])").value);return}
   const ics=e.target.closest("[data-ics]");if(ics)return downloadIcs(ics);
   const ca=e.target.closest("[data-cookall]");
   if(ca){const card=ca.closest("[data-card]");const main=card.querySelector('input[type=radio]:checked');
     const ids=[main&&main.value,...[...card.querySelectorAll("input[data-x]:checked")].map(x=>x.dataset.x)].filter(Boolean);
-    return openCookAll(MENUS[+card.dataset.mi].name,ids,card.querySelector("[data-ready]").value,card.querySelector("select").value)}
+    return openCookAll(MENUS[+card.dataset.mi].name,ids,card.querySelector("[data-ready]").value,card.querySelector("select:not([data-serves])").value,+card.querySelector("[data-serves]").value)}
   const add=e.target.closest("[data-add]");if(!add)return;
   const card=add.closest("[data-card]");
   const main=card.querySelector('input[type=radio]:checked');
-  const day=card.querySelector("select").value;
-  [main&&main.value,...[...card.querySelectorAll("input[data-x]:checked")].map(x=>x.dataset.x)].filter(Boolean).forEach(id=>addToPlan(id,day));
+  const day=card.querySelector("select:not([data-serves])").value;
+  const sv=+card.querySelector("[data-serves]").value;
+  [main&&main.value,...[...card.querySelectorAll("input[data-x]:checked")].map(x=>x.dataset.x)].filter(Boolean).forEach(id=>addToPlan(id,day,sv));
   render();add.textContent="✓ Added to list";setTimeout(()=>add.textContent="＋ Add to list",1800);
 }
 $("#menus").addEventListener("click",nightClick);
 ["#menus","#wheelOut"].forEach(sel=>$(sel).addEventListener("change",e=>{const c=e.target.closest("[data-card]");if(!c)return;
   if(e.target.type==="radio")setMain(c,e.target.value,true);
+  if(e.target.matches("[data-serves]"))setHousehold(+e.target.value);
   updatePlate(c)}));
 $("#wheelOut").addEventListener("click",nightClick);
 

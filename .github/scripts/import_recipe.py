@@ -430,7 +430,7 @@ def main():
         rid, n = f"{base}-{n}", n + 1
 
     recipe = {"id": rid, "name": name, "cooker": cooker_pick, "type": type_pick, "region": region,
-              "mins": mins, "desc": desc, "ing": ings, "steps": steps, "tip": "",
+              "mins": mins, "serves": servings_of(rec.get("recipeYield")) or 4, "desc": desc, "ing": ings, "steps": steps, "tip": "",
               "src": [f"{site_name(page, rec, url)}: {page_name}", url]}
     if finish_cooker:
         recipe["finish"] = finish_cooker
