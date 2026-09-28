@@ -220,5 +220,39 @@ window.ADDED = [
    "v": 3.7,
    "n": 111
   }
+ },
+ {
+  "id": "kielbasa-cowboy-stir-fry",
+  "name": "Kielbasa Cowboy Stir Fry",
+  "cooker": "BS",
+  "type": "Pork",
+  "region": "American",
+  "mins": 30,
+  "desc": "Try out this great meat and potatoes meal with veggies made right on the flat top griddle",
+  "ing": [
+   "3 lb Russet Potatoes (thin sliced)",
+   "1 Medium White Onion (chopped)",
+   "4 Garlic Cloves (minced)",
+   "1 tsp Salt",
+   "1 tsp Pepper",
+   "1 tsp Paprika",
+   "1 tsp Parsley",
+   "3 tbsp Oil",
+   "2 lbs Kielbasa Sausage (cut into ½inch chunks)",
+   "2 Medium Zucchinis (cut into ½inch chunks)",
+   "1 Red Bell Pepper (cut into ½inch chunks)",
+   "½ cup Italian Dressing"
+  ],
+  "steps": [
+   "In a large mixing bowl, combine potatoes, onion, garlic, salt, pepper, oil, parsley, and paprika. In another mixing bowl, combine kielbasa, zucchini, bell pepper and Italian dressing.",
+   "Heat griddle to medium-high heat. Add potato mixture and flatten out to almost a single layer. Cook for 5 minutes, then do your best to flip it all over and cook another 5 minutes.",
+   "Add in sausage mixture and combine with potato mixture will spreading back out into a mostly single layer. Let cook for 5 minutes on each side.",
+   "Remove from griddle and let sit for a few minutes before serving. Garnish with your favorite hot sauce or maybe a fried egg."
+  ],
+  "tip": "",
+  "src": [
+   "Homemade on a Weeknight: Blackstone Cowboy Stir-Fry",
+   "https://homemadeonaweeknight.com/2022/07/27/blackstone-cowboy-stir-fry/"
+  ]
  }
 ];
