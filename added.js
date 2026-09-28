@@ -78,6 +78,10 @@ window.ADDED = [
    "s": 6,
    "from": "s",
    "note": ""
+  },
+  "rating": {
+   "v": 5.0,
+   "n": 4
   }
  },
  {
@@ -134,7 +138,11 @@ window.ADDED = [
   "src": [
    "RecipeTin Eats: Thai Yellow Curry (from scratch!)",
    "https://www.recipetineats.com/thai-yellow-curry/"
-  ]
+  ],
+  "rating": {
+   "v": 5.0,
+   "n": 59
+  }
  },
  {
   "id": "blackstone-kielbasa",
@@ -207,6 +215,10 @@ window.ADDED = [
   "src": [
    "Heath Riles BBQ: Easy Smoked White Queso Dip on the Traeger Ironwood 885",
    "https://www.heathrilesbbq.com/blogs/favorite-recipes/easy-smoked-white-queso-dip-on-the-traeger-ironwood-885"
-  ]
+  ],
+  "rating": {
+   "v": 3.7,
+   "n": 111
+  }
  }
 ];

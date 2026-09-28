@@ -10,3 +10,17 @@ namespace_id = "1001"
   [ratelimits.simple]
   limit = 3
   period = 60
+
+# Shared hearts (one per recipe per device)
+[[ratelimits]]
+name = "HEART_LIMITER"
+namespace_id = "1002"
+
+  [ratelimits.simple]
+  limit = 30
+  period = 60
+
+[[d1_databases]]
+binding = "DB"
+database_name = "grill-hearts"
+database_id = "52615513-2976-4f7c-9d14-0db661e17e52"

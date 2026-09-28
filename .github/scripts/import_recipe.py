@@ -421,6 +421,12 @@ def main():
     mac = macros_of(rec)
     if mac:
         recipe["mac"] = mac
+    ar = rec.get("aggregateRating")
+    ar = ar[0] if isinstance(ar, list) and ar else ar
+    if isinstance(ar, dict) and "pitbarrelcooker.com" not in url:
+        rv, rn = first_num(ar.get("ratingValue")), first_num(ar.get("ratingCount") or ar.get("reviewCount"))
+        if rv and rn and 0 < rv <= 5:
+            recipe["rating"] = {"v": round(rv, 1), "n": int(rn)}
     if replacing is not None:
         items[replacing] = recipe
     else:

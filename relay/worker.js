@@ -9,8 +9,10 @@
  * Secrets (set with `wrangler secret put`, never committed):
  *   GH_TOKEN          fine-grained GitHub token: this repo only, Issues read/write
  *   TURNSTILE_SECRET  Cloudflare Turnstile secret key
- * Binding:
- *   LIMITER           Cloudflare rate limiter (see wrangler.toml)
+ * Bindings:
+ *   LIMITER           rate limiter for /add (see wrangler.toml)
+ *   HEART_LIMITER     rate limiter for /heart
+ *   DB                D1 database "grill-hearts" (table hearts: one row per recipe per device)
  */
 const REPO = "rsissons/grill-recipes";
 const ALLOWED_ORIGINS = ["https://rsissons.github.io", "http://localhost:8788", "http://127.0.0.1:8788"];
@@ -105,6 +107,38 @@ async function handleAdd(req, env, origin) {
   return json({ ok: true, issue: issue.number }, 200, origin);
 }
 
+/* Shared hearts: GET /hearts -> {recipeId: count}; POST /heart {id, device, on} -> {count} */
+const ID_RE = /^[a-z0-9-]{1,80}$/;
+const DEVICE_RE = /^[a-f0-9-]{16,64}$/;
+
+async function handleHearts(env, origin) {
+  const { results } = await env.DB.prepare("SELECT recipe, COUNT(*) AS n FROM hearts GROUP BY recipe").all();
+  const counts = {};
+  for (const r of results) counts[r.recipe] = r.n;
+  const res = json({ ok: true, counts }, 200, origin);
+  res.headers.set("Cache-Control", "public, max-age=20");
+  return res;
+}
+
+async function handleHeart(req, env, origin) {
+  let body;
+  try { body = await req.json(); } catch { return json({ ok: false }, 400, origin); }
+  const id = String(body.id || ""), device = String(body.device || "").toLowerCase();
+  if (!ID_RE.test(id) || !DEVICE_RE.test(device)) return json({ ok: false }, 400, origin);
+  if (env.HEART_LIMITER) {
+    const ip = req.headers.get("CF-Connecting-IP") || "unknown";
+    const { success } = await env.HEART_LIMITER.limit({ key: ip });
+    if (!success) return json({ ok: false, reason: "slow down" }, 429, origin);
+  }
+  if (body.on) {
+    await env.DB.prepare("INSERT OR IGNORE INTO hearts (recipe, device, created) VALUES (?, ?, ?)").bind(id, device, Date.now()).run();
+  } else {
+    await env.DB.prepare("DELETE FROM hearts WHERE recipe = ? AND device = ?").bind(id, device).run();
+  }
+  const row = await env.DB.prepare("SELECT COUNT(*) AS n FROM hearts WHERE recipe = ?").bind(id).first();
+  return json({ ok: true, count: row ? row.n : 0 }, 200, origin);
+}
+
 async function handleStatus(req, env, origin) {
   const n = parseInt(new URL(req.url).searchParams.get("issue") || "", 10);
   if (!n) return json({ ok: false }, 400, origin);
@@ -125,6 +159,8 @@ export default {
     try {
       if (req.method === "POST" && path === "/add") return await handleAdd(req, env, origin);
       if (req.method === "GET" && path === "/status") return await handleStatus(req, env, origin);
+      if (req.method === "GET" && path === "/hearts") return await handleHearts(env, origin);
+      if (req.method === "POST" && path === "/heart") return await handleHeart(req, env, origin);
       return json({ ok: true, service: "grill-recipes relay" }, 200, origin);
     } catch (e) {
       return json({ ok: false, reason: "Something went wrong on our end." }, 500, origin);
