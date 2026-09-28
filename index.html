@@ -101,7 +101,27 @@ nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(-
 .tl .ics{margin-top:8px}
 .rb{display:inline-flex;align-items:center;gap:6px;font-size:.85rem;color:var(--ink-2)}
 .rb input{font:inherit;background:var(--surface-2);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:5px 6px}
-.dealbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.gbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.gbar select{border:1px solid var(--line);background:var(--surface-2);color:var(--ink);border-radius:10px;padding:7px 10px;font-size:.9rem}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{border:0;background:var(--surface-2);color:var(--ink);padding:7px 12px;font-size:.88rem}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed=true]{background:var(--ember);color:#fff}
+.chk{display:inline-flex;gap:6px;align-items:center;font-size:.9rem}
+.dealline{margin-top:10px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);font-size:.88rem}
+.dealline .lnk,.popacts .lnk{background:none;border:0;color:var(--ember);font-weight:600;padding:0 4px;text-decoration:underline;cursor:pointer}
+.dealpanel{margin-top:8px;padding:10px;border:1px solid var(--line);border-radius:10px;display:grid;gap:10px}
+.dprow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.pop{position:relative}
+.pop>summary{list-style:none;cursor:pointer}
+.pop>summary::-webkit-details-marker{display:none}
+.menupop{position:absolute;z-index:20;right:0;top:calc(100% + 4px);min-width:240px;max-height:60vh;overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);padding:6px;display:grid;gap:2px}
+.storesel .menupop{left:0;right:auto}
+.menupop>button{text-align:left;border:0;background:none;color:var(--ink);padding:9px 10px;border-radius:8px;font-size:.92rem}
+.menupop>button:hover,.shopopt:hover{background:var(--surface-2)}
+.popacts{display:flex;gap:8px;padding:4px 6px 6px;border-bottom:1px solid var(--line)}
+.shopopt{display:flex;gap:8px;align-items:center;padding:7px 8px;border-radius:8px;font-size:.9rem}
+.shopopt small{margin-left:auto;padding-left:10px;color:var(--ink-2);white-space:nowrap}
 .deal{display:block;color:#15803d;font-size:.78rem;font-weight:600;margin-top:2px}
 :root[data-theme="dark"] .deal{color:#4ade80}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .deal{color:#4ade80}}
@@ -202,7 +222,6 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
 .prow .nm{flex:1;min-width:0;text-align:left;background:none;border:0;color:var(--ink);padding:0;font-weight:600}
 .x{border:0;background:none;color:var(--ink-2);font-size:1.3rem;line-height:1;padding:0 6px}
 .ghead{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
-.gbtns{display:flex;gap:6px;flex-wrap:wrap}
 .gi{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line);cursor:pointer}
 .gi input{width:20px;height:20px;margin-top:2px;accent-color:var(--ember);flex:none}
 .gi span{flex:1;min-width:0}
@@ -213,7 +232,7 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
 .gempty{color:var(--ink-2);padding:10px 0}
 @media (max-width:800px){.gwrap{grid-template-columns:1fr}}
 @media print{
-  .gbtns,#gAddForm,.x,.prow select,.gscope,.gnote,.night-actions{display:none!important}
+  .pop,.gbar,.dealline,.dealpanel,#gAddForm,.x,.prow select,.gnote,.night-actions{display:none!important}
   header.hero,nav.tabs,.filters,footer,.dlg-close,.dlg-actions,.pairs-wrap{display:none!important}
   dialog{box-shadow:none;max-width:none;width:100%}
   .dlg-body{max-height:none;overflow:visible}
@@ -297,14 +316,22 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
       </div>
       <div class="menu">
         <div class="ghead"><h2>Grocery list</h2>
-          <div class="gbtns"><button class="btn primary" id="gShare" type="button">Share to Keep</button><button class="btn" id="gCopy" type="button">Copy</button><button class="btn" id="gHide" type="button" aria-pressed="false">Hide what I have</button><button class="btn" id="gPrint" type="button">Print</button></div></div>
-        <div class="frow gscope" style="margin-top:10px"><span class="lbl">For</span><div class="chips" id="gScope"></div></div>
-        <form id="gAddForm" class="searchbar" style="margin-top:10px"><input id="gAdd" placeholder="Add an item (beer, charcoal, foil pans)" aria-label="Add an item"><button class="btn" type="submit">Add</button></form>
-        <div class="dealbar"><label class="rb">Sale prices near <input id="dealZip" inputmode="numeric" maxlength="5" placeholder="zip" size="6"></label><button class="btn" type="button" id="dealGo">🏷️ Check this week's ads</button>
-          <span class="rb" id="groupBox" hidden>Group by <button class="chip" type="button" data-group="aisle">Aisle</button><button class="chip" type="button" data-group="store">Store</button></span>
-          <span class="rb" id="stopsBox" hidden>Stops <button class="chip" type="button" data-stops="1">1</button><button class="chip" type="button" data-stops="2">2</button><button class="chip" type="button" data-stops="3">3</button><button class="chip" type="button" data-stops="99">All</button></span></div>
-        <p class="gsum" id="dealSum" hidden></p>
-        <div class="frow" id="shopAtRow" hidden style="margin-top:8px"><span class="lbl">Shop at</span><div class="chips" id="shopAt"></div></div>
+          <details class="pop sharemenu"><summary class="btn primary">Share ▾</summary><div class="menupop">
+            <button type="button" id="gShare">Share to Keep</button><button type="button" id="gCopy">Copy</button><button type="button" id="gPrint">Print</button></div></details></div>
+        <div class="gbar">
+          <select id="gScope" aria-label="Which days"></select>
+          <div class="seg" id="groupBox" hidden><button type="button" data-group="aisle">Aisle</button><button type="button" data-group="store">Store</button></div>
+          <label class="chk"><input type="checkbox" id="gHide"> Hide what I have</label>
+        </div>
+        <div class="dealline"><span id="dealSum">🏷️ See this week's sale prices near you.</span> <button class="lnk" type="button" id="dealEdit">Set zip</button></div>
+        <div class="dealpanel" id="dealPanel" hidden>
+          <div class="dprow"><label class="rb">Zip <input id="dealZip" inputmode="numeric" maxlength="5" placeholder="zip" size="6"></label><button class="btn" type="button" id="dealGo">Update</button></div>
+          <div class="dprow" id="shopAtRow" hidden><span class="rb">My stores</span>
+            <details class="pop storesel"><summary class="btn" id="shopSum">All stores</summary><div class="menupop">
+              <div class="popacts"><button class="lnk" type="button" data-shopall="1">All</button><button class="lnk" type="button" data-shopall="0">None</button></div><div id="shopAt"></div></div></details></div>
+          <div class="dprow" id="stopsBox" hidden><span class="rb">Max stops</span><div class="seg"><button type="button" data-stops="1">1</button><button type="button" data-stops="2">2</button><button type="button" data-stops="3">3</button><button type="button" data-stops="99">All</button></div></div>
+        </div>
+        <form id="gAddForm" class="searchbar" style="margin-top:10px"><input id="gAdd" placeholder="+ Add an item (beer, charcoal, foil pans)" aria-label="Add an item"><button class="btn" type="submit">Add</button></form>
         <p class="gsum" id="gSum"></p>
         <div id="gItems"></div>
         <p class="gnote">Check off what you already have. Share to Keep sends only what you still need: pick Keep on your phone's share sheet, then tap "Show checkboxes" in Keep. The list is saved in this browser only.</p>
@@ -1727,15 +1754,15 @@ function renderGrocery(){
   // scope chips
   const usedDays=DAYS.filter(d=>plan.some(p=>p.day===d));
   if(gScope!=="All"&&!usedDays.includes(gScope))gScope="All";
-  $("#gScope").innerHTML=["All",...usedDays].map(d=>`<button class="chip" type="button" aria-pressed="${d===gScope}" data-scope="${d}">${d==="All"?"Whole plan":d}</button>`).join("");
+  $("#gScope").innerHTML=["All",...usedDays].map(d=>`<option value="${d}"${d===gScope?" selected":""}>${d==="All"?"Whole plan":d==="Anytime"?"Anytime":d==="Tonight"?"Tonight":"For "+d}</option>`).join("");
   // items
   const items=buildItems();
   const need=items.filter(i=>!have.has(i.k)).length;
   $("#gSum").textContent=items.length?`${need} to buy · ${items.length-need} already have`:"";
-  $("#gHide").setAttribute("aria-pressed",hideHave);$("#gHide").classList.toggle("primary",hideHave);
+  $("#gHide").checked=hideHave;dealLine();maybeDeals();
   if(!items.length){$("#gItems").innerHTML=`<p class="gempty">Your list is empty. Add recipes to the plan and their ingredients show up here, sorted by store section.</p>`;return}
   const hasDeals=Object.keys(deals).length>0;
-  $("#groupBox").hidden=!hasDeals;$("#stopsBox").hidden=!(hasDeals&&groupBy==="store");
+  $("#groupBox").hidden=!hasDeals;$("#stopsBox").hidden=!(hasDeals&&groupBy==="store");dealLine();
   document.querySelectorAll("#stopsBox [data-stops]").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.stops===maxStops));
   document.querySelectorAll("#groupBox [data-group]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.group===groupBy));
   if(hasDeals&&groupBy==="store"){$("#gItems").innerHTML=storeViewHTML(items);return}
@@ -1755,11 +1782,11 @@ $("#planBox").addEventListener("click",e=>{
   const x=e.target.closest("[data-rm]");if(x){removeFromPlan(x.dataset.rm);render()}
 });
 $("#planBox").addEventListener("change",e=>{const s=e.target.closest("[data-pday]");if(s){addToPlan(s.dataset.pday,s.value)}});
-$("#gScope").addEventListener("click",e=>{const c=e.target.closest("[data-scope]");if(c){gScope=c.dataset.scope;renderGrocery()}});
+$("#gScope").onchange=e=>{gScope=e.target.value;renderGrocery()};
 $("#gItems").addEventListener("change",e=>{const c=e.target.closest("input[data-k]");if(!c)return;c.checked?have.add(c.dataset.k):have.delete(c.dataset.k);store.set("ftb-have",[...have]);renderGrocery()});
 $("#gItems").addEventListener("click",e=>{const x=e.target.closest("[data-cx]");if(!x)return;e.preventDefault();custom=custom.filter(c=>c!==x.dataset.cx);store.set("ftb-custom",custom);renderGrocery()});
 $("#gAddForm").onsubmit=e=>{e.preventDefault();const v=$("#gAdd").value.trim();if(v&&!custom.includes(v)){custom.push(v);store.set("ftb-custom",custom)}$("#gAdd").value="";renderGrocery()};
-$("#gHide").onclick=()=>{hideHave=!hideHave;store.set("ftb-hide",hideHave);renderGrocery()};
+$("#gHide").onchange=e=>{hideHave=e.target.checked;store.set("ftb-hide",hideHave);renderGrocery()};
 $("#gPrint").onclick=()=>window.print();
 $("#planClear").onclick=()=>{if(plan.length&&confirm("Clear the cook plan and grocery list?")){plan=[];have=new Set();custom=[];store.set("ftb-have",[]);store.set("ftb-custom",[]);savePlan();renderGrocery();render()}};
 /* ---------- weekly-ad sale prices (Flipp, via the relay) ---------- */
@@ -1773,11 +1800,12 @@ function applyDeals(){
     if(vis.length){deals[k]=vis;n++;vis.forEach(x=>{if(x.ends&&(!ends||x.ends<ends))ends=x.ends})}
   }
   if(dealMeta){
-    $("#dealSum").hidden=false;
-    $("#dealSum").innerHTML=n?`🏷️ Found sale prices for <b>${n}</b> of ${dealMeta.total} items near ${dealMeta.zip}${ends?` · ads run through ${new Date(ends).toLocaleDateString([],{weekday:"short",month:"short",day:"numeric"})}`:""}. Weekly ads via Flipp; check prices in store.`:`No matching sale prices this week near ${dealMeta.zip}${hiddenStores.size?" at the stores you shop":""}.`;
-    const list=[...all].sort((a,b)=>a.localeCompare(b));
+    const cnt={};Object.values(rawDeals).forEach(ds=>new Set(ds.map(x=>storeName(x.store))).forEach(st=>cnt[st]=(cnt[st]||0)+1));
+    const list=[...all].sort((a,b)=>cnt[b]-cnt[a]||a.localeCompare(b));
+    Object.assign(dealMeta,{n,ends,stores:list.length,mine:list.filter(st=>!hiddenStores.has(st)).length});
     $("#shopAtRow").hidden=!list.length;
-    $("#shopAt").innerHTML=list.map(st=>`<button class="chip" type="button" data-shop="${esc(st)}" aria-pressed="${!hiddenStores.has(st)}">${hiddenStores.has(st)?"✕ ":""}${esc(st)}</button>`).join("");
+    $("#shopAt").innerHTML=list.map(st=>`<label class="shopopt"><input type="checkbox" data-shop="${esc(st)}"${hiddenStores.has(st)?"":" checked"}>${esc(st)}<small>${cnt[st]} on sale</small></label>`).join("");
+    $("#shopSum").textContent=dealMeta.mine===list.length?`All stores (${list.length}) ▾`:`${dealMeta.mine} of ${list.length} stores ▾`;
   }
   renderGrocery();
 }
@@ -1804,20 +1832,20 @@ function dealTerm(i){
 $("#dealZip").value=store.get("ftb-zip","");
 $("#dealGo").onclick=async()=>{
   const zip=$("#dealZip").value.trim();
-  if(!/^\d{5}$/.test(zip)){$("#dealSum").hidden=false;$("#dealSum").textContent="Enter a 5-digit zip code first.";return}
-  store.set("ftb-zip",zip);
+  if(!/^\d{5}$/.test(zip)){dealMsg="Enter a 5-digit zip code first.";dealLine();dealMsg="";return}
+  store.set("ftb-zip",zip);dealSig=zip+"|"+plan.map(p=>p.id).sort().join()+"|"+custom.join();
   const items=buildItems().filter(i=>i.a<=4&&!have.has(i.k));      // meat, produce, dairy, bread, frozen; skip pantry staples
-  if(!items.length){$("#dealSum").hidden=false;$("#dealSum").textContent="Nothing on the list to price-check yet.";return}
+  if(!items.length){dealMsg="🏷️ Nothing on the list to price-check yet.";dealLine();dealMsg="";return}
   const terms={};items.forEach(i=>{const t=dealTerm(i);if(t.length>2)terms[i.k]=t});
   const qs=[...new Set(Object.values(terms))].slice(0,40);
-  $("#dealGo").disabled=true;$("#dealSum").hidden=false;$("#dealSum").textContent="Checking this week's ads…";
+  $("#dealGo").disabled=true;dealMsg="🏷️ Checking this week's ads…";dealLine();
   try{
     const d=await (await fetch(`${RELAY}/deals?zip=${zip}&q=${encodeURIComponent(qs.join("|"))}`)).json();
     if(!d.ok)throw new Error(d.reason||"failed");
     rawDeals={};
     for(const [k,t] of Object.entries(terms)){const ds=(d.results[t]||[]).filter(x=>!SKIP_STORES.test(x.store));if(ds.length)rawDeals[k]=ds}
-    dealMeta={zip,total:items.length};applyDeals();
-  }catch(_){$("#dealSum").textContent="Couldn't reach the weekly ads right now. Try again in a minute."}
+    dealMsg="";dealMeta={zip,total:items.length};applyDeals();
+  }catch(_){dealMsg="Couldn't reach the weekly ads right now. Tap Edit, then Update to retry.";dealLine();dealMsg=""}
   $("#dealGo").disabled=false;
 };
 
@@ -1862,9 +1890,39 @@ function storeViewHTML(items){
   return out+(rest.length&&!order.length?`<div class="aisle"><h4>Buy anywhere <small style="text-transform:none;letter-spacing:0;color:var(--ink-2)">no sale prices at the stores you shop</small></h4>${rest.map(i=>rowHTML(i,dealHTML(i.k))).join("")}</div>`:"");
 }
 document.querySelectorAll("#groupBox [data-group]").forEach(b=>b.onclick=()=>{groupBy=b.dataset.group;store.set("ftb-groupby",groupBy);renderGrocery()});
-$("#shopAt").addEventListener("click",e=>{const c=e.target.closest("[data-shop]");if(!c)return;const st=c.dataset.shop;
-  hiddenStores.has(st)?hiddenStores.delete(st):hiddenStores.add(st);store.set("ftb-hidestores",[...hiddenStores]);applyDeals()});
+$("#shopAt").addEventListener("change",e=>{const c=e.target.closest("[data-shop]");if(!c)return;const st=c.dataset.shop;
+  c.checked?hiddenStores.delete(st):hiddenStores.add(st);store.set("ftb-hidestores",[...hiddenStores]);applyDeals()});
+document.querySelectorAll("[data-shopall]").forEach(b=>b.onclick=()=>{
+  $("#shopAt").querySelectorAll("[data-shop]").forEach(c=>{const st=c.dataset.shop;b.dataset.shopall==="1"?hiddenStores.delete(st):hiddenStores.add(st)});
+  store.set("ftb-hidestores",[...hiddenStores]);applyDeals()});
+// the one-line deal summary (tap Edit for zip, stores, stops)
+let dealMsg="";
+function dealLine(){
+  const m=dealMeta,parts=[];
+  if(dealMsg)parts.push(dealMsg);
+  else if(!m)parts.push("🏷️ See this week's sale prices near you.");
+  else{parts.push(m.n?`🏷️ <b>${m.n}</b> sale price${m.n>1?"s":""}`:"🏷️ No sale prices this week",m.zip);
+    if(m.stores)parts.push(m.mine===m.stores?"all stores":`my stores (${m.mine})`);
+    if(groupBy==="store"&&m.n)parts.push(maxStops>=99?"any stops":`${maxStops} stop${maxStops>1?"s":""}`);
+    if(m.ends)parts.push("thru "+new Date(m.ends).toLocaleDateString([],{weekday:"short",month:"numeric",day:"numeric"}))}
+  $("#dealSum").innerHTML=parts.join(" · ");
+  $("#dealEdit").textContent=$("#dealPanel").hidden?(store.get("ftb-zip","")?"Edit":"Set zip"):"Done";
+  $("#stopsBox").hidden=!(Object.keys(deals).length&&groupBy==="store");
+}
+$("#dealEdit").onclick=()=>{$("#dealPanel").hidden=!$("#dealPanel").hidden;if(!$("#dealPanel").hidden&&!$("#dealZip").value)$("#dealZip").focus();dealLine()};
+$("#dealZip").addEventListener("input",e=>{if(/^\d{5}$/.test(e.target.value.trim()))$("#dealGo").click()});
+// check the ads on their own when there's a saved zip and the list changed
+let dealSig="";
+function maybeDeals(){
+  const zip=store.get("ftb-zip","");if(!zip||$("#tab-grocery").hidden||$("#dealGo").disabled)return;
+  const sig=zip+"|"+plan.map(p=>p.id).sort().join()+"|"+custom.join();
+  if(sig===dealSig)return;dealSig=sig;setTimeout(()=>$("#dealGo").click(),0);
+}
+// close the Share and store dropdowns on an outside tap
+document.addEventListener("click",e=>document.querySelectorAll("details.pop[open]").forEach(d=>{if(!d.contains(e.target))d.open=false}));
+document.querySelectorAll(".sharemenu .menupop button").forEach(b=>b.addEventListener("click",()=>setTimeout(()=>b.closest("details").open=false,1900)));
 document.querySelectorAll("#stopsBox [data-stops]").forEach(b=>b.onclick=()=>{maxStops=+b.dataset.stops;store.set("ftb-stops",maxStops);renderGrocery()});
+if(store.get("ftb-zip",""))$("#dealEdit").textContent="Edit";
 
 function listText(){
   const items=buildItems().filter(i=>!have.has(i.k)).sort((x,y)=>x.a-y.a||x.t.localeCompare(y.t));
