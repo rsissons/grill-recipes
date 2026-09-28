@@ -296,7 +296,9 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
           <div class="gbtns"><button class="btn primary" id="gShare" type="button">Share to Keep</button><button class="btn" id="gCopy" type="button">Copy</button><button class="btn" id="gHide" type="button" aria-pressed="false">Hide what I have</button><button class="btn" id="gPrint" type="button">Print</button></div></div>
         <div class="frow gscope" style="margin-top:10px"><span class="lbl">For</span><div class="chips" id="gScope"></div></div>
         <form id="gAddForm" class="searchbar" style="margin-top:10px"><input id="gAdd" placeholder="Add an item (beer, charcoal, foil pans)" aria-label="Add an item"><button class="btn" type="submit">Add</button></form>
-        <div class="dealbar"><label class="rb">Sale prices near <input id="dealZip" inputmode="numeric" maxlength="5" placeholder="zip" size="6"></label><button class="btn" type="button" id="dealGo">🏷️ Check this week's ads</button></div>
+        <div class="dealbar"><label class="rb">Sale prices near <input id="dealZip" inputmode="numeric" maxlength="5" placeholder="zip" size="6"></label><button class="btn" type="button" id="dealGo">🏷️ Check this week's ads</button>
+          <span class="rb" id="groupBox" hidden>Group by <button class="chip" type="button" data-group="aisle">Aisle</button><button class="chip" type="button" data-group="store">Store</button></span>
+          <span class="rb" id="stopsBox" hidden>Stops <button class="chip" type="button" data-stops="1">1</button><button class="chip" type="button" data-stops="2">2</button><button class="chip" type="button" data-stops="3">3</button><button class="chip" type="button" data-stops="99">All</button></span></div>
         <p class="gsum" id="dealSum" hidden></p>
         <p class="gsum" id="gSum"></p>
         <div id="gItems"></div>
@@ -1724,6 +1726,11 @@ function renderGrocery(){
   $("#gSum").textContent=items.length?`${need} to buy · ${items.length-need} already have`:"";
   $("#gHide").setAttribute("aria-pressed",hideHave);$("#gHide").classList.toggle("primary",hideHave);
   if(!items.length){$("#gItems").innerHTML=`<p class="gempty">Your list is empty. Add recipes to the plan and their ingredients show up here, sorted by store section.</p>`;return}
+  const hasDeals=Object.keys(deals).length>0;
+  $("#groupBox").hidden=!hasDeals;$("#stopsBox").hidden=!(hasDeals&&groupBy==="store");
+  document.querySelectorAll("#stopsBox [data-stops]").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.stops===maxStops));
+  document.querySelectorAll("#groupBox [data-group]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.group===groupBy));
+  if(hasDeals&&groupBy==="store"){$("#gItems").innerHTML=storeViewHTML(items);return}
   $("#gItems").innerHTML=AISLES.map((name,ai)=>{
     let list=items.filter(i=>i.a===ai);
     if(hideHave)list=list.filter(i=>!have.has(i.k));
@@ -1788,8 +1795,49 @@ $("#dealGo").onclick=async()=>{
   $("#dealGo").disabled=false;
 };
 
+/* ---------- group the list by store (fewest trips) ---------- */
+let groupBy=store.get("ftb-groupby","aisle"),maxStops=store.get("ftb-stops",2);
+const storeName=x=>x.replace(/ Markets?$/,"").replace(/\.$/,"");
+function storePlan(items){
+  // Greedy: pick the store with the most sale items still unassigned, give it those items, repeat. Fewest stops.
+  const open=items.filter(i=>!have.has(i.k)&&deals[i.k]&&deals[i.k].length),assign={},order=[];
+  let left=open.slice();
+  while(left.length){
+    const cnt={};left.forEach(i=>new Set(deals[i.k].map(d=>storeName(d.store))).forEach(st=>cnt[st]=(cnt[st]||0)+1));
+    const best=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a]||a.localeCompare(b))[0];
+    if(order.length>=maxStops)break;       // stop limit reached: the rest go to "Buy anywhere"
+    order.push(best);
+    left=left.filter(i=>{const d=deals[i.k].find(x=>storeName(x.store)===best);if(d){assign[i.k]=d;return false}return true});
+  }
+  return {assign,order};
+}
+function rowHTML(i,extra){
+  return `<label class="gi${have.has(i.k)?" have":""}"><input type="checkbox" data-k="${esc(i.k)}"${have.has(i.k)?" checked":""}><span>${esc(i.t)}${i.from.size?`<small>${esc([...i.from].join(", "))}</small>`:""}${extra}</span>${i.custom?`<button class="x" type="button" data-cx="${esc(i.t)}" aria-label="Remove">×</button>`:""}</label>`;
+}
+function storeViewHTML(items){
+  const {assign,order}=storePlan(items);
+  let list=hideHave?items.filter(i=>!have.has(i.k)):items;
+  const out=order.map(st=>{
+    const its=list.filter(i=>assign[i.k]&&storeName(assign[i.k].store)===st).sort((x,y)=>x.a-y.a||x.t.localeCompare(y.t));
+    if(!its.length)return "";
+    return `<div class="aisle"><h4>🏷️ ${esc(st)} <small style="text-transform:none;letter-spacing:0;color:var(--ink-2)">${its.length} sale item${its.length>1?"s":""}</small></h4>${its.map(i=>{
+      const d=assign[i.k],others=deals[i.k].filter(x=>storeName(x.store)!==st);
+      return rowHTML(i,`<span class="deal">${esc(dealPrice(d))}${d.was?` (was $${Number(d.was).toFixed(2)})`:""}${others.length?` <small style="display:inline;font-weight:400;color:var(--ink-2)">· also ${others.map(o=>`${esc(storeName(o.store))} ${esc(dealPrice(o))}`).join(", ")}</small>`:""}</span>`)}).join("")}</div>`;
+  }).join("");
+  const rest=list.filter(i=>!assign[i.k]).sort((x,y)=>(have.has(x.k)-have.has(y.k))||x.a-y.a||x.t.localeCompare(y.t));
+  return out+(rest.length?`<div class="aisle"><h4>Buy anywhere <small style="text-transform:none;letter-spacing:0;color:var(--ink-2)">at your ${order.length?"stops above or any":""} store</small></h4>${rest.map(i=>rowHTML(i,dealHTML(i.k))).join("")}</div>`:"");
+}
+document.querySelectorAll("#groupBox [data-group]").forEach(b=>b.onclick=()=>{groupBy=b.dataset.group;store.set("ftb-groupby",groupBy);renderGrocery()});
+document.querySelectorAll("#stopsBox [data-stops]").forEach(b=>b.onclick=()=>{maxStops=+b.dataset.stops;store.set("ftb-stops",maxStops);renderGrocery()});
+
 function listText(){
   const items=buildItems().filter(i=>!have.has(i.k)).sort((x,y)=>x.a-y.a||x.t.localeCompare(y.t));
+  if(Object.keys(deals).length&&groupBy==="store"){
+    const {assign,order}=storePlan(items),lines=[];
+    order.forEach(st=>{const its=items.filter(i=>assign[i.k]&&storeName(assign[i.k].store)===st);if(its.length){lines.push(`--- ${st} ---`);its.forEach(i=>lines.push(`${i.t} (${dealPrice(assign[i.k])})`))}});
+    const rest=items.filter(i=>!assign[i.k]);if(rest.length){lines.push("--- Anywhere ---");rest.forEach(i=>lines.push(i.t))}
+    return lines.join("\n");
+  }
   return items.map(i=>{const d=(deals[i.k]||[])[0];return i.t+(d?` (on sale: ${d.store.replace(/ Markets?$/,"")} ${dealPrice(d)})`:"")}).join("\n");
 }
 function listTitle(){const d=new Date();return `Grocery list${gScope!=="All"?" ("+gScope+")":""} ${d.getMonth()+1}/${d.getDate()}`}
