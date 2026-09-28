@@ -176,5 +176,37 @@ window.ADDED = [
    "from": "s",
    "note": "1/5 of recipe"
   }
+ },
+ {
+  "id": "easy-smoked-white-queso-dip-on-the-traeger-ironwood-885",
+  "name": "Easy Smoked White Queso Dip on the Traeger Ironwood 885",
+  "cooker": "PBC",
+  "type": "Appetizer",
+  "region": "BBQ",
+  "mins": 135,
+  "desc": "Which one of y’all doesn’t love cheese? I’m guessin’ none! My recipe for Smoked White Queso Dip is super simple and can be prepped in 15 minutes. This is a great, mostly hands-off…",
+  "ing": [
+   "Heath Riles Garlic Jalapeno Rub",
+   "3/4 cup of milk",
+   "Can of lime and cilantro Rotel",
+   "8oz block of cream cheese",
+   "1lb of white American cheese diced",
+   "1lb of Velveeta cheese diced",
+   "1/2 lb of pepperjack cheese",
+   "1 deseeded jalapeno chopped",
+   "1 head of cilantro chopped"
+  ],
+  "steps": [
+   "Get your grill up to temperature of approximately 300º.",
+   "Place a can of Rotel, 1lb of american cheese diced, 8oz block of cream cheese, 1lb of Velveeta cheese diced, 1/2 lb of pepperjack cheese diced, 1 chopped jalapeno, 1 chopped head of cilantro, and Heath Riles Garlic Jalapeno Rub into your disposable aluminum pan",
+   "Place the pan on your grill and stir after 30 minutes. Add 3/4 cup of milk to help with the consistency of your queso. Stir every 30 minutes.",
+   "After 2 hours, or until your queso dip is completely melted, take off your grill and serve.",
+   "Serve with chips, crackers, veggies, whatever you'd like. Enjoy!"
+  ],
+  "tip": "",
+  "src": [
+   "Heath Riles BBQ: Easy Smoked White Queso Dip on the Traeger Ironwood 885",
+   "https://www.heathrilesbbq.com/blogs/favorite-recipes/easy-smoked-white-queso-dip-on-the-traeger-ironwood-885"
+  ]
  }
 ];
