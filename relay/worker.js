@@ -12,7 +12,7 @@
  * Bindings:
  *   LIMITER           rate limiter for /add (see wrangler.toml)
  *   HEART_LIMITER     rate limiter for /heart
- *   DB                D1 database "grill-hearts" (table hearts: one row per recipe per device)
+ *   DB                D1 database "grill-hearts": tables hearts and ratings (one row per recipe per device)
  */
 const REPO = "rsissons/grill-recipes";
 const ALLOWED_ORIGINS = ["https://rsissons.github.io", "http://localhost:8788", "http://127.0.0.1:8788"];
@@ -139,6 +139,41 @@ async function handleHeart(req, env, origin) {
   return json({ ok: true, count: row ? row.n : 0 }, 200, origin);
 }
 
+/* Everything shared in one call: GET /community -> {hearts: {id: n}, ratings: {id: [avg, n]}} */
+async function handleCommunity(env, origin) {
+  const [h, r] = await env.DB.batch([
+    env.DB.prepare("SELECT recipe, COUNT(*) AS n FROM hearts GROUP BY recipe"),
+    env.DB.prepare("SELECT recipe, AVG(stars) AS avg, COUNT(*) AS n FROM ratings GROUP BY recipe"),
+  ]);
+  const hearts = {}, ratings = {};
+  for (const x of h.results) hearts[x.recipe] = x.n;
+  for (const x of r.results) ratings[x.recipe] = [Math.round(x.avg * 10) / 10, x.n];
+  const res = json({ ok: true, hearts, ratings }, 200, origin);
+  res.headers.set("Cache-Control", "public, max-age=20");
+  return res;
+}
+
+/* POST /rate {id, device, stars}: stars 1-5 sets this device's rating, 0 removes it. Returns the new [avg, n]. */
+async function handleRate(req, env, origin) {
+  let body;
+  try { body = await req.json(); } catch { return json({ ok: false }, 400, origin); }
+  const id = String(body.id || ""), device = String(body.device || "").toLowerCase(), stars = parseInt(body.stars, 10);
+  if (!ID_RE.test(id) || !DEVICE_RE.test(device) || !(stars >= 0 && stars <= 5)) return json({ ok: false }, 400, origin);
+  if (env.HEART_LIMITER) {
+    const ip = req.headers.get("CF-Connecting-IP") || "unknown";
+    const { success } = await env.HEART_LIMITER.limit({ key: ip });
+    if (!success) return json({ ok: false, reason: "slow down" }, 429, origin);
+  }
+  if (stars === 0) {
+    await env.DB.prepare("DELETE FROM ratings WHERE recipe = ? AND device = ?").bind(id, device).run();
+  } else {
+    await env.DB.prepare("INSERT INTO ratings (recipe, device, stars, updated) VALUES (?, ?, ?, ?) ON CONFLICT (recipe, device) DO UPDATE SET stars = excluded.stars, updated = excluded.updated")
+      .bind(id, device, stars, Date.now()).run();
+  }
+  const row = await env.DB.prepare("SELECT AVG(stars) AS avg, COUNT(*) AS n FROM ratings WHERE recipe = ?").bind(id).first();
+  return json({ ok: true, rating: row && row.n ? [Math.round(row.avg * 10) / 10, row.n] : null }, 200, origin);
+}
+
 async function handleStatus(req, env, origin) {
   const n = parseInt(new URL(req.url).searchParams.get("issue") || "", 10);
   if (!n) return json({ ok: false }, 400, origin);
@@ -161,6 +196,8 @@ export default {
       if (req.method === "GET" && path === "/status") return await handleStatus(req, env, origin);
       if (req.method === "GET" && path === "/hearts") return await handleHearts(env, origin);
       if (req.method === "POST" && path === "/heart") return await handleHeart(req, env, origin);
+      if (req.method === "GET" && path === "/community") return await handleCommunity(env, origin);
+      if (req.method === "POST" && path === "/rate") return await handleRate(req, env, origin);
       return json({ ok: true, service: "grill-recipes relay" }, 200, origin);
     } catch (e) {
       return json({ ok: false, reason: "Something went wrong on our end." }, 500, origin);

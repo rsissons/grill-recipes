@@ -69,6 +69,10 @@ nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(-
 .hearts{font-size:.8rem;white-space:nowrap;color:var(--ink-2)}
 .hearts.mine{color:var(--ember);font-weight:600}
 .rateline{font-size:.88rem;color:var(--ink-2);margin:8px 0 0}
+.rateme{display:flex;align-items:center;gap:2px;margin-top:8px;font-size:.85rem;color:var(--ink-2);flex-wrap:wrap}
+.rateme button{background:none;border:0;padding:0 2px;font-size:1.6rem;line-height:1;color:var(--line);cursor:pointer}
+.rateme button.on{color:var(--gold)}
+.rateme .clr{font-size:.8rem;color:var(--ink-2);text-decoration:underline;margin-left:8px}
 .tipgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px;align-items:start}
 .tipcard{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:var(--shadow)}
 .tipcard h2{font-size:1.4rem;display:flex;gap:8px;align-items:center}
@@ -1433,7 +1437,7 @@ function cardHTML(r){
   return `<button class="card" type="button" data-id="${r.id}">
     <div class="tags"><span class="tag ${r.cooker.toLowerCase()}">${COOKERS[r.cooker]}</span><span class="tag">${esc(r.region)}</span>${r.added?'<span class="tag added">Added</span>':""}</div>
     <h3>${esc(r.name)}</h3>
-    <div class="meta"><span>⏱ ${fmtTime(r.mins)}${r.mac?` · ${r.mac.cal} cal · ${r.mac.p}g protein`:""}</span><span>${inPlan(r.id)?'<span class="onlist">🛒 On list</span> ':''}${r.rating?`<span class="stars" title="${r.rating.v} stars from ${r.rating.n} ratings on ${esc(siteOf(r))}">★ ${r.rating.v.toFixed(1)}</span> `:""}${heartHTML(r.id)}</span></div>
+    <div class="meta"><span>⏱ ${fmtTime(r.mins)}${r.mac?` · ${r.mac.cal} cal · ${r.mac.p}g protein`:""}</span><span>${inPlan(r.id)?'<span class="onlist">🛒 On list</span> ':''}${starsHTML(r)}${heartHTML(r.id)}</span></div>
   </button>`;
 }
 function render(){
@@ -1616,7 +1620,7 @@ function openRecipe(id){
   const r=byId[id];if(!r)return;
   $("#dlgTitle").textContent=r.name;
   $("#dlgTags").innerHTML=`<span class="tag ${r.cooker.toLowerCase()}">${COOKERS[r.cooker]}</span><span class="tag">${TYPE_LABEL[r.type]}</span><span class="tag">${esc(r.region)}</span><span class="tag">⏱ ${fmtTime(r.mins)}</span>`+
-    `${r.rating||heartCounts[r.id]?`<p class="rateline">${r.rating?`<span class="stars">★ ${r.rating.v.toFixed(1)}</span> from ${r.rating.n.toLocaleString()} rating${r.rating.n===1?"":"s"} on ${esc(siteOf(r))}`:""}${r.rating&&heartCounts[r.id]?" · ":""}${heartCounts[r.id]?`♥ ${heartCounts[r.id]} favorite${heartCounts[r.id]===1?"":"s"} here`:""}</p>`:""}`;
+    `${ratingLineHTML(r)}${rateMeHTML(r)}`;
   const isFav=favs.has(r.id);
   $("#dlgBody").innerHTML=`${macHTML(r)}<h3${r.mac?"":' style="margin-top:0"'}>Ingredients</h3><ul>${r.ing.map(i=>`<li>${esc(i)}</li>`).join("")}</ul>
     <h3>Steps</h3><ol>${r.steps.map(s=>`<li>${esc(s)}</li>`).join("")}</ol>
@@ -1829,7 +1833,7 @@ $("#sourcesBox").innerHTML=BOOKS.map(b=>`<div class="src"><h3><a href="${b[1]}" 
 
 /* ---------- sorting ---------- */
 const byName=(a,b)=>a.name.localeCompare(b.name);
-const topScore=r=>r.rating?(r.rating.v*r.rating.n+4.3*10)/(r.rating.n+10):0;   // stars, weighted so 5.0 from 2 ratings doesn't beat 4.9 from 200
+const topScore=r=>{const e=effRating(r);return e?(e.v*e.n+4.3*10)/(e.n+10):0};   // stars, weighted so 5.0 from 2 ratings doesn't beat 4.9 from 200
 const SORTS={
   rec:(a,b)=>a.cooker.localeCompare(b.cooker)||byName(a,b),
   new:(a,b)=>b.order-a.order,
@@ -1844,6 +1848,41 @@ let sortBy=store.get("ftb-sort","rec");if(!SORTS[sortBy])sortBy="rec";
 $("#sortBy").value=sortBy;
 $("#sortBy").onchange=e=>{sortBy=e.target.value;store.set("ftb-sort",sortBy);render()};
 
+/* ---------- cook ratings (1-5 stars, one per recipe per device, averaged in the relay) ---------- */
+let cookRatings={};                                  // id -> [avg, count]
+let myRates=store.get("ftb-myrates",{});
+function effRating(r){                               // cooks' rating once 3+ people rated it, otherwise the source's stars
+  const c=cookRatings[r.id];
+  if(c&&c[1]>=3)return {v:c[0],n:c[1],who:"cooks"};
+  if(r.rating)return {v:r.rating.v,n:r.rating.n,who:siteOf(r)};
+  if(c)return {v:c[0],n:c[1],who:"cooks"};
+  return null;
+}
+function starsHTML(r){
+  const e=effRating(r);if(!e)return "";
+  const t=e.who==="cooks"?`${e.v} stars from ${e.n} cook${e.n===1?"":"s"} here`:`${e.v} stars from ${e.n} ratings on ${esc(e.who)}`;
+  return `<span class="stars" title="${t}">★ ${e.v.toFixed(1)}${e.who==="cooks"?` <small>(${e.n})</small>`:""}</span> `;
+}
+function ratingLineHTML(r){
+  const c=cookRatings[r.id],h=heartCounts[r.id],bits=[];
+  if(c)bits.push(`<span class="stars">★ ${c[0].toFixed(1)}</span> from ${c[1]} cook${c[1]===1?"":"s"} here`);
+  if(r.rating)bits.push(`<span class="stars">★ ${r.rating.v.toFixed(1)}</span> from ${r.rating.n.toLocaleString()} rating${r.rating.n===1?"":"s"} on ${esc(siteOf(r))}`);
+  if(h)bits.push(`♥ ${h} favorite${h===1?"":"s"} here`);
+  return bits.length?`<p class="rateline">${bits.join(" · ")}</p>`:"";
+}
+function rateMeHTML(r){
+  if(!RELAY)return "";
+  const mine=myRates[r.id]||0;
+  return `<div class="rateme" data-rate="${r.id}"><span style="margin-right:6px">${mine?"Your rating:":"Made it? Rate it:"}</span>${[1,2,3,4,5].map(n=>`<button type="button" data-stars="${n}" class="${n<=mine?"on":""}" aria-label="${n} star${n>1?"s":""}">★</button>`).join("")}${mine?'<button type="button" class="clr" data-stars="0">clear</button>':""}</div>`;
+}
+async function sendRate(id,stars){
+  if(stars)myRates[id]=stars;else delete myRates[id];
+  store.set("ftb-myrates",myRates);openRecipe(id);
+  try{const d=await (await fetch(RELAY+"/rate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id,device:deviceId,stars})})).json();
+    if(d.ok){if(d.rating)cookRatings[id]=d.rating;else delete cookRatings[id];render();if(dlg.open&&$("#dlgTitle").textContent===byId[id].name)openRecipe(id)}}catch(_){}
+}
+$("#dlgTags").addEventListener("click",e=>{const b=e.target.closest("[data-stars]");if(!b)return;const box=b.closest("[data-rate]");sendRate(box.dataset.rate,+b.dataset.stars)});
+
 /* ---------- shared hearts (counted in the relay, one per recipe per device) ---------- */
 let heartCounts={};
 const deviceId=(()=>{let d=store.get("ftb-device","");if(!/^[a-f0-9]{32}$/.test(d)){d=[...crypto.getRandomValues(new Uint8Array(16))].map(b=>b.toString(16).padStart(2,"0")).join("");store.set("ftb-device",d)}return d})();
@@ -1855,7 +1894,7 @@ async function sendHeart(id,on){
 }
 async function loadHearts(){
   if(!RELAY)return;
-  try{const d=await (await fetch(RELAY+"/hearts")).json();if(d.ok){heartCounts=d.counts||{};render()}}catch(_){}
+  try{const d=await (await fetch(RELAY+"/community")).json();if(d.ok){heartCounts=d.hearts||{};cookRatings=d.ratings||{};render()}}catch(_){}
   const synced=new Set(store.get("ftb-hsync",[]));   // favorites saved before shared hearts existed get counted once
   for(const id of favs)if(!synced.has(id)&&byId[id])await sendHeart(id,true);
 }
