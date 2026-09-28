@@ -174,6 +174,44 @@ async function handleRate(req, env, origin) {
   return json({ ok: true, rating: row && row.n ? [Math.round(row.avg * 10) / 10, row.n] : null }, 200, origin);
 }
 
+/* Weekly-ad deals via Flipp (unofficial): GET /deals?zip=91773&q=chuck roast|chicken thighs  -> {results: {query: [deal...]}} */
+const STOP = new Set(["the","and","or","with","for","fresh","large","small","whole","boneless","skinless","bone-in","skin-on","lean","thin","thick","sliced","diced","shredded","cup","cups","lb","lbs","oz","each"]);
+const words = s => (s.toLowerCase().match(/[a-z]+/g) || []).filter(w => w.length > 2 && !STOP.has(w)).map(w => w.replace(/(ies)$/, "y").replace(/(es|s)$/, ""));
+async function flippSearch(zip, q) {
+  const url = `https://backflipp.wishabi.com/flipp/items/search?locale=en-us&postal_code=${zip}&q=${encodeURIComponent(q)}`;
+  const r = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0" }, cf: { cacheTtl: 21600, cacheEverything: true } });
+  if (!r.ok) return [];
+  const d = await r.json();
+  const need = words(q);
+  const out = [];
+  for (const it of d.items || []) {
+    if (!it.name || it.current_price == null || !it.merchant_name) continue;
+    const have = new Set(words(it.name));
+    if (!need.every(w => have.has(w))) continue;   // every key word must be in the ad item's name
+    out.push({
+      store: String(it.merchant_name).trim(), name: it.name,
+      price: it.current_price, pre: it.pre_price_text || "", post: it.post_price_text || "",
+      was: it.original_price || null, ends: it.valid_to || null, story: it.sale_story || "",
+    });
+  }
+  out.sort((a, b) => a.price - b.price);
+  const seen = new Set();
+  return out.filter(x => (seen.has(x.store) ? false : seen.add(x.store))).slice(0, 3);   // cheapest per store, top 3
+}
+async function handleDeals(req, env, origin) {
+  const u = new URL(req.url);
+  const zip = u.searchParams.get("zip") || "";
+  const qs = (u.searchParams.get("q") || "").split("|").map(s => s.trim()).filter(Boolean).slice(0, 40);
+  if (!/^\d{5}$/.test(zip) || !qs.length) return json({ ok: false, reason: "Need a 5-digit zip and at least one item." }, 400, origin);
+  if (env.HEART_LIMITER) {
+    const { success } = await env.HEART_LIMITER.limit({ key: "deals:" + (req.headers.get("CF-Connecting-IP") || "x") });
+    if (!success) return json({ ok: false, reason: "slow down" }, 429, origin);
+  }
+  const results = {};
+  await Promise.all(qs.map(async q => { try { results[q] = await flippSearch(zip, q); } catch { results[q] = []; } }));
+  return json({ ok: true, zip, results }, 200, origin);
+}
+
 async function handleStatus(req, env, origin) {
   const n = parseInt(new URL(req.url).searchParams.get("issue") || "", 10);
   if (!n) return json({ ok: false }, 400, origin);
@@ -198,6 +236,7 @@ export default {
       if (req.method === "POST" && path === "/heart") return await handleHeart(req, env, origin);
       if (req.method === "GET" && path === "/community") return await handleCommunity(env, origin);
       if (req.method === "POST" && path === "/rate") return await handleRate(req, env, origin);
+      if (req.method === "GET" && path === "/deals") return await handleDeals(req, env, origin);
       return json({ ok: true, service: "grill-recipes relay" }, 200, origin);
     } catch (e) {
       return json({ ok: false, reason: "Something went wrong on our end." }, 500, origin);
