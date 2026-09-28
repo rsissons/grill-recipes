@@ -90,6 +90,16 @@ nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(-
 .addstatus ul{margin:6px 0;padding-left:20px}
 .addstatus .spin{display:inline-block;width:14px;height:14px;border:2px solid var(--ember);border-right-color:transparent;border-radius:50%;animation:rot 0.8s linear infinite;vertical-align:-2px;margin-right:6px}
 @keyframes rot{to{transform:rotate(360deg)}}
+.tl{background:var(--surface-2);border-radius:12px;padding:10px 12px;margin-top:10px}
+.tl h4{margin:0 0 6px;font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ember)}
+.tl ol{list-style:none;margin:0;padding:0}
+.tl li{display:grid;grid-template-columns:5.6rem 1fr;gap:8px;padding:5px 0;border-bottom:1px solid var(--line);font-size:.9rem}
+.tl li:last-child{border-bottom:0;font-weight:600}
+.tl time{font-weight:600;color:var(--ink)}
+.tl small{display:block;color:var(--ink-2);font-size:.78rem}
+.tl .ics{margin-top:8px}
+.rb{display:inline-flex;align-items:center;gap:6px;font-size:.85rem;color:var(--ink-2)}
+.rb input{font:inherit;background:var(--surface-2);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:5px 6px}
 .macs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:4px 0 2px}
 .macs div{background:var(--surface-2);border-radius:10px;padding:8px 6px;text-align:center}
 .macs b{display:block;font-family:Oswald,Impact,sans-serif;font-size:1.25rem;line-height:1.1}
@@ -261,6 +271,11 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
       <div class="out" id="buildOut"></div>
     </div>
     <h2 style="margin-bottom:10px">Meal nights</h2>
+    <div class="filters" style="margin-bottom:12px">
+      <div class="frow"><span class="lbl">Cooker</span><div class="chips" id="mn-cooker"></div></div>
+      <div class="frow"><span class="lbl">Region</span><div class="chips" id="mn-region"></div></div>
+    </div>
+    <div class="count" id="mnCount"></div>
     <div class="menus" id="menus"></div>
   </section>
 
@@ -1173,7 +1188,7 @@ const R = [
  ing:["2 ribeye or NY strip steaks, 1.5 to 2 inches thick (about 2 lb)","Kosher salt, coarse pepper","Optional in the bag: 2 thyme sprigs, 2 smashed garlic cloves","1 Tbsp high smoke point oil, 2 Tbsp butter"],
  steps:["Set the circulator to 129°F for medium rare (135°F for medium).","Salt and pepper the steaks, bag them with the thyme and garlic, and push the air out with the water displacement trick.","Cook 1.5 to 3 hours.","Heat the Blackstone to 500°F+. Take the steaks out and pat them bone dry.","Sear 45 to 60 seconds a side with the oil, adding the butter for the last 30 seconds and spooning it over. Slice and serve right away. No rest needed."],
  tip:"Pat them really dry before the sear. Any water on the surface steams and ruins the crust.",src:["Anova (J. Kenji López-Alt): Sous Vide Ribeye","https://recipes.anovaculinary.com/recipe/ribeye-steak-time-and-temp"]},
-{id:"sv-brisket",name:"Sous Vide Smoked Brisket",cooker:"SV",finish:"PBC",type:"Beef",region:"BBQ",mins:2160,
+{id:"sv-brisket",name:"Sous Vide Smoked Brisket",cooker:"SV",finish:"PBC",pre:[[300,"Smoke the brisket in the Pit Barrel for bark (3 to 4 hours), then chill and bag it"]],type:"Beef",region:"BBQ",mins:2160,
  desc:"Smoke the flat in the Pit Barrel for bark, then 36 hours at 155°F. Brisket that's juicy every single time.",
  ing:["5 lb brisket flat","Rub: 1/4 cup coarse black pepper, 3 Tbsp kosher salt, 1 Tbsp garlic powder","Optional: 1/2 tsp pink curing salt in the rub (smoke ring)"],
  steps:["Rub the brisket and hang it in the Pit Barrel 3 to 4 hours for smoke and bark (to about 150°F inside).","Chill it, then vacuum-seal it.","Cook in the bath at 155°F for 36 hours (135°F for 72 hours is steak-like and rosy).","Chill in ice water if serving later. To finish, pat dry and set it back in the Pit Barrel or on a hot grill 20 to 30 minutes to re-crisp the bark.","Slice against the grain."],
@@ -1622,7 +1637,8 @@ function renderGrocery(){
   // plan box
   if(!plan.length){$("#planBox").innerHTML=`<p class="gempty">Nothing planned yet. Use ＋ Add to list on any recipe or Meal Night.</p>`}
   else $("#planBox").innerHTML=DAYS.map(d=>{const ps=plan.filter(p=>p.day===d);if(!ps.length)return "";
-    return `<div class="gday"><h4>${d}</h4>${ps.map(p=>{const r=byId[p.id];return `<div class="prow"><button class="nm" type="button" data-open="${r.id}">${esc(r.name)}<small style="display:block;font-weight:400;color:var(--ink-2)">${COOKERS[r.cooker]} · ${fmtTime(r.mins)}</small></button><select data-pday="${r.id}" aria-label="Day">${dayOpts(p.day)}</select><button class="x" type="button" data-rm="${r.id}" aria-label="Remove">×</button></div>`}).join("")}</div>`}).join("");
+    return `<div class="gday" data-gday="${d}"><h4>${d}</h4>${ps.map(p=>{const r=byId[p.id];return `<div class="prow"><button class="nm" type="button" data-open="${r.id}">${esc(r.name)}<small style="display:block;font-weight:400;color:var(--ink-2)">${COOKERS[r.cooker]} · ${fmtTime(r.mins)}</small></button><select data-pday="${r.id}" aria-label="Day">${dayOpts(p.day)}</select><button class="x" type="button" data-rm="${r.id}" aria-label="Remove">×</button></div>`}).join("")}
+      <div class="night-actions"><label class="rb">Ready by <input type="time" value="17:00" data-ready></label><button class="btn" type="button" data-ptime>⏰ Plan my timing</button></div><div data-timeline></div></div>`}).join("");
   // scope chips
   const usedDays=DAYS.filter(d=>plan.some(p=>p.day===d));
   if(gScope!=="All"&&!usedDays.includes(gScope))gScope="All";
@@ -1642,6 +1658,9 @@ function renderGrocery(){
   }).join("");
 }
 $("#planBox").addEventListener("click",e=>{
+  const tb=e.target.closest("[data-ptime]");
+  if(tb){const g=tb.closest("[data-gday]");const d=g.dataset.gday;g.querySelector("[data-timeline]").innerHTML=timelineHTML(plan.filter(p=>p.day===d).map(p=>p.id),g.querySelector("[data-ready]").value,d);return}
+  const ics=e.target.closest("[data-ics]");if(ics)return downloadIcs(ics);
   const o=e.target.closest("[data-open]");if(o)return openRecipe(o.dataset.open);
   const x=e.target.closest("[data-rm]");if(x){removeFromPlan(x.dataset.rm);render()}
 });
@@ -1700,10 +1719,13 @@ function openRecipe(id){
     ${r.tip?`<div class="tip"><b>Tip:</b> ${esc(r.tip)}</div>`:""}
     <div class="pairs-wrap"><h3>Pairs with</h3><div class="pairs">${pairsFor(r).map(p=>`<button type="button" data-id="${p.id}">${esc(p.name)}<small>${COOKERS[p.cooker]} · ${TYPE_LABEL[p.type]} · ${esc(p.region)}</small></button>`).join("")}</div></div>
     <p style="margin-top:16px;font-size:.88rem">Source: <a href="${esc(r.src[1])}" target="_blank" rel="noopener">${esc(r.src[0])}</a></p>
-    <div class="dlg-actions"><select id="dayPick" aria-label="Which day">${dayOpts(inPlan(r.id)?inPlan(r.id).day:"Tonight")}</select><button class="btn primary" id="listBtn" type="button">${inPlan(r.id)?'✓ On list (remove)':'＋ Add to list'}</button><button class="btn ${isFav?'primary':''}" id="favBtn" type="button">${isFav?'♥ Saved':'♡ Save to favorites'}</button><button class="btn" type="button" onclick="window.print()">Print</button><button class="btn" id="shareBtn" type="button">Copy link</button></div>`;
+    <div class="dlg-actions"><select id="dayPick" aria-label="Which day">${dayOpts(inPlan(r.id)?inPlan(r.id).day:"Tonight")}</select><button class="btn primary" id="listBtn" type="button">${inPlan(r.id)?'✓ On list (remove)':'＋ Add to list'}</button><button class="btn ${isFav?'primary':''}" id="favBtn" type="button">${isFav?'♥ Saved':'♡ Save to favorites'}</button><button class="btn" type="button" onclick="window.print()">Print</button><button class="btn" id="shareBtn" type="button">Copy link</button></div>
+    <div class="dlg-actions"><label class="rb">Ready by <input type="time" value="17:00" id="dlgReady"></label><button class="btn" type="button" id="dlgTime">⏰ Plan my timing</button></div><div id="dlgTimeline"></div>`;
   $("#dlgBody").querySelectorAll(".pairs button").forEach(b=>b.onclick=()=>openRecipe(b.dataset.id));
   $("#listBtn").onclick=()=>{inPlan(r.id)?removeFromPlan(r.id):addToPlan(r.id,$("#dayPick").value);openRecipe(r.id);render()};
   $("#dayPick").onchange=()=>{if(inPlan(r.id)){addToPlan(r.id,$("#dayPick").value);render()}};
+  $("#dlgTime").onclick=()=>{$("#dlgTimeline").innerHTML=timelineHTML([r.id],$("#dlgReady").value,$("#dayPick").value)};
+  $("#dlgTimeline").onclick=e=>{const b=e.target.closest("[data-ics]");if(b)downloadIcs(b)};
   $("#favBtn").onclick=()=>{const on=!favs.has(r.id);on?favs.add(r.id):favs.delete(r.id);store.set("ftb-favs",[...favs]);sendHeart(r.id,on);openRecipe(r.id);render()};
   $("#shareBtn").onclick=async e=>{const url=location.href.split("#")[0]+"#"+r.id;try{await navigator.clipboard.writeText(url);e.target.textContent="Copied!"}catch(_){prompt("Copy this link:",url)}};
   history.replaceState(null,"","#"+r.id);
@@ -1720,17 +1742,41 @@ function nightCard(m,i,pfx,chosen){
   const mains=m.ids.filter(isMain),extras=m.ids.filter(id=>!isMain(id));
   const sel=chosen||mains[0];
   const row=(id,input)=>{const r=byId[id];return `<label class="opt">${input}<button type="button" class="lnk" data-id="${id}">${esc(r.name)}</button><small>${COOKERS[r.cooker]} · ${fmtTime(r.mins)}</small></label>`};
-  return `<div class="menu" data-card><h3>${esc(m.name)}</h3><p>${esc(m.why)}</p>
+  const cks=[...new Set(m.ids.flatMap(id=>[byId[id].cooker,byId[id].finish]).filter(Boolean))],rgs=[...new Set(mains.map(id=>byId[id].region))];
+  return `<div class="menu" data-card data-cookers="${cks.join(" ")}" data-regions="${esc(rgs.join("|"))}"><h3>${esc(m.name)}</h3><p>${esc(m.why)}</p>
     <div class="nh">${mains.length>1?"Main (pick one)":"Main"}</div>
     ${mains.map(id=>row(id,`<input type="radio" name="m-${pfx}${i}" value="${id}"${id===sel?" checked":""}${mains.length===1?" hidden":""}>`)).join("")}
     ${extras.length?`<div class="nh">With</div>${extras.map(id=>row(id,`<input type="checkbox" data-x="${id}" checked>`)).join("")}`:""}
     <p class="plate" data-plate>${plateText([sel,...extras])}</p>
-    <div class="night-actions"><select aria-label="Which day">${dayOpts("Tonight")}</select><button class="btn primary" type="button" data-add>＋ Add to list</button>${pfx==="w"?'<button class="btn" type="button" data-respin>Spin again</button>':""}</div></div>`;
+    <div class="night-actions"><select aria-label="Which day">${dayOpts("Tonight")}</select><button class="btn primary" type="button" data-add>＋ Add to list</button>${pfx==="w"?'<button class="btn" type="button" data-respin>Spin again</button>':""}</div>
+    <div class="night-actions"><label class="rb">Ready by <input type="time" value="17:00" data-ready></label><button class="btn" type="button" data-time>⏰ Plan my timing</button></div>
+    <div data-timeline></div></div>`;
 }
 $("#menus").innerHTML=MENUS.map((m,i)=>nightCard(m,i,"n")).join("");
+const mnState={cooker:new Set(),region:new Set()};
+function filterNights(){
+  let shown=0;
+  document.querySelectorAll("#menus [data-card]").forEach(c=>{
+    const cks=c.dataset.cookers.split(" "),rgs=c.dataset.regions.split("|");
+    const ok=(!mnState.cooker.size||cks.some(x=>mnState.cooker.has(x)))&&(!mnState.region.size||rgs.some(x=>mnState.region.has(x)));
+    c.hidden=!ok;if(ok)shown++;
+  });
+  $("#mnCount").textContent=`${shown} of ${MENUS.length} meal nights`;
+}
+(function nightChips(){
+  const rgs=[...new Set(MENUS.flatMap(m=>m.ids.filter(isMain).map(id=>byId[id].region)))].sort();
+  const mk=(el,items,key)=>{el.innerHTML=items.map(([v,l])=>`<button class="chip" type="button" aria-pressed="false" data-v="${esc(v)}">${esc(l)}</button>`).join("");
+    el.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{const v=c.dataset.v;mnState[key].has(v)?mnState[key].delete(v):mnState[key].add(v);c.setAttribute("aria-pressed",mnState[key].has(v));filterNights()})};
+  mk($("#mn-cooker"),Object.entries(COOKERS),"cooker");mk($("#mn-region"),rgs.map(r=>[r,r]),"region");filterNights();
+})();
 function nightClick(e){
   const b=e.target.closest("button[data-id]");if(b){e.preventDefault();return openRecipe(b.dataset.id)}
   if(e.target.closest("[data-respin]"))return spin();
+  const tb=e.target.closest("[data-time]");
+  if(tb){const card=tb.closest("[data-card]");const main=card.querySelector('input[type=radio]:checked');
+    const ids=[main&&main.value,...[...card.querySelectorAll("input[data-x]:checked")].map(x=>x.dataset.x)].filter(Boolean);
+    card.querySelector("[data-timeline]").innerHTML=timelineHTML(ids,card.querySelector("[data-ready]").value,card.querySelector("select").value);return}
+  const ics=e.target.closest("[data-ics]");if(ics)return downloadIcs(ics);
   const add=e.target.closest("[data-add]");if(!add)return;
   const card=add.closest("[data-card]");
   const main=card.querySelector('input[type=radio]:checked');
@@ -1910,6 +1956,56 @@ const BOOKS=[
 ];
 $("#sourcesBox").innerHTML=BOOKS.map(b=>`<div class="src"><h3><a href="${b[1]}" target="_blank" rel="noopener">${esc(b[0])}</a></h3><p>${esc(b[2])}</p></div>`).join("")+
 "";
+
+/* ---------- "Ready by" timing planner ---------- */
+// Extra minutes a sous vide item can sit in the bath past its listed time without harm
+const HOLD={"sv-steak":90,"sv-chicken-breast":150,"sv-chicken-thighs":120,"sv-pork-chops":180,"sv-corn":60,"sv-carrots":60,"sv-mashed":60,"sv-ribs":240,"sv-brisket":720,"sv-short-ribs":720};
+const WD=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+function dayDate(day){const d=new Date();d.setSeconds(0,0);const i=WD.indexOf(day);if(i>=0){let k=(i-d.getDay()+7)%7;d.setDate(d.getDate()+k)}return d}
+function fmtClock(t,ref){const s=t.toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});const dd=Math.round((new Date(ref).setHours(0,0,0,0)-new Date(t).setHours(0,0,0,0))/864e5);
+  return dd===0?s:dd===1?`Day before ${s}`:`${WD[t.getDay()]} ${s}`}
+function buildSteps(ids,ready,day){
+  const at=dayDate(day);const [hh,mm]=(ready||"17:00").split(":").map(Number);at.setHours(hh,mm,0,0);
+  const M=6e4,steps=[],pre={};
+  const preheat=(key,t,txt)=>{if(!pre[key]||t<pre[key].t)pre[key]={t,txt}};
+  ids.map(id=>byId[id]).filter(Boolean).forEach(r=>{
+    const start=new Date(at-r.mins*M);
+    const ahead=/marinat|overnight|dry brine|brine /i.test(r.steps.join(" "))&&r.cooker!=="SV";
+    if(ahead)steps.push({t:new Date(start-4*60*M),txt:`Marinate or brine: ${r.name}`,sub:"Start 2 to 24 hours ahead (see the recipe). The time here is the latest."});
+    if(r.cooker==="SV"){
+      preheat("SV",new Date(start-20*M),"Fill and heat the sous vide bath");
+      const hold=HOLD[r.id]||0;
+      steps.push({t:start,txt:`Into the bath: ${r.name}`,sub:hold?`Anytime from ${fmtClock(new Date(start-hold*M),at)} works. Sous vide can't overcook.`:""});
+      (r.pre||[]).forEach(([mins,txt])=>steps.push({t:new Date(start-mins*M),txt,sub:`Before it goes in the bath: ${r.name}`}));
+      if(r.finish){const lead=r.finish==="PBC"?30:12,f=new Date(at-lead*M);preheat(r.finish,new Date(f-(r.finish==="PBC"?25:15)*M),r.finish==="PBC"?"Light the Pit Barrel":`Heat the ${COOKERS[r.finish]}`);
+        steps.push({t:f,txt:`Finish ${r.name} on the ${COOKERS[r.finish]}`,sub:r.finish==="PBC"?"Pat dry and let the bark re-crisp 20 to 30 minutes.":"Pat dry, then a quick, very hot finish (see the recipe)."})}
+    }else{
+      const lead=r.cooker==="PBC"?25:15;
+      preheat(r.cooker,new Date(start-lead*M),r.cooker==="PBC"?"Light the Pit Barrel":r.cooker==="GR"?"Light or preheat the grill":"Preheat the Blackstone");
+      steps.push({t:start,txt:`Start: ${r.name}`,sub:`About ${fmtTime(r.mins)} total`});
+    }
+  });
+  Object.values(pre).forEach(x=>steps.push(x));
+  steps.sort((a,b)=>a.t-b.t);
+  steps.push({t:at,txt:"Dinner's ready 🍽️"});
+  return {steps,at};
+}
+function timelineHTML(ids,ready,day){
+  if(!ids.length)return `<div class="tl">Pick at least one dish.</div>`;
+  const {steps,at}=buildSteps(ids,ready,day);
+  const data=encodeURIComponent(JSON.stringify(steps.map(x=>({t:x.t.getTime(),txt:x.txt}))));
+  return `<div class="tl"><h4>Timing for ${esc(day==="Tonight"||day==="Anytime"?"today":day)}</h4><ol>${steps.map(x=>`<li><time>${fmtClock(x.t,at)}</time><span>${esc(x.txt)}${x.sub?`<small>${esc(x.sub)}</small>`:""}</span></li>`).join("")}</ol>
+    <button class="btn ics" type="button" data-ics="${data}">📅 Add reminders to my calendar</button></div>`;
+}
+function downloadIcs(btn){
+  const steps=JSON.parse(decodeURIComponent(btn.dataset.ics));
+  const f=t=>{const d=new Date(t),z=n=>String(n).padStart(2,"0");return `${d.getFullYear()}${z(d.getMonth()+1)}${z(d.getDate())}T${z(d.getHours())}${z(d.getMinutes())}00`};
+  const lines=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Flat Top Barrel Grill//EN"];
+  steps.forEach((x,i)=>lines.push("BEGIN:VEVENT",`UID:${x.t}-${i}@grill-recipes`,`DTSTAMP:${f(Date.now())}`,`DTSTART:${f(x.t)}`,"DURATION:PT10M",`SUMMARY:${x.txt.replace(/[,;]/g," ")}`,"BEGIN:VALARM","ACTION:DISPLAY",`DESCRIPTION:${x.txt.replace(/[,;]/g," ")}`,"TRIGGER:-PT0M","END:VALARM","END:VEVENT"));
+  lines.push("END:VCALENDAR");
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([lines.join("\r\n")],{type:"text/calendar"}));a.download="dinner-timing.ics";document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000);
+  btn.textContent="✓ Calendar file downloaded. Open it to add the reminders.";
+}
 
 /* ---------- sorting ---------- */
 const byName=(a,b)=>a.name.localeCompare(b.name);
