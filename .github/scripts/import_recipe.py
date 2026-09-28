@@ -6,6 +6,7 @@ Runs in GitHub Actions (see .github/workflows/add-recipe.yml). Also runs locally
 Writes comment.md (the reply posted on the issue) and sets the step outputs
 status=added|failed and commit=<commit message>.
 """
+import datetime
 import html
 import json
 import os
@@ -484,7 +485,8 @@ def main():
 
     recipe = {"id": rid, "name": name, "cooker": cooker_pick, "type": type_pick, "region": region,
               "mins": mins, "serves": servings_of(rec.get("recipeYield")) or 4, "desc": desc, "ing": ings, "steps": steps, "tip": "",
-              "src": [f"{site_name(page, rec, url)}: {page_name}", url]}
+              "src": [f"{site_name(page, rec, url)}: {page_name}", url],
+              "added_on": datetime.date.today().isoformat()}
     if finish_cooker:
         recipe["finish"] = finish_cooker
     mac = macros_of(rec)
@@ -499,6 +501,9 @@ def main():
     if replacing is not None:
         # a resubmit keeps the earlier cooker/type/region unless the form sets them this time
         old = items[replacing]
+        recipe["added_on"] = old.get("added_on", recipe["added_on"])
+        if old.get("curated"):
+            recipe["curated"] = 1
         if not form.get("cooker"):
             recipe["cooker"] = old.get("cooker", recipe["cooker"])
             recipe.pop("finish", None)

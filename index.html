@@ -1822,12 +1822,13 @@ function updateCounts(){
 }
 function cardHTML(r,flat){
   return `<button class="card" type="button" data-id="${r.id}">
-    <div class="tags"><span class="tag ${r.cooker.toLowerCase()}">${cookerLabel(r)}</span>${flat?`<span class="tag">${TYPE_LABEL[r.type]}</span>`:""}<span class="tag">${esc(r.region)}</span>${r.added?'<span class="tag added">Added</span>':""}</div>
+    <div class="tags"><span class="tag ${r.cooker.toLowerCase()}">${cookerLabel(r)}</span>${flat?`<span class="tag">${TYPE_LABEL[r.type]}</span>`:""}<span class="tag">${esc(r.region)}</span>${isNew(r)?'<span class="tag added">New</span>':""}</div>
     <h3>${esc(r.name)}</h3>
     <div class="meta"><span>⏱ ${fmtTime(r.mins)}${needsAhead(r)?` + ${aheadText(r.ahead)}`:""}${r.mac?` · ${r.mac.cal} cal · ${r.mac.p}g protein`:""}</span><span>${inPlan(r.id)?'<span class="onlist">🛒 On list</span> ':''}${starsHTML(r)}${heartHTML(r.id)}</span></div>
   </button>`;
 }
 function render(){
+  if(!SORTS[sortBy]||sortBy==="rec")computeRec();
   const list=R.filter(r=>matches(r)).sort(SORTS[sortBy]||SORTS.rec);
   const GROUP={Beef:"Beef Mains",Chicken:"Chicken Mains",Pork:"Pork Mains",Seafood:"Seafood Mains",Other:"Other Mains",Side:"Side Dishes",Appetizer:"Appetizers"};
   const SORT_TITLE={new:"Newest",top:"Top rated",fav:"Most favorited",az:"A to Z",quick:"Quickest",cal:"Lowest calories",pro:"Most protein"};
@@ -2653,8 +2654,14 @@ function downloadIcs(btn){
 /* ---------- sorting ---------- */
 const byName=(a,b)=>a.name.localeCompare(b.name);
 const topScore=r=>{const e=effRating(r);return e?(e.v*e.n+4.3*10)/(e.n+10):0};   // stars, weighted so 5.0 from 2 ratings doesn't beat 4.9 from 200
+// "New" = a friend's submission from the last 2 weeks (bulk imports are marked curated)
+const isNew=r=>!!(r.added&&!r.curated&&r.added_on&&Date.now()-Date.parse(r.added_on)<14*864e5);
+// Recommended: inside each type, rotate through the cookers, best-rated first from each (unrated sits at the 4.3 prior)
+let REC={};
+function computeRec(){const g={};R.forEach(r=>{(g[r.type+"|"+r.cooker]=g[r.type+"|"+r.cooker]||[]).push(r)});REC={};
+  Object.values(g).forEach(a=>a.map(r=>[r,topScore(r)||4.3]).sort((x,y)=>y[1]-x[1]||byName(x[0],y[0])).forEach(([r,sc],i)=>REC[r.id]=[i,sc]))}
 const SORTS={
-  rec:(a,b)=>a.cooker.localeCompare(b.cooker)||byName(a,b),
+  rec:(a,b)=>REC[a.id][0]-REC[b.id][0]||REC[b.id][1]-REC[a.id][1]||byName(a,b),
   new:(a,b)=>b.order-a.order,
   top:(a,b)=>topScore(b)-topScore(a)||byName(a,b),
   fav:(a,b)=>(heartCounts[b.id]||0)-(heartCounts[a.id]||0)||topScore(b)-topScore(a)||byName(a,b),

@@ -36,7 +36,8 @@ window.ADDED = [
    "s": 3,
    "from": "s",
    "note": "about 4 oz"
-  }
+  },
+  "added_on": "2026-09-27"
  },
  {
   "id": "blackstone-blackened-mahi-mahi",
@@ -82,7 +83,8 @@ window.ADDED = [
   "rating": {
    "v": 5.0,
    "n": 4
-  }
+  },
+  "added_on": "2026-09-27"
  },
  {
   "id": "thai-yellow-curry-from-scratch",
@@ -142,7 +144,8 @@ window.ADDED = [
   "rating": {
    "v": 5.0,
    "n": 59
-  }
+  },
+  "added_on": "2026-09-27"
  },
  {
   "id": "blackstone-kielbasa",
@@ -183,7 +186,8 @@ window.ADDED = [
    "s": 4,
    "from": "s",
    "note": "1/5 of recipe"
-  }
+  },
+  "added_on": "2026-09-27"
  },
  {
   "id": "easy-smoked-white-queso-dip-on-the-traeger-ironwood-885",
@@ -219,7 +223,8 @@ window.ADDED = [
   "rating": {
    "v": 3.7,
    "n": 111
-  }
+  },
+  "added_on": "2026-09-28"
  },
  {
   "id": "kielbasa-cowboy-stir-fry",
@@ -253,7 +258,8 @@ window.ADDED = [
   "src": [
    "Homemade on a Weeknight: Blackstone Cowboy Stir-Fry",
    "https://homemadeonaweeknight.com/2022/07/27/blackstone-cowboy-stir-fry/"
-  ]
+  ],
+  "added_on": "2026-09-28"
  },
  {
   "id": "chicken-and-elote-tacos",
@@ -294,7 +300,8 @@ window.ADDED = [
   "src": [
    "Blackstone Products: Chicken and Elote Tacos",
    "https://blackstoneproducts.com/blogs/recipes/chicken-and-elote-tacos"
-  ]
+  ],
+  "added_on": "2026-09-28"
  },
  {
   "id": "easy-bbq-chicken-flatbread",
@@ -338,7 +345,8 @@ window.ADDED = [
   "rating": {
    "v": 4.0,
    "n": 7
-  }
+  },
+  "added_on": "2026-09-28"
  },
  {
   "id": "shrimp-scampi",
@@ -371,7 +379,8 @@ window.ADDED = [
   "src": [
    "Blackstone Products: Shrimp Scampi",
    "https://blackstoneproducts.com/blogs/recipes/shrimp-scampi"
-  ]
+  ],
+  "curated": 1
  },
  {
   "id": "beer-battered-fish-and-chips",
@@ -406,7 +415,8 @@ window.ADDED = [
   "src": [
    "Blackstone Products: Beer Battered Fish and Chips",
    "https://blackstoneproducts.com/blogs/recipes/beer-battered-fish-chips"
-  ]
+  ],
+  "curated": 1
  },
  {
   "id": "hawaiian-mac-salad",
@@ -439,7 +449,8 @@ window.ADDED = [
   "src": [
    "Blackstone Products: Hawaiian Mac Salad",
    "https://blackstoneproducts.com/blogs/recipes/hawaiian-mac-salad"
-  ]
+  ],
+  "curated": 1
  },
  {
   "id": "marinated-lamb-chops",
@@ -472,7 +483,8 @@ window.ADDED = [
   "src": [
    "Blackstone Products: Marinated Lamb Chops",
    "https://blackstoneproducts.com/blogs/recipes/marinated-lamb-chops"
-  ]
+  ],
+  "curated": 1
  },
  {
   "id": "crispy-asian-broccoli",
@@ -501,7 +513,8 @@ window.ADDED = [
   "src": [
    "Blackstone Products: Crispy Asian Broccoli",
    "https://blackstoneproducts.com/blogs/recipes/crispy-asian-broccoli"
-  ]
+  ],
+  "curated": 1
  },
  {
   "id": "taco-salad",
@@ -541,7 +554,8 @@ window.ADDED = [
   "src": [
    "Blackstone Products: Taco Salad",
    "https://blackstoneproducts.com/blogs/recipes/taco-salad"
-  ]
+  ],
+  "curated": 1
  },
  {
   "id": "spicy-pork-noodles",
@@ -574,7 +588,8 @@ window.ADDED = [
   "src": [
    "Blackstone Products: Spicy Pork Noodles",
    "https://blackstoneproducts.com/blogs/recipes/spicy-pork-noodles"
-  ]
+  ],
+  "curated": 1
  },
  {
   "id": "chicken-katsu-curry",
@@ -613,7 +628,8 @@ window.ADDED = [
   "rating": {
    "v": 4.0,
    "n": 8
-  }
+  },
+  "curated": 1
  },
  {
   "id": "beef-stroganoff",
@@ -656,7 +672,8 @@ window.ADDED = [
   "rating": {
    "v": 5.0,
    "n": 49
-  }
+  },
+  "curated": 1
  },
  {
   "id": "salmon-patties",
@@ -690,7 +707,8 @@ window.ADDED = [
   "rating": {
    "v": 4.0,
    "n": 51
-  }
+  },
+  "curated": 1
  },
  {
   "id": "char-siu-pork",
@@ -741,7 +759,8 @@ window.ADDED = [
   "src": [
    "Blackstone Products: Char Siu Pork (Chinese BBQ Pork)",
    "https://blackstoneproducts.com/blogs/recipes/char-siu-pork-chinese-bbq-pork"
-  ]
+  ],
+  "curated": 1
  },
  {
   "id": "meatball-subs",
@@ -776,7 +795,8 @@ window.ADDED = [
   "src": [
    "Blackstone Products: Meatball Subs",
    "https://blackstoneproducts.com/blogs/recipes/meatball-subs"
-  ]
+  ],
+  "curated": 1
  },
  {
   "id": "beef-chow-fun",
@@ -828,7 +848,8 @@ window.ADDED = [
   "rating": {
    "v": 4.0,
    "n": 37
-  }
+  },
+  "curated": 1
  },
  {
   "id": "shrimp-fajitas",
@@ -871,7 +892,8 @@ window.ADDED = [
   "rating": {
    "v": 5.0,
    "n": 4
-  }
+  },
+  "curated": 1
  },
  {
   "id": "country-fried-steak",
@@ -910,7 +932,8 @@ window.ADDED = [
   "src": [
    "Blackstone Products: Country Fried Steak",
    "https://blackstoneproducts.com/blogs/recipes/country-fried-steak"
-  ]
+  ],
+  "curated": 1
  },
  {
   "id": "bacon-wrapped-scallops",
@@ -954,7 +977,8 @@ window.ADDED = [
   "rating": {
    "v": 4.0,
    "n": 64
-  }
+  },
+  "curated": 1
  },
  {
   "id": "pepper-steak",
@@ -1004,7 +1028,8 @@ window.ADDED = [
   "rating": {
    "v": 5.0,
    "n": 52
-  }
+  },
+  "curated": 1
  },
  {
   "id": "crab-rangoon-nachos",
@@ -1041,7 +1066,8 @@ window.ADDED = [
   "rating": {
    "v": 4.0,
    "n": 8
-  }
+  },
+  "curated": 1
  },
  {
   "id": "sweet-and-sour-chicken",
@@ -1078,7 +1104,8 @@ window.ADDED = [
   "src": [
    "Blackstone Products: Sweet and Sour Chicken",
    "https://blackstoneproducts.com/blogs/recipes/sweet-and-sour-chicken"
-  ]
+  ],
+  "curated": 1
  },
  {
   "id": "catfish-po-boys",
@@ -1115,7 +1142,8 @@ window.ADDED = [
   "rating": {
    "v": 5.0,
    "n": 2
-  }
+  },
+  "curated": 1
  },
  {
   "id": "cajun-dirty-rice",
@@ -1153,7 +1181,8 @@ window.ADDED = [
   "rating": {
    "v": 4.0,
    "n": 35
-  }
+  },
+  "curated": 1
  },
  {
   "id": "potato-skins",
@@ -1196,7 +1225,8 @@ window.ADDED = [
   "rating": {
    "v": 4.0,
    "n": 9
-  }
+  },
+  "curated": 1
  },
  {
   "id": "cheesy-beef-tostadas",
@@ -1234,7 +1264,8 @@ window.ADDED = [
   "src": [
    "Blackstone Products: Cheesy Beef Tostadas",
    "https://blackstoneproducts.com/blogs/recipes/cheesy-beef-tostadas"
-  ]
+  ],
+  "curated": 1
  },
  {
   "id": "chicken-shawarma-wraps",
@@ -1284,7 +1315,8 @@ window.ADDED = [
   "rating": {
    "v": 4.0,
    "n": 7
-  }
+  },
+  "curated": 1
  },
  {
   "id": "spam-fried-rice",
@@ -1321,7 +1353,8 @@ window.ADDED = [
   "src": [
    "Blackstone Products: Spam Fried Rice",
    "https://blackstoneproducts.com/blogs/recipes/spam-fried-rice"
-  ]
+  ],
+  "curated": 1
  },
  {
   "id": "shrimp-chow-mein",
@@ -1377,7 +1410,8 @@ window.ADDED = [
   "rating": {
    "v": 4.0,
    "n": 33
-  }
+  },
+  "curated": 1
  },
  {
   "id": "arroz-con-pollo",
@@ -1432,7 +1466,8 @@ window.ADDED = [
   "src": [
    "Blackstone Products: Arroz con Pollo",
    "https://blackstoneproducts.com/blogs/recipes/arroz-con-pollo"
-  ]
+  ],
+  "curated": 1
  },
  {
   "id": "griddle-chili-dogs",
@@ -1474,7 +1509,8 @@ window.ADDED = [
   "src": [
    "Blackstone Products: Griddle Chili Dogs",
    "https://blackstoneproducts.com/blogs/recipes/griddle-chili-dogs"
-  ]
+  ],
+  "curated": 1
  },
  {
   "id": "onion-rings",
@@ -1531,7 +1567,8 @@ window.ADDED = [
   "rating": {
    "v": 4.0,
    "n": 12
-  }
+  },
+  "curated": 1
  },
  {
   "id": "steak-frites",
@@ -1564,7 +1601,8 @@ window.ADDED = [
   "src": [
    "Blackstone Products: Steak Frites",
    "https://blackstoneproducts.com/blogs/recipes/steak-frites"
-  ]
+  ],
+  "curated": 1
  },
  {
   "id": "chicken-fettuccine",
@@ -1612,7 +1650,8 @@ window.ADDED = [
   "rating": {
    "v": 4.0,
    "n": 16
-  }
+  },
+  "curated": 1
  },
  {
   "id": "fried-green-tomatoes",
@@ -1651,7 +1690,8 @@ window.ADDED = [
   "rating": {
    "v": 4.0,
    "n": 16
-  }
+  },
+  "curated": 1
  },
  {
   "id": "corn-fritters",
@@ -1689,7 +1729,8 @@ window.ADDED = [
   "src": [
    "Blackstone Products: Corn Fritters",
    "https://blackstoneproducts.com/blogs/recipes/corn-fritters"
-  ]
+  ],
+  "curated": 1
  },
  {
   "id": "garlic-parmesan-zucchini",
@@ -1717,7 +1758,8 @@ window.ADDED = [
   "src": [
    "Blackstone Products: Garlic Parmesan Zucchini",
    "https://blackstoneproducts.com/blogs/recipes/garlic-parmesan-zucchini"
-  ]
+  ],
+  "curated": 1
  },
  {
   "id": "shrimp-toast",
@@ -1761,7 +1803,8 @@ window.ADDED = [
   "src": [
    "Blackstone Products: Shrimp Toast",
    "https://blackstoneproducts.com/blogs/recipes/shrimp-toast"
-  ]
+  ],
+  "curated": 1
  },
  {
   "id": "chicken-enchiladas",
@@ -1798,7 +1841,8 @@ window.ADDED = [
   "src": [
    "Blackstone Products: Chicken Enchiladas",
    "https://blackstoneproducts.com/blogs/recipes/chicken-enchiladas"
-  ]
+  ],
+  "curated": 1
  },
  {
   "id": "grilled-chicken-club",
@@ -1844,7 +1888,8 @@ window.ADDED = [
   "rating": {
    "v": 4.0,
    "n": 133
-  }
+  },
+  "curated": 1
  },
  {
   "id": "animal-style-fries",
@@ -1891,7 +1936,8 @@ window.ADDED = [
    "v": 3.0,
    "n": 11
   },
-  "finish": "BS"
+  "finish": "BS",
+  "curated": 1
  },
  {
   "id": "crispy-pork-cutlets",
@@ -1933,7 +1979,8 @@ window.ADDED = [
   "src": [
    "Blackstone Products: Crispy Pork Cutlets",
    "https://blackstoneproducts.com/blogs/recipes/crispy-pork-cutlets"
-  ]
+  ],
+  "curated": 1
  },
  {
   "id": "grilled-cheese-and-tomato-soup",
@@ -1979,7 +2026,8 @@ window.ADDED = [
   "rating": {
    "v": 5.0,
    "n": 2
-  }
+  },
+  "curated": 1
  },
  {
   "id": "air-fryer-whole-chicken",
@@ -2023,7 +2071,8 @@ window.ADDED = [
   "rating": {
    "v": 5.0,
    "n": 416
-  }
+  },
+  "curated": 1
  },
  {
   "id": "air-fryer-pork-tenderloin",
@@ -2067,7 +2116,8 @@ window.ADDED = [
   "rating": {
    "v": 5.0,
    "n": 103
-  }
+  },
+  "curated": 1
  },
  {
   "id": "air-fryer-sweet-potato-fries",
@@ -2110,7 +2160,8 @@ window.ADDED = [
   "rating": {
    "v": 5.0,
    "n": 66
-  }
+  },
+  "curated": 1
  },
  {
   "id": "air-fryer-mozzarella-sticks",
@@ -2157,7 +2208,8 @@ window.ADDED = [
   "rating": {
    "v": 5.0,
    "n": 79
-  }
+  },
+  "curated": 1
  },
  {
   "id": "air-fryer-shrimp",
@@ -2207,7 +2259,8 @@ window.ADDED = [
   "rating": {
    "v": 4.9,
    "n": 40
-  }
+  },
+  "curated": 1
  },
  {
   "id": "easy-air-fryer-crab-cakes",
@@ -2253,7 +2306,8 @@ window.ADDED = [
   "rating": {
    "v": 4.6,
    "n": 23
-  }
+  },
+  "curated": 1
  },
  {
   "id": "air-fryer-chicken-parmesan",
@@ -2292,7 +2346,8 @@ window.ADDED = [
   "rating": {
    "v": 4.3,
    "n": 223
-  }
+  },
+  "curated": 1
  },
  {
   "id": "air-fryer-spicy-fried-chicken-sandwich",
@@ -2331,7 +2386,8 @@ window.ADDED = [
   "rating": {
    "v": 4.0,
    "n": 704
-  }
+  },
+  "curated": 1
  },
  {
   "id": "air-fryer-chicken-nuggets",
@@ -2367,7 +2423,8 @@ window.ADDED = [
   "rating": {
    "v": 4.3,
    "n": 151
-  }
+  },
+  "curated": 1
  },
  {
   "id": "air-fryer-buffalo-chicken-drumsticks",
@@ -2404,7 +2461,8 @@ window.ADDED = [
   "rating": {
    "v": 4.4,
    "n": 46
-  }
+  },
+  "curated": 1
  },
  {
   "id": "air-fryer-better-than-boxed-fish-sticks",
@@ -2440,7 +2498,8 @@ window.ADDED = [
   "rating": {
    "v": 4.0,
    "n": 36
-  }
+  },
+  "curated": 1
  },
  {
   "id": "air-fryer-turkey-burgers",
@@ -2475,7 +2534,8 @@ window.ADDED = [
   "rating": {
    "v": 4.5,
    "n": 47
-  }
+  },
+  "curated": 1
  },
  {
   "id": "air-fryer-juicy-well-done-cheeseburgers",
@@ -2509,7 +2569,8 @@ window.ADDED = [
   "rating": {
    "v": 4.1,
    "n": 54
-  }
+  },
+  "curated": 1
  },
  {
   "id": "air-fryer-fried-chicken",
@@ -2546,7 +2607,8 @@ window.ADDED = [
   "rating": {
    "v": 4.0,
    "n": 65
-  }
+  },
+  "curated": 1
  },
  {
   "id": "air-fryer-corn-on-the-cob",
@@ -2586,7 +2648,8 @@ window.ADDED = [
   "rating": {
    "v": 5.0,
    "n": 31
-  }
+  },
+  "curated": 1
  },
  {
   "id": "air-fryer-stuffed-peppers",
@@ -2633,7 +2696,8 @@ window.ADDED = [
   "rating": {
    "v": 5.0,
    "n": 22
-  }
+  },
+  "curated": 1
  },
  {
   "id": "air-fryer-egg-rolls",
@@ -2687,7 +2751,8 @@ window.ADDED = [
   "rating": {
    "v": 4.6,
    "n": 21
-  }
+  },
+  "curated": 1
  },
  {
   "id": "air-fryer-zucchini",
@@ -2732,7 +2797,8 @@ window.ADDED = [
   "rating": {
    "v": 4.5,
    "n": 137
-  }
+  },
+  "curated": 1
  },
  {
   "id": "air-fryer-green-beans",
@@ -2770,7 +2836,8 @@ window.ADDED = [
   "rating": {
    "v": 5.0,
    "n": 32
-  }
+  },
+  "curated": 1
  },
  {
   "id": "air-fryer-cauliflower",
@@ -2812,7 +2879,8 @@ window.ADDED = [
   "rating": {
    "v": 5.0,
    "n": 22
-  }
+  },
+  "curated": 1
  },
  {
   "id": "air-fryer-brussels-sprouts-with-garlic-balsamic-and-soy",
@@ -2856,7 +2924,8 @@ window.ADDED = [
   "rating": {
    "v": 5.0,
    "n": 3533
-  }
+  },
+  "curated": 1
  },
  {
   "id": "air-fryer-potatoes",
@@ -2898,7 +2967,8 @@ window.ADDED = [
   "rating": {
    "v": 5.0,
    "n": 941
-  }
+  },
+  "curated": 1
  },
  {
   "id": "air-fryer-chicken-tenders",
@@ -2945,7 +3015,8 @@ window.ADDED = [
   "rating": {
    "v": 5.0,
    "n": 606
-  }
+  },
+  "curated": 1
  },
  {
   "id": "easy-air-fryer-asparagus",
@@ -2988,7 +3059,8 @@ window.ADDED = [
   "rating": {
    "v": 5.0,
    "n": 217
-  }
+  },
+  "curated": 1
  },
  {
   "id": "air-fryer-steak-with-garlic-herb-butter",
@@ -3040,7 +3112,8 @@ window.ADDED = [
   "rating": {
    "v": 5.0,
    "n": 208
-  }
+  },
+  "curated": 1
  },
  {
   "id": "air-fryer-turkey-breast",
@@ -3084,7 +3157,8 @@ window.ADDED = [
   "rating": {
    "v": 5.0,
    "n": 54
-  }
+  },
+  "curated": 1
  },
  {
   "id": "jerk-sweet-potato-street-fries",
@@ -3136,7 +3210,8 @@ window.ADDED = [
   "rating": {
    "v": 5.0,
    "n": 87
-  }
+  },
+  "curated": 1
  },
  {
   "id": "orange-cauliflower-bites",
@@ -3190,7 +3265,8 @@ window.ADDED = [
   "rating": {
    "v": 4.0,
    "n": 290
-  }
+  },
+  "curated": 1
  },
  {
   "id": "shrimp-po-boy",
@@ -3238,6 +3314,7 @@ window.ADDED = [
   "rating": {
    "v": 4.0,
    "n": 41
-  }
+  },
+  "curated": 1
  }
 ];
