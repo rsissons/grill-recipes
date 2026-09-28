@@ -54,6 +54,7 @@ nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(-
 .panel{padding:20px 0 48px}
 .filters{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:var(--shadow);display:grid;gap:10px}
 .frow{display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap}
+.restlbl{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-2);font-weight:600;margin:12px 0 4px}
 .frow .lbl{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-2);font-weight:600;width:64px;padding-top:7px;flex:none}
 .chips{display:flex;gap:6px;flex-wrap:wrap;flex:1;min-width:0}
 .chip{border:1px solid var(--line);background:var(--surface-2);color:var(--ink);border-radius:999px;padding:5px 12px;font-size:.88rem}
@@ -1823,7 +1824,7 @@ function storePlan(items){
   while(left.length){
     const cnt={};left.forEach(i=>new Set(deals[i.k].map(d=>storeName(d.store))).forEach(st=>cnt[st]=(cnt[st]||0)+1));
     const best=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a]||a.localeCompare(b))[0];
-    if(order.length>=maxStops)break;       // stop limit reached: the rest go to "Buy anywhere"
+    if(order.length>=maxStops)break;       // stop limit reached: the rest fold into the first stop
     order.push(best);
     left=left.filter(i=>{const d=deals[i.k].find(x=>storeName(x.store)===best);if(d){assign[i.k]=d;return false}return true});
   }
@@ -1835,15 +1836,17 @@ function rowHTML(i,extra){
 function storeViewHTML(items){
   const {assign,order}=storePlan(items);
   let list=hideHave?items.filter(i=>!have.has(i.k)):items;
-  const out=order.map(st=>{
+  const rest=list.filter(i=>!assign[i.k]).sort((x,y)=>(have.has(x.k)-have.has(y.k))||x.a-y.a||x.t.localeCompare(y.t));
+  // Not on sale at a store you shop: grab it at your first stop so it's still one trip.
+  const restHTML=rest.length?`<p class="restlbl">Regular price, grab here too</p>${rest.map(i=>rowHTML(i,dealHTML(i.k))).join("")}`:"";
+  const out=order.map((st,n)=>{
     const its=list.filter(i=>assign[i.k]&&storeName(assign[i.k].store)===st).sort((x,y)=>x.a-y.a||x.t.localeCompare(y.t));
-    if(!its.length)return "";
+    if(!its.length)return n===0&&rest.length?`<div class="aisle"><h4>🏷️ ${esc(st)}</h4>${restHTML}</div>`:"";
     return `<div class="aisle"><h4>🏷️ ${esc(st)} <small style="text-transform:none;letter-spacing:0;color:var(--ink-2)">${its.length} sale item${its.length>1?"s":""}</small></h4>${its.map(i=>{
       const d=assign[i.k],others=deals[i.k].filter(x=>storeName(x.store)!==st);
-      return rowHTML(i,`<span class="deal">${esc(dealPrice(d))}${d.was?` (was $${Number(d.was).toFixed(2)})`:""}${others.length?` <small style="display:inline;font-weight:400;color:var(--ink-2)">· also ${others.map(o=>`${esc(storeName(o.store))} ${esc(dealPrice(o))}`).join(", ")}</small>`:""}</span>`)}).join("")}</div>`;
+      return rowHTML(i,`<span class="deal">${esc(dealPrice(d))}${d.was?` (was $${Number(d.was).toFixed(2)})`:""}${others.length?` <small style="display:inline;font-weight:400;color:var(--ink-2)">· also ${others.map(o=>`${esc(storeName(o.store))} ${esc(dealPrice(o))}`).join(", ")}</small>`:""}</span>`)}).join("")}${n===0?restHTML:""}</div>`;
   }).join("");
-  const rest=list.filter(i=>!assign[i.k]).sort((x,y)=>(have.has(x.k)-have.has(y.k))||x.a-y.a||x.t.localeCompare(y.t));
-  return out+(rest.length?`<div class="aisle"><h4>Buy anywhere <small style="text-transform:none;letter-spacing:0;color:var(--ink-2)">at your ${order.length?"stops above or any":""} store</small></h4>${rest.map(i=>rowHTML(i,dealHTML(i.k))).join("")}</div>`:"");
+  return out+(rest.length&&!order.length?`<div class="aisle"><h4>Buy anywhere <small style="text-transform:none;letter-spacing:0;color:var(--ink-2)">no sale prices at the stores you shop</small></h4>${rest.map(i=>rowHTML(i,dealHTML(i.k))).join("")}</div>`:"");
 }
 document.querySelectorAll("#groupBox [data-group]").forEach(b=>b.onclick=()=>{groupBy=b.dataset.group;store.set("ftb-groupby",groupBy);renderGrocery()});
 $("#shopAt").addEventListener("click",e=>{const c=e.target.closest("[data-shop]");if(!c)return;const st=c.dataset.shop;
@@ -1854,8 +1857,9 @@ function listText(){
   const items=buildItems().filter(i=>!have.has(i.k)).sort((x,y)=>x.a-y.a||x.t.localeCompare(y.t));
   if(Object.keys(deals).length&&groupBy==="store"){
     const {assign,order}=storePlan(items),lines=[];
-    order.forEach(st=>{const its=items.filter(i=>assign[i.k]&&storeName(assign[i.k].store)===st);if(its.length){lines.push(`--- ${st} ---`);its.forEach(i=>lines.push(`${i.t} (${dealPrice(assign[i.k])})`))}});
-    const rest=items.filter(i=>!assign[i.k]);if(rest.length){lines.push("--- Anywhere ---");rest.forEach(i=>lines.push(i.t))}
+    const rest=items.filter(i=>!assign[i.k]);
+    order.forEach((st,n)=>{const its=items.filter(i=>assign[i.k]&&storeName(assign[i.k].store)===st);if(its.length||(n===0&&rest.length)){lines.push(`--- ${st} ---`);its.forEach(i=>lines.push(`${i.t} (${dealPrice(assign[i.k])})`));if(n===0)rest.forEach(i=>lines.push(i.t))}});
+    if(rest.length&&!order.length){lines.push("--- Anywhere ---");rest.forEach(i=>lines.push(i.t))}
     return lines.join("\n");
   }
   return items.map(i=>{const d=(deals[i.k]||[])[0];return i.t+(d?` (on sale: ${d.store.replace(/ Markets?$/,"")} ${dealPrice(d)})`:"")}).join("\n");
