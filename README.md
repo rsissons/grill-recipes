@@ -1,4 +1,4 @@
-# Flat Top, Barrel & Grill
+# Sear, Smoke & Simmer
 
 Blackstone griddle, Pit Barrel Cooker and grill recipes: beef and chicken mains, sides and appetizers. Filter by cooker, type, region and time. Meal Nights, an "I don't know" wheel, and a grocery list you can share to Google Keep.
 

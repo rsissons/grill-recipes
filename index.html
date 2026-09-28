@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Flat Top, Barrel & Grill</title>
-<meta name="description" content="Top-rated Blackstone griddle, Pit Barrel Cooker and grill recipes: beef and chicken mains, sides and appetizers, filterable by cooker, type and region.">
+<title>Sear, Smoke & Simmer</title>
+<meta name="description" content="Sear, Smoke &amp; Simmer: top-rated flat top, smoker, slow cooker, sous vide and grill recipes, with meal nights, a cook-it-all planner and a grocery list with weekly sale prices.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔥</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -243,8 +243,8 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
 <header class="hero">
   <button class="theme-toggle" id="themeBtn" type="button" aria-label="Toggle dark mode">Theme</button>
   <div class="wrap">
-    <h1>Flat Top, Barrel <span>&amp;</span> Grill</h1>
-    <p>Blackstone griddle, Pit Barrel Cooker and grill recipes. Beef, chicken, pork, seafood, sides and appetizers.</p>
+    <h1>Sear, Smoke <span>&amp;</span> Simmer</h1>
+    <p>Flat top, smoker, slow cooker, sous vide &amp; grill. Beef, chicken, pork, seafood, sides and appetizers.</p>
     <div class="stats" id="stats"></div>
     <button class="spin-cta" id="spinCta" type="button">🎡 Can't decide? Spin the wheel</button>
   </div>
@@ -2334,7 +2334,7 @@ function timelineHTML(ids,ready,day){
 function downloadIcs(btn){
   const steps=JSON.parse(decodeURIComponent(btn.dataset.ics));
   const f=t=>{const d=new Date(t),z=n=>String(n).padStart(2,"0");return `${d.getFullYear()}${z(d.getMonth()+1)}${z(d.getDate())}T${z(d.getHours())}${z(d.getMinutes())}00`};
-  const lines=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Flat Top Barrel Grill//EN"];
+  const lines=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Sear Smoke Simmer//EN"];
   steps.forEach((x,i)=>lines.push("BEGIN:VEVENT",`UID:${x.t}-${i}@grill-recipes`,`DTSTAMP:${f(Date.now())}`,`DTSTART:${f(x.t)}`,"DURATION:PT10M",`SUMMARY:${x.txt.replace(/[,;]/g," ")}`,"BEGIN:VALARM","ACTION:DISPLAY",`DESCRIPTION:${x.txt.replace(/[,;]/g," ")}`,"TRIGGER:-PT0M","END:VALARM","END:VEVENT"));
   lines.push("END:VCALENDAR");
   const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([lines.join("\r\n")],{type:"text/calendar"}));a.download="dinner-timing.ics";document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000);

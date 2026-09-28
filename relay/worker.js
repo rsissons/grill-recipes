@@ -1,5 +1,5 @@
 /*
- * Add-a-recipe relay for Flat Top, Barrel & Grill.
+ * Add-a-recipe relay for Sear, Smoke & Simmer (the recipe site).
  *
  * The site is a static page, so it can't write to GitHub itself. This Cloudflare Worker
  * takes a recipe link from the site's form, checks it, and opens an "add-recipe" issue.
