@@ -254,5 +254,46 @@ window.ADDED = [
    "Homemade on a Weeknight: Blackstone Cowboy Stir-Fry",
    "https://homemadeonaweeknight.com/2022/07/27/blackstone-cowboy-stir-fry/"
   ]
+ },
+ {
+  "id": "chicken-and-elote-tacos",
+  "name": "Chicken and Elote Tacos",
+  "cooker": "BS",
+  "type": "Chicken",
+  "region": "Mexican",
+  "mins": 35,
+  "serves": 10,
+  "desc": "Juicy griddled chicken tossed in Blackstone Chili Herb Sauce and served in warm flour tortillas with a creamy, charred elote-style corn salad.",
+  "ing": [
+   "1½ lb (680 g) boneless, skinless chicken thighs, about 5 thighs",
+   "1 tbsp high-heat cooking oil, plus more for the griddle",
+   "1 tbsp Blackstone Essential Blend Seasoning, divided",
+   "1 tbsp Blackstone Street Taco Seasoning, divided",
+   "⅓ cup Blackstone Chili Herb Sauce, plus more for serving",
+   "10–12 street taco-size flour tortillas",
+   "1 lb (454 g) frozen corn, thawed",
+   "⅓ cup mayonnaise",
+   "¼ cup crumbled cotija cheese, plus more for garnish",
+   "¼ cup chopped fresh cilantro, plus more for garnish",
+   "Mexican crema, for serving",
+   "Crushed hot cheese snacks, such as Cheetos, optional"
+  ],
+  "steps": [
+   "Place the chicken thighs in a large bowl. Add 1 tablespoon of oil, 2 teaspoons of Essential Blend, and 2 teaspoons of Street Taco Seasoning. Toss until the chicken is evenly coated.",
+   "Preheat your Blackstone griddle to medium-high heat, about 375–400°F (190–205°C). Lightly coat the cooking surface with high-heat oil.",
+   "Place the chicken thighs on one side of the griddle, pressing them flat against the surface. Spread the corn into a single layer on the other side. Cook both undisturbed for about 3 minutes to develop color.",
+   "Flip the chicken and turn the corn. Spread the corn back into a thin layer after turning so more kernels make contact with the griddle. Continue cooking, turning about every 3 minutes, until both the chicken and corn are well browned.",
+   "Once the corn is charred to your liking, season it with the remaining 1 teaspoon each of Essential Blend and Street Taco Seasoning. Transfer the corn to a mixing bowl.",
+   "While the corn is still hot, stir in the mayonnaise, cotija cheese, and cilantro until evenly combined. Set aside. If desired, finish with additional cotija, cilantro, crema, and crushed hot cheese snacks.",
+   "Continue cooking the chicken until the thickest part of each thigh reaches an internal temperature of 165°F (74°C). Transfer to a cutting board and chop into bite-size pieces.",
+   "Return the chopped chicken to the griddle and toss it through the browned bits left from cooking. Add the Chili Herb Sauce and cook for 1–2 minutes, tossing until the chicken is evenly glazed and heated through.",
+   "Warm the tortillas on the griddle for 20–30 seconds per side, just until soft and pliable.",
+   "Fill each tortilla with the sauced chicken and a spoonful of the elote-style corn salad. Finish with Mexican crema and an extra drizzle of Chili Herb Sauce, if desired. Serve immediately."
+  ],
+  "tip": "",
+  "src": [
+   "Blackstone Products: Chicken and Elote Tacos",
+   "https://blackstoneproducts.com/blogs/recipes/chicken-and-elote-tacos"
+  ]
  }
 ];
