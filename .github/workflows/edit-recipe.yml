@@ -1,0 +1,56 @@
+name: Edit a recipe
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: add-recipe
+  cancel-in-progress: false
+
+jobs:
+  edit:
+    # Filed by the relay only after the owner's code checks out; anyone else's issue is ignored.
+    if: github.event.issue.user.login == 'rsissons' && contains(github.event.issue.labels.*.name, 'edit-recipe')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Apply the edit
+        id: ed
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: python .github/scripts/apply_edit.py
+
+      - name: Publish
+        if: steps.ed.outputs.status == 'added'
+        env:
+          MSG: ${{ steps.ed.outputs.commit }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add overrides.js
+          git commit -m "$MSG"
+          git pull --rebase
+          git push
+
+      - name: Reply and close
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ ! -f comment.md ]; then echo "Something went wrong applying that edit. Check the Actions log." > comment.md; fi
+          gh issue comment ${{ github.event.issue.number }} --repo ${{ github.repository }} --body-file comment.md
+          if [ "${{ steps.ed.outputs.status }}" = "added" ]; then
+            gh issue close ${{ github.event.issue.number }} --repo ${{ github.repository }} --reason completed
+          else
+            gh issue close ${{ github.event.issue.number }} --repo ${{ github.repository }} --reason "not planned"
+          fi

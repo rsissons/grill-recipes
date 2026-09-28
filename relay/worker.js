@@ -142,6 +142,59 @@ async function handleHeart(req, env, origin) {
   return json({ ok: true, count: row ? row.n : 0 }, 200, origin);
 }
 
+/* Owner code (secret ADMIN_CODE, set with Set-Admin-Code.cmd). Checked here, never in the page.
+   Wrong guesses are rate-limited per visitor; a right code isn't. */
+function sameText(a, b) {
+  const x = new TextEncoder().encode(String(a || "")), y = new TextEncoder().encode(String(b || ""));
+  if (!y.length || x.length !== y.length) return false;
+  let d = 0;
+  for (let i = 0; i < x.length; i++) d |= x[i] ^ y[i];
+  return d === 0;
+}
+async function ownerOK(req, env, code) {
+  if (sameText(code, env.ADMIN_CODE)) return "ok";
+  if (env.LIMITER) {
+    const ip = req.headers.get("CF-Connecting-IP") || "unknown";
+    const { success } = await env.LIMITER.limit({ key: "admin:" + ip });
+    if (!success) return "slow";
+  }
+  return "no";
+}
+async function handleAdminCheck(req, env, origin) {
+  let body;
+  try { body = await req.json(); } catch { return json({ ok: false }, 400, origin); }
+  const r = await ownerOK(req, env, body.code);
+  if (r === "slow") return json({ ok: false, reason: "Too many wrong codes. Wait a minute." }, 429, origin);
+  return json({ ok: r === "ok", reason: r === "ok" ? "" : "That code isn't right." }, r === "ok" ? 200 : 403, origin);
+}
+const OWNER_COOKERS = ["BS", "PBC", "GR", "SV", "SC", "AF"], OWNER_TYPES = ["Beef", "Chicken", "Pork", "Seafood", "Other", "Side", "Appetizer"];
+async function handleAdminEdit(req, env, origin) {
+  let body;
+  try { body = await req.json(); } catch { return json({ ok: false, reason: "Bad request." }, 400, origin); }
+  const r = await ownerOK(req, env, body.code);
+  if (r !== "ok") return json({ ok: false, reason: r === "slow" ? "Too many wrong codes. Wait a minute." : "That code isn't right." }, r === "slow" ? 429 : 403, origin);
+  const id = String(body.id || "");
+  if (!ID_RE.test(id)) return json({ ok: false, reason: "Unknown recipe." }, 400, origin);
+  const edit = { id };
+  if (body.remove) edit.remove = true;
+  else if (body.restore) edit.restore = true;
+  else {
+    const st = body.set || {}, set = {};
+    if (st.name != null) set.name = String(st.name).replace(/[^\w\s&',().!-]/g, "").replace(/\s+/g, " ").trim().slice(0, 60);
+    if (st.cooker != null && OWNER_COOKERS.includes(st.cooker)) set.cooker = st.cooker;
+    if (st.type != null && OWNER_TYPES.includes(st.type)) set.type = st.type;
+    if (st.region != null && /^[A-Za-z ]{3,24}$/.test(String(st.region))) set.region = String(st.region);
+    if (st.mins != null && Number.isInteger(+st.mins) && +st.mins >= 1 && +st.mins <= 4000) set.mins = +st.mins;
+    if (!Object.keys(set).length) return json({ ok: false, reason: "Nothing to change." }, 400, origin);
+    edit.set = set;
+  }
+  const issueBody = "### Edit\n\n```json\n" + JSON.stringify(edit) + "\n```\n\n<!-- owner edit from the site -->";
+  const g = await gh(env, "/issues", { method: "POST", body: JSON.stringify({ title: "Edit recipe: " + id, body: issueBody, labels: ["edit-recipe"] }) });
+  if (!g.ok) return json({ ok: false, reason: "GitHub, which stores the recipes, didn't answer. Try again in a minute." }, 502, origin);
+  const issue = await g.json();
+  return json({ ok: true, issue: issue.number }, 200, origin);
+}
+
 /* Saved meal nights, shared with everyone.
    GET /nights?device=x -> {nights:[{id,name,author,ids,mine}]}
    POST /night {name, author, ids[], device} -> {id}
@@ -179,7 +232,14 @@ async function handleNightDelete(req, env, origin) {
   let body;
   try { body = await req.json(); } catch { return json({ ok: false }, 400, origin); }
   const id = Number(body.id), device = String(body.device || "").toLowerCase();
-  if (!Number.isInteger(id) || !DEVICE_RE.test(device)) return json({ ok: false }, 400, origin);
+  if (!Number.isInteger(id)) return json({ ok: false }, 400, origin);
+  if (body.code) {
+    const o = await ownerOK(req, env, body.code);
+    if (o !== "ok") return json({ ok: false, reason: "That code isn't right." }, 403, origin);
+    const r = await env.DB.prepare("DELETE FROM nights WHERE id = ?").bind(id).run();
+    return json({ ok: r.meta.changes > 0 }, 200, origin);
+  }
+  if (!DEVICE_RE.test(device)) return json({ ok: false }, 400, origin);
   const r = await env.DB.prepare("DELETE FROM nights WHERE id = ? AND device = ?").bind(id, device).run();
   return json({ ok: r.meta.changes > 0 }, 200, origin);
 }
@@ -283,6 +343,8 @@ export default {
       if (req.method === "POST" && path === "/rate") return await handleRate(req, env, origin);
       if (req.method === "GET" && path === "/deals") return await handleDeals(req, env, origin);
       if (req.method === "GET" && path === "/nights") return await handleNights(req, env, origin);
+      if (req.method === "POST" && path === "/admin/check") return await handleAdminCheck(req, env, origin);
+      if (req.method === "POST" && path === "/admin/edit") return await handleAdminEdit(req, env, origin);
       if (req.method === "POST" && path === "/night") return await handleNightSave(req, env, origin);
       if (req.method === "POST" && path === "/night/delete") return await handleNightDelete(req, env, origin);
       return json({ ok: true, service: "grill-recipes relay" }, 200, origin);

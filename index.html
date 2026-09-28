@@ -327,7 +327,7 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
     </div>
     <div class="builder">
       <h2>Build me a cook</h2>
-      <p class="section-intro" style="margin:4px 0 0">A main, a side and an appetizer that go together and fit your filters.</p>
+      <p class="section-intro" style="margin:4px 0 0">A main and a side that go together (plus an appetizer when the meal calls for one), all fitting your filters.</p>
       <div class="mnbar" style="margin-top:10px"><button class="btn" type="button" data-mnopen id="mnToggle">🔍 Filters<span class="badge" data-mnbadge id="mnBadge"></span></button><span class="mnsum" data-mnsum></span><button class="lnk" type="button" data-mnclear hidden id="mnClear">✕ Clear</button></div>
       <div style="margin-top:12px"><button class="btn primary" id="build" type="button">🎲 Build the menu</button></div>
       <div class="out" id="buildOut"></div>
@@ -381,6 +381,28 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
 
 <footer><div class="wrap">Recipes adapted and condensed from the credited sources. Safe temps: chicken 165°F (thighs and wings are better at 175 to 195°F), ground beef 160°F, whole beef cuts 130°F+ for medium rare.</div></footer>
 
+<dialog id="ownerDlg" aria-labelledby="ownerTitle">
+  <div class="dlg-head">
+    <button class="dlg-close" id="ownerClose" type="button" aria-label="Close">×</button>
+    <h2 id="ownerTitle">Edit recipe</h2>
+  </div>
+  <div class="dlg-body">
+    <form id="ownerForm">
+      <label class="fl">Name<input id="oName" maxlength="60" required></label>
+      <div class="frow2">
+        <label class="fl">Cooker<select id="oCooker"></select></label>
+        <label class="fl">Type<select id="oType"></select></label>
+      </div>
+      <div class="frow2">
+        <label class="fl">Region<select id="oRegion"></select></label>
+        <label class="fl">Cook time (minutes)<input id="oMins" type="number" min="1" max="4000" inputmode="numeric"></label>
+      </div>
+      <div class="dlg-actions" style="justify-content:space-between"><button class="btn" type="button" id="oDelete">🗑 Delete recipe</button><button class="btn primary" type="submit" id="oSave">Save changes</button></div>
+    </form>
+    <div id="ownerStatus" class="addstatus" hidden></div>
+  </div>
+</dialog>
+
 <dialog id="addDlg" aria-labelledby="addTitle">
   <div class="dlg-head">
     <button class="dlg-close" id="addClose" type="button" aria-label="Close">×</button>
@@ -429,6 +451,7 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
 </dialog>
 
 <script src="added.js"></script>
+<script src="overrides.js"></script>
 <script>
 /* ---------- Recipe data ----------
    cooker: BS = Blackstone griddle, PBC = Pit Barrel Cooker
@@ -1496,6 +1519,10 @@ const R = [
 ];
 /* recipes added through the "Add a recipe" form (written by the GitHub automation) */
 if(Array.isArray(window.ADDED))window.ADDED.forEach(r=>{if(r&&r.id&&!R.some(x=>x.id===r.id))R.push({...r,added:1})});
+// owner edits (overrides.js): rename, re-sort, time, or hide a recipe; built-in and imported alike
+const HIDDEN=[];
+if(window.OVERRIDES&&typeof window.OVERRIDES==="object")for(const [id,o] of Object.entries(window.OVERRIDES)){const i=R.findIndex(r=>r.id===id);if(i<0)continue;
+  if(o.hidden){HIDDEN.push(R[i]);R.splice(i,1);continue}["name","cooker","type","region","mins"].forEach(k=>{if(o[k]!=null)R[i][k]=o[k]})}
 // Prep that has to happen hours ahead (marinate, brine, soak, chill), read from the recipe's own steps.
 function aheadOf(r){
   if(r.cooker==="SV")return null;                                   // sous vide handles prep in its own "pre" steps
@@ -1752,12 +1779,12 @@ const MENUS = [
  {name:"Shrimp & Salmon Night",s:"Shrimp & Salmon",why:"Salmon on the griddle or shrimp skewers on the grill. Both cook in under 10 minutes.",ids:["griddle-salmon","grilled-shrimp","grilled-asparagus","hibachi-rice"]},
  {name:"Fish Taco Night",s:"Fish Tacos",why:"Blackened fish or chile shrimp tacos, street corn and grilled guac.",ids:["blackened-fish-tacos","shrimp-tacos","elote","grilled-guac"]},
  {name:"Curry Night",s:"Curry Night",why:"Pick an Indian or Thai curry. Rice and naan soak up the sauce.",ids:["tikka-masala","keema","green-curry","panang-steak","yellow-rice","griddle-naan","pineapple-rice","satay"],pair:{"tikka-masala":["yellow-rice","griddle-naan"],"keema":["yellow-rice","griddle-naan"],"green-curry":["pineapple-rice","satay"],"panang-steak":["pineapple-rice","satay"]}},
- {name:"Sous Vide Steak Night",s:"Sous Vide Steak",why:"Everything goes in the bath early, then the Blackstone does 5 minutes of searing right before dinner.",ids:["sv-steak","sv-pork-chops","sv-mashed","sv-carrots","sv-shrimp-cocktail"]},
- {name:"Set It and Forget It BBQ",s:"Sous Vide BBQ",why:"The bath does the long cook for brisket, ribs or short ribs; the fire just finishes them.",ids:["sv-brisket","sv-ribs","sv-short-ribs","sv-corn","popper-mac"]},
+ {name:"Sous Vide Steak Night",s:"Sous Vide Steak",why:"One bath, one protein: edge-to-edge steak or chops, seared hard. The Blackstone and air fryer handle the sides.",ids:["sv-steak","sv-pork-chops","garlic-mushrooms","af-baked-potato","easy-air-fryer-asparagus"],pair:{"sv-steak":["garlic-mushrooms","af-baked-potato"],"sv-pork-chops":["easy-air-fryer-asparagus","garlic-mushrooms"]}},
+ {name:"Set It and Forget It BBQ",s:"Sous Vide BBQ",why:"The bath does the long cook for days; the Pit Barrel or grill adds the bark. Sides come off the smoker and air fryer.",ids:["sv-brisket","sv-ribs","sv-short-ribs","popper-mac","air-fryer-corn-on-the-cob"]},
  {name:"Crockpot Game Day",s:"Crockpot Game Day",why:"One crockpot does the main all day; the air fryer and griddle knock out the snacks at kickoff.",ids:["sc-italian-beef","sc-pulled-pork","af-wings","air-fryer-mozzarella-sticks","griddle-nachos"],pair:{"sc-italian-beef":["af-wings","air-fryer-mozzarella-sticks"],"sc-pulled-pork":["af-wings","griddle-nachos"]}},
- {name:"Walk In the Door Dinner",s:"Crockpot Dinner",why:"Load it before work and dinner's done when you get home.",ids:["sc-mississippi-roast","sc-crack-chicken","sc-butter-chicken","sc-kalua-pork","sv-mashed","sv-carrots","blistered-green-beans","yellow-rice","griddle-naan","pineapple-rice","fried-cabbage"],pair:{"sc-mississippi-roast":["sv-mashed","sv-carrots"],"sc-crack-chicken":["sv-mashed","blistered-green-beans"],"sc-butter-chicken":["yellow-rice","griddle-naan"],"sc-kalua-pork":["pineapple-rice","fried-cabbage"]}},
+ {name:"Walk In the Door Dinner",s:"Crockpot Dinner",why:"Load it before work and dinner's done when you get home.",ids:["sc-mississippi-roast","sc-crack-chicken","sc-butter-chicken","sc-kalua-pork","sv-mashed","sv-carrots","blistered-green-beans","yellow-rice","griddle-naan","pineapple-rice","fried-cabbage"],pair:{"sc-mississippi-roast":["sv-mashed","blistered-green-beans"],"sc-crack-chicken":["sv-mashed","blistered-green-beans"],"sc-butter-chicken":["yellow-rice","griddle-naan"],"sc-kalua-pork":["pineapple-rice","fried-cabbage"]}},
  {name:"Rib Night",s:"Rib Night",why:"The Pit Barrel's famous ribs with beans catching the drippings underneath.",ids:["pbc-ribs","pbc-pulled-pork","drip-beans","popper-mac","smokies"]},
- {name:"Thanksgiving on the Barrel",s:"Thanksgiving",nowheel:true,why:"The turkey hangs in the barrel and frees up the oven for everything else.",ids:["smoked-turkey","sv-mashed","sv-carrots","honey-brussels"]},
+ {name:"Thanksgiving on the Barrel",s:"Thanksgiving",nowheel:true,why:"The turkey hangs in the barrel and frees up the oven for everything else.",ids:["smoked-turkey","sv-mashed","smoked-sweet-potatoes","honey-brussels"]},
  {name:"Fajita & Quesadilla Night",s:"Fajita Night",why:"Steak fajitas or chicken quesadillas, all on the Blackstone.",ids:["steak-fajitas","chicken-quesadillas","mexican-rice","elote"]},
  {name:"Soup & Stew Day",s:"Soup Day",why:"Load the slow cooker in the morning. Garlic bread on the griddle right before dinner.",ids:["sc-beef-stew","sc-tortilla-soup","griddle-garlic-bread","grilled-guac"],pair:{"sc-beef-stew":["griddle-garlic-bread"],"sc-tortilla-soup":["grilled-guac"]}},
  {name:"Air Fryer Weeknight",s:"Air Fryer",why:"Salmon, chicken, chops or pork tenderloin in 10 to 25 minutes, with a veg and potatoes. No grill to light.",ids:["af-salmon","af-chicken-breast","af-pork-chops","air-fryer-pork-tenderloin","air-fryer-whole-chicken","af-baked-potato","air-fryer-brussels-sprouts-with-garlic-balsamic-and-soy","easy-air-fryer-asparagus","air-fryer-green-beans","air-fryer-potatoes"],pair:{"af-salmon": ["easy-air-fryer-asparagus"], "af-chicken-breast": ["air-fryer-green-beans"], "af-pork-chops": ["air-fryer-potatoes"], "air-fryer-pork-tenderloin": ["air-fryer-green-beans"], "air-fryer-whole-chicken": ["air-fryer-potatoes"]}},
@@ -1786,7 +1813,7 @@ const MENUS = [
  {name:"Kielbasa & Sausage Night",s:"Kielbasa Night",why:"Kielbasa, cowboy stir fry or sausage and peppers, with griddle potatoes and fried cabbage.",ids:["blackstone-kielbasa", "kielbasa-cowboy-stir-fry", "cowboy-stir-fry", "sausage-peppers", "griddle-potatoes", "fried-cabbage"],pair:{"kielbasa-cowboy-stir-fry": ["fried-cabbage"], "cowboy-stir-fry": ["fried-cabbage"]}},
  {name:"Air Fryer Seafood Night",s:"AF Seafood",why:"Garlic shrimp, crab cakes, salmon patties or lobster tails, with corn and zucchini.",ids:["air-fryer-shrimp", "easy-air-fryer-crab-cakes", "salmon-patties", "lobster-tails", "air-fryer-corn-on-the-cob", "air-fryer-zucchini", "bacon-wrapped-scallops"],pair:{"air-fryer-shrimp": ["air-fryer-zucchini", "bacon-wrapped-scallops"], "easy-air-fryer-crab-cakes": ["air-fryer-corn-on-the-cob"], "salmon-patties": ["air-fryer-corn-on-the-cob", "air-fryer-zucchini"], "lobster-tails": ["air-fryer-corn-on-the-cob", "air-fryer-zucchini"]}},
  {name:"Air Fryer Dinner Classics",s:"AF Classics",why:"Steak with garlic-herb butter, crispy thighs, turkey breast, turkey burgers or stuffed peppers.",ids:["air-fryer-steak-with-garlic-herb-butter", "af-chicken-thighs", "air-fryer-turkey-breast", "air-fryer-turkey-burgers", "air-fryer-stuffed-peppers", "easy-air-fryer-asparagus", "air-fryer-potatoes", "air-fryer-sweet-potato-fries", "air-fryer-cauliflower"],pair:{"air-fryer-steak-with-garlic-herb-butter": ["easy-air-fryer-asparagus"], "af-chicken-thighs": ["air-fryer-cauliflower"], "air-fryer-turkey-breast": ["air-fryer-potatoes"], "air-fryer-turkey-burgers": ["air-fryer-sweet-potato-fries"], "air-fryer-stuffed-peppers": ["air-fryer-cauliflower"]}},
- {name:"Sous Vide Chicken Night",s:"SV Chicken",why:"Juicy sous vide breasts or crispy-skin thighs, with butter-poached sides from the same bath.",ids:["sv-chicken-breast", "sv-chicken-thighs", "sv-carrots", "sv-mashed", "sv-corn"]},
+ {name:"Sous Vide Chicken Night",s:"SV Chicken",why:"Juicy sous vide breasts or crispy-skin thighs; the sides come off the air fryer and griddle.",ids:["sv-chicken-breast","sv-chicken-thighs","air-fryer-green-beans","griddle-potatoes"]},
  {name:"Bistro Night",s:"Bistro",why:"Steak frites, crispy pork cutlets or lamb chops, a little Paris on the flat top.",ids:["steak-frites", "crispy-pork-cutlets", "marinated-lamb-chops", "grilled-asparagus", "griddle-potatoes", "grilled-caesar"],pair:{"steak-frites": ["grilled-asparagus"], "crispy-pork-cutlets": ["griddle-potatoes", "grilled-caesar"], "marinated-lamb-chops": ["grilled-asparagus", "griddle-potatoes"]}},
  {name:"Shawarma & Kebab Night",s:"Kebab Night",why:"Chicken shawarma wraps or beef shish kebabs, with grilled zucchini and veggie kebabs.",ids:["chicken-shawarma-wraps","shish-kebab","grilled-zucchini","veg-kebabs"]},
  {name:"Mediterranean Night",s:"Mediterranean",why:"One batch of tzatziki covers both dishes.",ids:["greek-gyros","veg-kebabs","greek-meatballs"]}
@@ -1802,6 +1829,10 @@ const ready5=r=>r.cooker==="SC"||(r.cooker==="SV"&&r.mins<=600)||(r.cooker==="PB
 const TIMES=[["nm","No marinating",r=>!needsAhead(r)],["q","Under 30 min",r=>r.mins<30],["h","30 to 90 min",r=>r.mins>=30&&r.mins<=90],["l","Low & slow (90+)",r=>r.mins>90],["r5","Ready by 5 (start early)",ready5]];
 const REGIONS=[...new Set(R.map(r=>r.region))].sort();
 const byId=Object.fromEntries(R.map(r=>[r.id,r]));
+// nights and pairs never point at a deleted recipe
+for(let k=MENUS.length-1;k>=0;k--){const m=MENUS[k];m.ids=m.ids.filter(id=>byId[id]);
+  if(m.pair)for(const x in m.pair){if(!byId[x])delete m.pair[x];else m.pair[x]=m.pair[x].filter(id=>byId[id])}
+  if(!m.ids.some(id=>MAIN_T.has(byId[id].type)))MENUS.splice(k,1)}
 
 /* ---------- helpers ---------- */
 const $=s=>document.querySelector(s);
@@ -1880,8 +1911,8 @@ function render(){
   const nf=state.cooker.size+state.type.size+state.region.size+state.time.size+state.mac.size;$("#fCount").textContent=nf||"";
   updateCounts();
 }
-function setFilters(open){$("#fBody").hidden=!open;$("#fToggle").setAttribute("aria-expanded",open);$("#fArrow").textContent=open?"▴":"▾";store.set("ftb-fopen",open)}
-setFilters(store.get("ftb-fopen",false));
+function setFilters(open){$("#fBody").hidden=!open;$("#fToggle").setAttribute("aria-expanded",open);$("#fArrow").textContent=open?"▴":"▾"}
+setFilters(false);   // always start collapsed (Ron)
 $("#fToggle").onclick=()=>setFilters($("#fBody").hidden);
 $("#q").oninput=e=>{state.q=e.target.value.trim().toLowerCase();render()};
 $("#favOnly").onclick=e=>{state.favOnly=!state.favOnly;e.currentTarget.setAttribute("aria-pressed",state.favOnly);e.currentTarget.classList.toggle("primary",state.favOnly);render()};
@@ -1904,9 +1935,13 @@ const GOES=[   // checked in order, most specific first; [main dish words, the c
  [/gyro|souvlaki|kofta|shawarma|greek|kebab|kabob|mediterranean|piri/i,/zucchini|naan|pita|rice/i,/tzatziki|salad|hummus|potato|veg|kebabs/i],
  [/pasta|fettuccine|scampi|stroganoff|parm|meatball|italian|lasagna|tortellini|piccata/i,/garlic bread|caesar/i,/zucchini|broccoli|asparagus|salad|bruschetta|mushroom/i],
 ];
-const FAM={"BBQ":"bbq","Southern":"bbq","Cajun":"bbq","American":"bbq","Mexican":"mx","Chinese":"asia","Japanese":"asia","Korean":"asia","Thai":"asia","Mediterranean":"med","European":"med","Indian":"med","South American":"sa","Caribbean":"sa","Hawaiian":"asia","African":"sa"};
-const fits=(main,side)=>goesWith(main,side)>0||(FAM[main.region]&&FAM[main.region]===FAM[side.region]);
-const overKit=(x,chosen)=>(x.cooker==="SC"&&chosen.some(c=>c&&c.cooker==="SC"))||(x.cooker==="AF"&&chosen.filter(c=>c&&c.cooker==="AF").length>=2);
+const FAM={"BBQ":"bbq","Southern":"bbq","Cajun":"bbq","American":"bbq","Mexican":"mx","Chinese":"asia","Japanese":"asia","Korean":"asia","Thai":"asia","Mediterranean":"med","European":"med","Indian":"ind","South American":"sa","Caribbean":"sa","Hawaiian":"asia","African":"sa"};
+// same cuisine family, or a classic pairing with an everyday American side (corn with brisket, yes; Korean corn cheese with brisket, no)
+const fits=(main,side)=>(FAM[main.region]&&FAM[main.region]===FAM[side.region])||(goesWith(main,side)>0&&FAM[side.region]==="bbq");
+// one sous vide bath = one temperature: two sous vide dishes can share a meal only if they have a bath temp in common
+const svTemps=r=>{const st=r.steps.find(x=>/circulator|bath/i.test(x)&&/\d{3}\s*°/.test(x))||"";return new Set((st.match(/\d{3}(?=\s*°)/g)||[]).map(Number))};
+const svClash=(x,y)=>{const a=svTemps(x),b=svTemps(y);return !a.size||!b.size||![...a].some(t=>b.has(t))};
+const overKit=(x,chosen)=>(x.cooker==="SV"&&chosen.some(c=>c&&c.cooker==="SV"&&svClash(x,c)))||(x.cooker==="SC"&&chosen.some(c=>c&&c.cooker==="SC"))||(x.cooker==="AF"&&chosen.filter(c=>c&&c.cooker==="AF").length>=2);
 const BREAKFASTY=/egg bites|breakfast|pancake|french toast|hash browns?/i;
 function goesWith(main,side){const g=GOES.find(([m])=>m.test(main.name));return !g?0:g[1].test(side.name)?10:g[2].test(side.name)?7:0}
 function score(a,b){let s=0;if(a.region===b.region)s+=5;
@@ -2288,7 +2323,7 @@ function openRecipe(id){
     <h3>Steps</h3><ol>${r.steps.map(s=>`<li>${esc(s)}</li>`).join("")}</ol>
     ${r.tip?`<div class="tip"><b>Tip:</b> ${esc(r.tip)}</div>`:""}
     <details class="pairs-wrap fold"><summary><h3>Make it a meal</h3><span class="chev">▾</span></summary><p class="cahint" style="margin:4px 0 8px">Tick what goes with it. Add to list, Plan my timing and Cook it all include your picks.</p><div class="pairpick">${pairsFor(r).map(p=>optRow(p.id,`<input type="checkbox" data-pair="${p.id}">`)).join("")}</div></details>
-    <p style="margin-top:16px;font-size:.88rem">Source: <a href="${esc(r.src[1])}" target="_blank" rel="noopener">${esc(r.src[0])}</a>${r.added&&RELAY?` · <button type="button" class="lnk" id="fixBtn">✏️ Fix sorting</button>`:""}</p>
+    <p style="margin-top:16px;font-size:.88rem">Source: <a href="${esc(r.src[1])}" target="_blank" rel="noopener">${esc(r.src[0])}</a>${r.added&&RELAY?` · <button type="button" class="lnk" id="fixBtn">✏️ Fix sorting</button>`:""}${RELAY?` · <button type="button" class="lnk" id="ownerBtn">🔒 Edit</button>`:""}</p>
     <div class="dlg-actions"><select id="dayPick" aria-label="Which day">${dayOpts(inPlan(r.id)?inPlan(r.id).day:"Tonight")}</select><button class="btn primary" id="listBtn" type="button">${inPlan(r.id)?'✓ On list (remove)':'＋ Add to list'}</button><button class="btn ${isFav?'primary':''}" id="favBtn" type="button">${isFav?'♥ Saved':'♡ Save to favorites'}</button><button class="btn" type="button" onclick="window.print()">Print</button><button class="btn" id="shareBtn" type="button">Copy link</button></div>
     <div class="dlg-actions"><label class="rb">Ready by <input type="time" value="17:00" id="dlgReady"></label><button class="btn" type="button" id="dlgTime">⏰ Plan my timing</button><button class="btn" type="button" id="dlgCook">👨‍🍳 Cook it all</button></div><div id="dlgTimeline"></div>`;
   // the picked sides/apps ride along with this recipe
@@ -2300,6 +2335,7 @@ function openRecipe(id){
   $("#dlgCook").onclick=()=>openCookAll(r.name+(picks().length?" + sides":""),[r.id,...picks()],$("#dlgReady").value,$("#dayPick").value,+$("#dlgServes").value);
   $("#dlgBody").querySelectorAll("[data-also]").forEach(b=>b.onclick=()=>openRecipe(b.dataset.also));
   const fx=$("#dlgBody").querySelector("#fixBtn");if(fx)fx.onclick=()=>{dlg.close();openAdd(r)};
+  const ob=$("#dlgBody").querySelector("#ownerBtn");if(ob)ob.onclick=()=>ownerEdit(r);
   $("#listBtn").onclick=()=>{if(inPlan(r.id))removeFromPlan(r.id);else [r.id,...picks()].forEach(id=>addToPlan(id,$("#dayPick").value,+$("#dlgServes").value));openRecipe(r.id);render()};
   $("#dlgServes").onchange=e=>{const n=+e.target.value;setHousehold(n);const p=inPlan(r.id);if(p){p.serves=n;savePlan()}$("#dlgIng").innerHTML=ingHTML(r,n)};
   $("#dayPick").onchange=()=>{if(inPlan(r.id)){addToPlan(r.id,$("#dayPick").value);render()}};
@@ -2352,7 +2388,7 @@ function nightCard(m,i,pfx,chosen){
   const mains=m.ids.filter(isMain),sel=chosen||mains[0],extras=withFor(m,sel);
   const row=optRow;
   const cks=[...new Set(m.ids.flatMap(id=>[byId[id].cooker,byId[id].finish]).filter(Boolean))],rgs=[...new Set(mains.map(id=>byId[id].region))];
-  return `<div class="menu" data-card data-mi="${i}" data-cookers="${cks.join(" ")}" data-regions="${esc(rgs.join("|"))}"><h3>${m.saved?"⭐ ":""}${esc(m.name)}</h3><p>${esc(m.why)}${m.mine?` <button type="button" class="lnk" data-delnight="${m.saved}">🗑 Delete</button>`:""}</p><div class="ntime" data-ntime>${ntimeHTML(m,sel)}</div>
+  return `<div class="menu" data-card data-mi="${i}" data-cookers="${cks.join(" ")}" data-regions="${esc(rgs.join("|"))}"><h3>${m.saved?"⭐ ":""}${esc(m.name)}</h3><p>${esc(m.why)}${m.saved&&(m.mine||sessionStorage.getItem("ftb-owner"))?` <button type="button" class="lnk" data-delnight="${m.saved}">🗑 Delete</button>`:""}</p><div class="ntime" data-ntime>${ntimeHTML(m,sel)}</div>
     <details class="nbody fold"${pfx==="w"?" open":""}><summary>${mains.length>1?`Pick from ${mains.length} mains, add to list, timing`:"See the menu, add to list, timing"}<span class="chev">▾</span></summary>
     <div class="nh">${mains.length>1?"Main (pick one)":"Main"}</div>
     ${mains.map(id=>row(id,`<input type="radio" name="m-${pfx}${i}" value="${id}"${id===sel?" checked":""}${mains.length===1?" hidden":""}>`)).join("")}
@@ -2532,29 +2568,33 @@ $("#build").onclick=()=>{
   // pick the cooker first (evenly across the ones you picked), then the dish, so 12 air fryer mains aren't drowned out by 100 Blackstone ones
   const ck=rnd([...new Set(pool.map(r=>r.cooker))]),main=rnd(pool.filter(r=>r.cooker===ck));
   // sides come from the main's hand-built Meal Night first; the scored pick is only the fallback, and never two of the same thing (potato + potato skins)
-  const KIND=/potato|fries|tots|corn|rice|beans|mac|slaw|bread|salad|mushroom|asparagus|zucchini|broccoli|brussels|egg roll|wings|dip|poppers|nachos|shrimp/i;
+  const KIND=/burnt ends|bang bang|potato|fries|tots|corn|rice|beans|mac|slaw|bread|salad|mushroom|asparagus|zucchini|broccoli|brussels|egg roll|wings|dip|poppers|nachos|shrimp/i;
   const kind=r=>(r.name.match(KIND)||[""])[0].toLowerCase().replace(/fries|tots/,"potato");
   const clash=(x,chosen)=>chosen.some(c=>c&&kind(c)&&kind(c)===kind(x))||overKit(x,chosen);
   const usable=x=>x&&okCooker(x)&&timeOK(x,true)&&!BREAKFASTY.test(x.name);
   const night=rnd(MENUS.filter(m=>!m.gone&&m.ids.includes(main.id)))||null;
-  const fromNight=t=>night?(t==="Side"?withFor(night,main.id):night.ids).map(id=>byId[id]).filter(x=>x&&x.type===t&&usable(x)):[];
+  const fromNight=t=>night?(t==="Side"?withFor(night,main.id):night.ids).map(id=>byId[id]).filter(x=>x&&x.type===t&&usable(x)&&fits(main,x)):[];
   const pick=(t,chosen)=>{const n=fromNight(t).filter(x=>!clash(x,chosen));if(n.length)return rnd(n);
     const c=R.filter(r=>r.type===t&&usable(r)&&fits(main,r)&&!clash(r,chosen)).map(x=>[x,score(main,x)]).sort((a,b)=>b[1]-a[1]);
     return c.length?rnd(c.filter(x=>x[1]>=c[0][1]-3).slice(0,6))[0]:null};   // any of the best few, so it isn't potato skins every time
-  const side=pick("Side",[main]),app=pick("Appetizer",[main,side]);
+  // appetizers belong with casual food (tacos, takeout, burgers, BBQ); a pot roast or salmon dinner just gets its side,
+  // unless its hand-built Meal Night deliberately includes an appetizer
+  const PLATED=/roast|stew|soup|meatloaf|turkey breast|breast|\bchops?\b|tenderloin|salmon|cod\b|mahi|halibut|scampi|stroganoff|fettuccine|pasta|piccata|\bparm|curry|katsu|prime rib|short ribs|lamb|\bsteak\b(?! (fajita|bite|taco))|filet|ribeye|tomahawk/i;
+  const gi=GOES.findIndex(([m])=>m.test(main.name)),casual=!PLATED.test(main.name)&&([0,1,2,4].includes(gi)||/wing|nacho|slider|game day|dog/i.test(main.name));
+  const side=pick("Side",[main]),nightApps=fromNight("Appetizer").filter(x=>!clash(x,[main,side]));
+  const app=!casual?null:nightApps.length?rnd(nightApps):pick("Appetizer",[main,side]);
   const items=[main,side,app].filter(Boolean);
   const mixed=new Set(items.map(i=>i.cooker)).size>1;
   $("#buildOut").innerHTML=`<button class="rclose" type="button" data-rclose aria-label="Close">✕ Close</button>${note?`<p class="section-intro">${esc(note)}</p>`:""}<details class="menu fold buildfold" open><summary><h3 style="display:inline">Tonight's cook</h3><span class="chev">▾</span></summary><ol>${items.map(r=>`<li><button type="button" data-id="${r.id}">${esc(r.name)}</button> <small>${COOKERS[r.cooker]} · ${TYPE_LABEL[r.type]} · ${fmtTime(r.mins)}</small></li>`).join("")}</ol>
    <p class="plate">${plateText(items.map(r=>r.id))}</p>
    <p style="margin-top:10px">${!mixed?"Game plan: start the longest item first and work down the list so it all lands hot together.":items.some(r=>r.cooker==="PBC")?"Game plan: light the Pit Barrel first. Its items take longest. Fire the other cooker about 30 minutes before the barrel stuff comes off.":"Game plan: light the grill first and start the longest item. The Blackstone only needs 10 to 15 minutes to heat, so fire it last."}</p>
-   <div class="night-actions">${servesSelect(household||4,0,'id="bServes" data-serves')}<select id="bDay" aria-label="Which day">${dayOpts("Tonight")}</select><button class="btn primary" type="button" id="bAdd">＋ Add to list</button><button class="btn" type="button" id="bCook">👨‍🍳 Cook it all</button><button class="btn" type="button" id="again">Reroll</button></div><p class="cahint">👨‍🍳 <b>Cook it all:</b> every recipe on one page, timed so it all lands at once.</p></details>`;
+   <div class="night-actions">${servesSelect(household||4,0,'id="bServes" data-serves')}<select id="bDay" aria-label="Which day">${dayOpts("Tonight")}</select><button class="btn primary" type="button" id="bAdd">＋ Add to list</button><button class="btn" type="button" id="bCook">👨‍🍳 Cook it all</button></div><p class="cahint">👨‍🍳 <b>Cook it all:</b> every recipe on one page, timed so it all lands at once.</p></details>`;
   $("#bAdd").onclick=e=>{items.forEach(r=>addToPlan(r.id,$("#bDay").value,+$("#bServes").value));render();e.target.textContent="✓ Added to list"};
   $("#bServes").onchange=e=>setHousehold(+e.target.value);
   $("#bCook").onclick=()=>openCookAll("Tonight's cook",items.map(r=>r.id),"17:00",$("#bDay").value,+$("#bServes").value);
   if(RELAY){const sb=document.createElement("button");sb.className="btn";sb.type="button";sb.textContent="⭐ Save as a meal night";$("#bAdd").parentNode.appendChild(sb);
     sb.onclick=()=>saveNight(items.map(r=>r.id),items[0].name+" Night",sb)}
   $("#buildOut").querySelectorAll("button[data-id]").forEach(b=>b.onclick=()=>openRecipe(b.dataset.id));
-  $("#again").onclick=()=>$("#build").click();
 };
 
 
@@ -2826,6 +2866,53 @@ async function sendHeart(id,on){
   try{const r=await fetch(RELAY+"/heart",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id,device:deviceId,on})});const d=await r.json();
     if(d.ok){heartCounts[id]=d.count;const synced=new Set(store.get("ftb-hsync",[]));on?synced.add(id):synced.delete(id);store.set("ftb-hsync",[...synced]);render();if(dlg.open&&$("#dlgTitle").textContent===byId[id].name)openRecipe(id)}}catch(_){}
 }
+/* ---------- owner edits (code checked by the relay; changes land in overrides.js) ---------- */
+const ownerDlg=$("#ownerDlg");let ownerR=null,ownerPoll=null;
+async function ownerCode(){
+  let code=sessionStorage.getItem("ftb-owner")||"";
+  if(!code){code=(prompt("Owner code:")||"").trim();if(!code)return null}
+  try{const d=await (await fetch(RELAY+"/admin/check",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({code})})).json();
+    if(!d.ok){sessionStorage.removeItem("ftb-owner");alert(d.reason||"That code isn't right.");return null}}
+  catch(_){alert("Couldn't reach the site's server. Try again in a minute.");return null}
+  sessionStorage.setItem("ftb-owner",code);return code;   // remembered until the tab closes
+}
+async function ownerEdit(r){
+  const code=await ownerCode();if(!code)return;
+  ownerR=r;dlg.close();
+  $("#ownerTitle").textContent="Edit: "+r.name;$("#ownerForm").hidden=false;$("#ownerStatus").hidden=true;$("#oSave").disabled=$("#oDelete").disabled=false;
+  $("#oName").value=r.name;
+  $("#oCooker").innerHTML=Object.entries(COOKERS).map(([k,l])=>`<option value="${k}"${k===r.cooker?" selected":""}>${esc(l)}</option>`).join("");
+  $("#oType").innerHTML=Object.keys(TYPE_LABEL).map(t=>`<option value="${t}"${t===r.type?" selected":""}>${esc(TYPE_LABEL[t])}</option>`).join("");
+  $("#oRegion").innerHTML=[...new Set([...REGIONS,r.region])].sort().map(g=>`<option${g===r.region?" selected":""}>${esc(g)}</option>`).join("");
+  $("#oMins").value=r.mins;
+  if(!ownerDlg.open)ownerDlg.showModal();
+}
+function ownerStatus(html){const b=$("#ownerStatus");b.hidden=false;b.innerHTML=html}
+async function ownerSend(payload,doneMsg){
+  const code=sessionStorage.getItem("ftb-owner");$("#oSave").disabled=$("#oDelete").disabled=true;ownerStatus('<span class="spin"></span>Saving…');
+  let d;try{d=await (await fetch(RELAY+"/admin/edit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({code,id:ownerR.id,...payload})})).json()}catch(_){d={ok:false,reason:"Couldn't reach the site's server."}}
+  if(!d.ok){ownerStatus("<b>Not saved.</b> "+esc(d.reason||"Something went wrong."));$("#oSave").disabled=$("#oDelete").disabled=false;if(/code/i.test(d.reason||""))sessionStorage.removeItem("ftb-owner");return}
+  $("#ownerForm").hidden=true;ownerStatus('<span class="spin"></span>Saving to the site…');
+  const t0=Date.now();clearTimeout(ownerPoll);
+  const poll=async()=>{let st=null;try{st=await (await fetch(RELAY+"/status?issue="+d.issue)).json()}catch(_){}
+    if(st&&st.ok&&st.state!=="working"){ownerStatus(st.state==="added"?`<b>${doneMsg}</b> It shows up for everyone in about 2 minutes (refresh the page).`:"<b>Not saved.</b> "+mdLite(st.reply));return}
+    if(Date.now()-t0>4*60*1000){ownerStatus("Still working. Check back in a few minutes.");return}
+    ownerPoll=setTimeout(poll,5000)};
+  ownerPoll=setTimeout(poll,6000);
+}
+$("#ownerForm").onsubmit=e=>{e.preventDefault();const r=ownerR,set={};
+  const nm=$("#oName").value.trim();if(nm!==r.name)set.name=nm;
+  if($("#oCooker").value!==r.cooker)set.cooker=$("#oCooker").value;
+  if($("#oType").value!==r.type)set.type=$("#oType").value;
+  if($("#oRegion").value!==r.region)set.region=$("#oRegion").value;
+  if(+$("#oMins").value!==r.mins)set.mins=+$("#oMins").value;
+  if(!Object.keys(set).length){ownerStatus("Nothing changed.");return}
+  ownerSend({set},"Saved.")};
+$("#oDelete").onclick=()=>{if(confirm(`Delete "${ownerR.name}" from the site? (Jarvis can bring it back.)`))ownerSend({remove:true},"Deleted.")};
+$("#ownerClose").onclick=()=>ownerDlg.close();
+ownerDlg.addEventListener("click",e=>{if(e.target===ownerDlg)ownerDlg.close()});
+ownerDlg.addEventListener("close",()=>clearTimeout(ownerPoll));
+
 /* ---------- saved meal nights (shared through the relay) ---------- */
 function addSavedNight(n){
   const ids=n.ids.filter(id=>byId[id]);if(!ids.some(isMain))return;
@@ -2848,7 +2935,8 @@ async function saveNight(ids,suggest,btn){
 }
 async function deleteNight(id){
   if(!confirm("Delete this saved meal night for everyone?"))return;
-  try{const d=await (await fetch(RELAY+"/night/delete",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:+id,device:deviceId})})).json();
+  const m0=MENUS.find(x=>x.saved==id),code=m0&&!m0.mine?sessionStorage.getItem("ftb-owner"):null;
+  try{const d=await (await fetch(RELAY+"/night/delete",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:+id,device:deviceId,...(code?{code}:{})})})).json();
     if(d.ok){const m=MENUS.find(x=>x.saved==id);if(m)m.gone=true;renderNights();filterNights()}}catch(_){}
 }
 async function loadHearts(){
