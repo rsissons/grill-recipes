@@ -1782,6 +1782,8 @@ function applyDeals(){
   renderGrocery();
 }
 const SKIP_STORES=/restaurant depot|cabela|bass pro|home depot|lowe'?s|petsmart|petco|harbor freight|big 5|dick'?s|michaels|joann|staples|office depot|best buy|kohl|macy|ulta|walgreens|cvs|rite aid|dollar tree|party city|ace hardware|tractor supply|sportsman/i;   // not grocery stores (Restaurant Depot is business-only)
+// comparable price: "2 for $5" is $2.50 each; per-lb prices only compare with per-lb
+function unitCost(d){const m=(d.pre||"").match(/^\s*(\d+)\s*(\/|for)\s*$/i);return {v:Number(d.price)/(m?+m[1]:1),lb:/\blb\b|per lb|\/lb/i.test(d.post||"")}}
 function dealPrice(d){
   const txt=`${d.pre||""} ${d.post||""}`,pr="$"+Number(d.price).toFixed(2);
   const multi=(d.pre||"").match(/^\s*(\d+)\s*(\/|for)\s*$/i);
@@ -1833,7 +1835,13 @@ function storePlan(items){
     order.push(best);
     left=left.filter(i=>{const d=deals[i.k].find(x=>storeName(x.store)===best);if(d){assign[i.k]=d;return false}return true});
   }
-  return {assign,order};
+  // Greedy picks the stops; now send each item to the cheapest of those stops (bacon $2.99 at Smart & Final beats $3.99 at Food 4 Less).
+  open.forEach(i=>{if(!assign[i.k])return;
+    const c=deals[i.k].filter(x=>order.includes(storeName(x.store)));
+    if(new Set(c.map(x=>unitCost(x).lb)).size!==1)return;      // mixed per-lb and each: can't compare, keep it
+    assign[i.k]=c.reduce((m,x)=>unitCost(x).v<unitCost(m).v?x:m);
+  });
+  return {assign,order:order.filter(st=>open.some(i=>assign[i.k]&&storeName(assign[i.k].store)===st))};
 }
 function rowHTML(i,extra){
   return `<label class="gi${have.has(i.k)?" have":""}"><input type="checkbox" data-k="${esc(i.k)}"${have.has(i.k)?" checked":""}><span>${esc(i.t)}${i.from.size?`<small>${esc([...i.from].join(", "))}</small>`:""}${extra}</span>${i.custom?`<button class="x" type="button" data-cx="${esc(i.t)}" aria-label="Remove">×</button>`:""}</label>`;
