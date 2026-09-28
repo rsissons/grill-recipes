@@ -1406,7 +1406,7 @@ const R = [
  ing:["6 ears corn, shucked","1 green bell pepper, diced","2 Roma tomatoes, diced","1/4 cup red onion, diced","1/2 bunch cilantro, chopped","2 Tbsp olive oil, salt and pepper","Grated parmesan, optional"],
  steps:["Medium-high griddle with a thin coat of oil. Roll the corn around for about 10 minutes until tender with some black spots.","Cool enough to handle, then cut the kernels off into a big bowl.","Toss with everything else, season, and top with parmesan if you like."],
  tip:"Stand the cob in the hole of a bundt pan to cut it. The kernels stay in the pan.",src:["Blackstone: Grilled Corn Salad","https://blackstoneproducts.com/blogs/recipes/grilled-corn-salad"]},
-{id:"bang-bang-shrimp",name:"Sweet & Spicy Bang Bang Shrimp",cooker:"BS",type:"Appetizer",region:"American",mins:80,
+{id:"bang-bang-shrimp",name:"Sweet & Spicy Bang Bang Shrimp",cooker:"BS",type:"Appetizer",region:"American",mins:20,
  desc:"Buttermilk-soaked shrimp dredged in cornstarch, fried crisp on the griddle and tossed in sweet chili sriracha mayo.",
  ing:["1 lb shrimp, peeled and deveined","1 cup buttermilk","1 cup cornstarch, 1/2 tsp garlic powder","Sauce: 3/4 cup mayo, 1/2 cup sweet chili sauce, 1 to 2 Tbsp sriracha","Vegetable oil","Green onions and toasted sesame seeds"],
  steps:["Soak the shrimp in the buttermilk in the fridge for 1 hour.","Stir the sauce together.","Drain the shrimp and shake them in a bag with the cornstarch and garlic powder.","Medium-high to high griddle with a few Tbsp of oil. Fry the shrimp 3 to 5 minutes a side until golden, adding oil as needed.","Drain on paper towels, then toss with 1/2 to 3/4 cup sauce. Top with green onions and sesame seeds."],
@@ -1422,7 +1422,7 @@ const R = [
  steps:["Low to medium griddle. Cook the steak to your liking, and cook the onion, peppers and mushrooms in the butter until soft. Combine and let cool.","Char the poblano and hot peppers, then chop.","Melt the Velveeta in a small pan on the griddle, stirring, and stir in the chopped peppers.","Roll 2 to 3 Tbsp of filling in each wrapper and spray lightly.","Air fry at 350°F in a single layer 10 minutes, turn, and 10 to 15 more until golden. Cool 5 minutes and serve with the dip."],
  tip:"Let the filling cool before rolling or the wrappers tear.",src:["Blackstone: Philly Cheesesteak Egg Rolls","https://blackstoneproducts.com/blogs/recipes/philly-cheesesteak-egg-rolls"]},
 /* ================= AIR FRYER (2026-09-28) ================= */
-{id:"af-wings",name:"Crispy Air Fryer Wings",cooker:"AF",type:"Appetizer",region:"American",mins:100,
+{id:"af-wings",name:"Crispy Air Fryer Wings",cooker:"AF",type:"Appetizer",region:"American",mins:40,
  desc:"Baking powder and a low-then-high two-stage cook give wings shatter-crisp skin with no frying.",
  ing:["2 lb chicken wings, split, tips removed","Per lb: 1 tsp coarse salt and 1 tsp baking powder (aluminum-free)","Per lb: 1 tsp cornstarch, 1/2 tsp garlic powder, 1/2 tsp smoked paprika, 1/4 tsp onion powder, 1/8 tsp pepper","Oil for the basket","Your sauce: buffalo, BBQ, hot honey or lemon pepper"],
  steps:["Pat the wings very dry.","Toss with the salt and baking powder, set on a rack over a sheet pan and refrigerate uncovered at least 1 hour.","Pat dry again and toss in the cornstarch and spices.","Grease the basket and air fry at 300°F in a single layer, not touching, for 15 minutes.","Flip, crank it to 450°F (or your max) and cook 10 minutes more until crisp and at least 165°F (175 to 185°F is better for wings). Toss in sauce."],
@@ -1457,7 +1457,7 @@ const R = [
  ing:["1 lb large shrimp (20 to 30 count), peeled, tails off, patted dry","1/3 cup flour, 1/2 tsp kosher salt, 1/4 tsp pepper","4 egg whites, whisked frothy","3/4 cup sweetened coconut flakes, pulsed finer","1/2 cup panko","Cooking spray","Sweet chili sauce"],
  steps:["Set up three bowls: seasoned flour, egg whites, coconut plus panko.","Flour, egg, then press each shrimp into the coconut mix on both sides.","Spray the basket, add a single layer and spray the tops.","Air fry at 325°F for 5 minutes, flip, spray and cook 4 more. Repeat with the rest."],
  tip:"Keep it at 325°F. Coconut scorches fast at higher heat.",src:["Rachel Cooks: Air Fryer Coconut Shrimp","https://www.rachelcooks.com/air-fryer-coconut-shrimp/"]},
-{id:"af-fries",name:"Crispy Air Fryer French Fries",cooker:"AF",type:"Side",region:"American",mins:58,
+{id:"af-fries",name:"Crispy Air Fryer French Fries",cooker:"AF",type:"Side",region:"American",mins:28,
  desc:"Soaked and dried russet fries that come out crisp outside and fluffy inside with 2 Tbsp of oil.",
  ing:["2 russet potatoes","2 Tbsp olive oil","1 tsp garlic powder, 1/2 tsp seasoned salt"],
  steps:["Scrub (peel if you like) and cut into 1/4 inch fries.","Soak in cold water at least 30 minutes.","Drain and dry them completely.","Preheat to 390°F. Toss with the oil and seasoning.","Air fry 10 minutes, shake, then 6 to 8 minutes more until crisp. Salt to taste."],
@@ -1471,6 +1471,38 @@ const R = [
 ];
 /* recipes added through the "Add a recipe" form (written by the GitHub automation) */
 if(Array.isArray(window.ADDED))window.ADDED.forEach(r=>{if(r&&r.id&&!R.some(x=>x.id===r.id))R.push({...r,added:1})});
+// Prep that has to happen hours ahead (marinate, brine, soak, chill), read from the recipe's own steps.
+function aheadOf(r){
+  if(r.cooker==="SV")return null;                                   // sous vide handles prep in its own "pre" steps
+  const U=u=>/^h/i.test(u)?60:1,NUM="(\\d+(?:\\.\\d+)?|an?|one|two|three|four|six|eight|twelve)";
+  const n=x=>({a:1,an:1,one:1,two:2,three:3,four:4,six:6,eight:8,twelve:12})[String(x).toLowerCase()]??parseFloat(x);
+  let best=null;
+  for(const sent of r.steps.join(" ").split(/(?<=[.!?])\s+/)){
+    const m0=sent.match(/\b(marinat\w*|dry[- ]brin\w*|brin(e|ed|ing)\b|soak\w*|chill\w*|refrigerat\w*|in the fridge|rest(s)? in the fridge|let (it |them )?sit)/i);
+    if(!m0)continue;
+    if(/\bcan be\b|leftover|\bstored?\b|\bkeeps?\b|\bfrozen\b|\bfreeze\b|\b(months?|weeks?)\b/i.test(sent))continue;   // storage / make-ahead notes, not required prep
+    const what=/dry[- ]brin/i.test(m0[0])||(/\bsalt\b/i.test(sent)&&/ahead|in advance|uncovered/i.test(sent))||/uncovered/i.test(sent)?"dry brine":/brin/i.test(m0[0])?"brine":/soak/i.test(m0[0])?"soak":/chill|refrigerat|fridge/i.test(m0[0])?"chill":/marinat/i.test(m0[0])?"marinate":"rest";
+    let min=null,max=null,m;
+    if((m=sent.match(new RegExp(NUM+"\\s*(?:to|-|–)\\s*"+NUM+"\\s*(hours?|hrs?|minutes?|mins?)","i")))){min=n(m[1])*U(m[3]);max=n(m[2])*U(m[3])}
+    else if((m=sent.match(new RegExp(NUM+"\\s*(hours?|hrs?|minutes?|mins?)\\s*(?:to|or|up to)\\s*(?:overnight|a day|24 hours|1 day)","i")))){min=n(m[1])*U(m[2]);max=24*60}
+    else if((m=sent.match(new RegExp("(?:at least|for|minimum of)?\\s*"+NUM+"\\s*(hours?|hrs?|minutes?|mins?)","i")))){min=n(m[1])*U(m[2]);
+      const up=sent.match(new RegExp("up to\\s*"+NUM+"\\s*(hours?|hrs?|minutes?|mins?|days?)","i"));
+      max=up?n(up[1])*(/^d/i.test(up[2])?1440:U(up[2])):/or longer|overnight/i.test(sent)?Math.max(min,24*60):min}
+    else if(/overnight/i.test(sent)){min=8*60;max=24*60}
+    if(min==null||!(min>=30))continue;                                // under 30 minutes is part of the cook, not "ahead"
+    const optional=/optional|if you (have|can)|worth it|if time allows|for best/i.test(sent);
+    if(!best||min>best.min)best={min,max:Math.max(max||min,min),what,optional};
+  }
+  return best;
+}
+const fmtHrs=m=>m>=60?(m%60?(m/60).toFixed(1).replace(/\.0$/,""):m/60)+" hr"+(m>60?"s":""):m+" min";
+function aheadText(a){
+  if(!a)return "";
+  const span=a.max>=24*60&&a.min>=8*60?"overnight":a.max>a.min?`${a.min>=60?fmtHrs(a.min).replace(/ hrs?$/,""):fmtHrs(a.min)} to ${a.max>=24*60?"24 hrs":fmtHrs(a.max)}`:fmtHrs(a.min);
+  return `${a.optional?"optional: ":""}${a.what} ${span}`;
+}
+R.forEach(r=>{const a=aheadOf(r);if(!a)return;r.ahead=a;if(r.added&&r.mins>=a.min+15)r.mins-=a.min});
+const needsAhead=r=>!!(r&&r.ahead&&!r.ahead.optional);
 /* Per-serving macros: [calories, protein g, carbs g, fat g, servings, s=published by the source / e=estimate from the ingredient list, note] */
 const MACROS={
  "air-fryer-chicken-parmesan":[700,55,35,35,2,"e"],"air-fryer-spicy-fried-chicken-sandwich":[650,40,50,30,4,"e"],"air-fryer-chicken-nuggets":[420,40,25,17,4,"e"],"air-fryer-buffalo-chicken-drumsticks":[560,45,4,40,2,"e"],"air-fryer-better-than-boxed-fish-sticks":[330,28,25,13,4,"e"],"air-fryer-turkey-burgers":[520,35,30,28,2,"e"],"air-fryer-juicy-well-done-cheeseburgers":[720,45,30,45,2,"e"],"air-fryer-fried-chicken":[650,55,30,33,2,"e"],
@@ -1722,7 +1754,7 @@ const TYPES=["Beef","Chicken","Pork","Seafood",...(R.some(r=>r.type==="Other")?[
 const TYPE_LABEL={Beef:"Beef Main",Chicken:"Chicken Main",Pork:"Pork Main",Seafood:"Seafood Main",Other:"Other Main",Side:"Side Dish",Appetizer:"Appetizer"};
 // Ready by 5: start it in the morning or early afternoon and walk away. Slow cooker, sous vide (holds), or a Pit Barrel cook of 2 to 10 hours.
 const ready5=r=>r.cooker==="SC"||(r.cooker==="SV"&&r.mins<=600)||(r.cooker==="PBC"&&r.mins>=120&&r.mins<=600);
-const TIMES=[["q","Under 30 min",r=>r.mins<30],["h","30 to 90 min",r=>r.mins>=30&&r.mins<=90],["l","Low & slow (90+)",r=>r.mins>90],["r5","Ready by 5 (start early)",ready5]];
+const TIMES=[["nm","No marinating",r=>!needsAhead(r)],["q","Under 30 min",r=>r.mins<30],["h","30 to 90 min",r=>r.mins>=30&&r.mins<=90],["l","Low & slow (90+)",r=>r.mins>90],["r5","Ready by 5 (start early)",ready5]];
 const REGIONS=[...new Set(R.map(r=>r.region))].sort();
 const byId=Object.fromEntries(R.map(r=>[r.id,r]));
 
@@ -1768,7 +1800,8 @@ function matches(r,skip){
   if(skip!=="cooker"&&state.cooker.size&&!state.cooker.has(r.cooker))return false;
   if(skip!=="type"&&state.type.size&&!state.type.has(r.type))return false;
   if(skip!=="region"&&state.region.size&&!state.region.has(r.region))return false;
-  if(skip!=="time"&&state.time.size&&!TIMES.some(t=>state.time.has(t[0])&&t[2](r)))return false;
+  if(skip!=="time"&&state.time.size){const ks=[...state.time].filter(k=>k!=="nm");
+    if(ks.length&&!TIMES.some(t=>ks.includes(t[0])&&t[2](r)))return false;if(state.time.has("nm")&&needsAhead(r))return false}
   if(skip!=="mac"&&state.mac.size&&!MACF.every(t=>!state.mac.has(t[0])||t[2](r)))return false;
   if(state.favOnly&&!favs.has(r.id))return false;
   if(state.q){const hay=(r.name+" "+r.desc+" "+r.region+" "+r.ing.join(" ")).toLowerCase();
@@ -1787,7 +1820,7 @@ function cardHTML(r,flat){
   return `<button class="card" type="button" data-id="${r.id}">
     <div class="tags"><span class="tag ${r.cooker.toLowerCase()}">${cookerLabel(r)}</span>${flat?`<span class="tag">${TYPE_LABEL[r.type]}</span>`:""}<span class="tag">${esc(r.region)}</span>${r.added?'<span class="tag added">Added</span>':""}</div>
     <h3>${esc(r.name)}</h3>
-    <div class="meta"><span>⏱ ${fmtTime(r.mins)}${r.mac?` · ${r.mac.cal} cal · ${r.mac.p}g protein`:""}</span><span>${inPlan(r.id)?'<span class="onlist">🛒 On list</span> ':''}${starsHTML(r)}${heartHTML(r.id)}</span></div>
+    <div class="meta"><span>⏱ ${fmtTime(r.mins)}${needsAhead(r)?` + ${aheadText(r.ahead)}`:""}${r.mac?` · ${r.mac.cal} cal · ${r.mac.p}g protein`:""}</span><span>${inPlan(r.id)?'<span class="onlist">🛒 On list</span> ':''}${starsHTML(r)}${heartHTML(r.id)}</span></div>
   </button>`;
 }
 function render(){
@@ -2181,7 +2214,7 @@ const dlg=$("#dlg");
 function openRecipe(id){
   const r=byId[id];if(!r)return;
   $("#dlgTitle").textContent=r.name;
-  $("#dlgTags").innerHTML=`<span class="tag ${r.cooker.toLowerCase()}">${cookerLabel(r)}</span><span class="tag">${TYPE_LABEL[r.type]}</span><span class="tag">${esc(r.region)}</span><span class="tag">⏱ ${fmtTime(r.mins)}</span>`+
+  $("#dlgTags").innerHTML=`<span class="tag ${r.cooker.toLowerCase()}">${cookerLabel(r)}</span><span class="tag">${TYPE_LABEL[r.type]}</span><span class="tag">${esc(r.region)}</span><span class="tag">⏱ ${fmtTime(r.mins)}</span>${r.ahead?`<span class="tag">🕒 ${esc(aheadText(r.ahead))}</span>`:""}`+
     `${ratingLineHTML(r)}${rateMeHTML(r)}`;
   const isFav=favs.has(r.id);
   $("#dlgBody").innerHTML=`${alsoOnHTML(r)}${macHTML(r)}${smokerHTML(r)}<div class="inghead"><h3${r.mac?"":' style="margin-top:0"'}>Ingredients</h3>${servesSelect(servesFor(r.id),nativeServes(r),'id="dlgServes"')}</div><div id="dlgIng">${ingHTML(r,servesFor(r.id))}</div>
@@ -2237,8 +2270,9 @@ const withFor=(m,main)=>(m.pair&&m.pair[main])||m.ids.filter(id=>!isMain(id));
 function optRow(id,input){const r=byId[id];return `<label class="opt">${input}<button type="button" class="lnk" data-id="${id}">${esc(r.name)}</button><small>${COOKERS[r.cooker]} · ${fmtTime(r.mins)}</small></label>`}
 // A night's cook time = the longest dish, since the sides cook alongside the main.
 const nightMins=(m,main)=>Math.max(...[main,...withFor(m,main)].map(id=>byId[id].mins));
-const NTIMES=[["30","Under 30 min",(m,x)=>nightMins(m,x)<=30],["60","Under 1 hr",(m,x)=>nightMins(m,x)<=60],["120","Under 2 hrs",(m,x)=>nightMins(m,x)<=120],["r5","Ready by 5 (start early)",(m,x)=>ready5(byId[x])]];
-const ntimeHTML=(m,main)=>`⏱ ${fmtTime(nightMins(m,main))}${ready5(byId[main])?" · start it early, done by dinner":""}`;
+const nightAhead=(m,x)=>[x,...withFor(m,x)].map(id=>byId[id]).filter(needsAhead).sort((a,b)=>b.ahead.min-a.ahead.min)[0];
+const NTIMES=[["nm","No marinating",(m,x)=>!nightAhead(m,x)],["30","Under 30 min",(m,x)=>nightMins(m,x)<=30],["60","Under 1 hr",(m,x)=>nightMins(m,x)<=60],["120","Under 2 hrs",(m,x)=>nightMins(m,x)<=120],["r5","Ready by 5 (start early)",(m,x)=>ready5(byId[x])]];
+const ntimeHTML=(m,main)=>{const a=nightAhead(m,main);return `⏱ ${fmtTime(nightMins(m,main))}${a?` + ${aheadText(a.ahead)}`:""}${ready5(byId[main])?" · start it early, done by dinner":""}`};
 const withHTML=ids=>ids.length?`<div class="nh">With</div>${ids.map(id=>optRow(id,`<input type="checkbox" data-x="${id}" checked>`)).join("")}`:"";
 function nightCard(m,i,pfx,chosen){
   const mains=m.ids.filter(isMain),sel=chosen||mains[0],extras=withFor(m,sel);
@@ -2266,10 +2300,13 @@ const mnState={cooker:new Set(),region:new Set(),protein:new Set(),time:new Set(
 const cookerOK=r=>!mnState.cooker.size||(mnState.cooker.has(r.cooker)&&(!r.finish||mnState.cooker.has(r.finish)));
 const mainOK=r=>cookerOK(r)&&(!mnState.region.size||mnState.region.has(r.region))&&(!mnState.protein.size||mnState.protein.has(r.type));
 // the time chips for a single recipe (Build me a cook)
-const RTIME={"30":r=>r.mins<=30,"60":r=>r.mins<=60,"120":r=>r.mins<=120,"r5":ready5};
-const timeOK=(r,side)=>!mnState.time.size||[...mnState.time].some(k=>side&&k==="r5"?true:RTIME[k](r));
+const RTIME={"nm":r=>!needsAhead(r),"30":r=>r.mins<=30,"60":r=>r.mins<=60,"120":r=>r.mins<=120,"r5":ready5};
+const timeOK=(r,side)=>{const ks=[...mnState.time].filter(k=>k!=="nm");
+  return (!ks.length||ks.some(k=>side&&k==="r5"?true:RTIME[k](r)))&&(!mnState.time.has("nm")||!needsAhead(r))};
 // mains in a night that fit every filter row (any chip within a row)
-const fitMains=m=>m.ids.filter(isMain).filter(x=>mainOK(byId[x])&&(!mnState.time.size||NTIMES.some(t=>mnState.time.has(t[0])&&t[2](m,x))));
+const nightTimeOK=(m,x)=>{const ks=[...mnState.time].filter(k=>k!=="nm");
+  return (!ks.length||NTIMES.some(t=>ks.includes(t[0])&&t[2](m,x)))&&(!mnState.time.has("nm")||!nightAhead(m,x))};
+const fitMains=m=>m.ids.filter(isMain).filter(x=>mainOK(byId[x])&&nightTimeOK(m,x));
 // with a cooker filter on, untick sides that need a cooker you don't have
 // With a cooker filter on: hide dishes that need a cooker you didn't pick, and with 2+ cookers picked,
 // mix in a side from the one the night doesn't use yet (Blackstone night + air fryer fries)
@@ -2558,8 +2595,13 @@ function buildSteps(ids,ready,day){
   const preheat=(key,t,txt)=>{if(!pre[key]||t<pre[key].t)pre[key]={t,txt}};
   ids.map(id=>byId[id]).filter(Boolean).forEach(r=>{
     const start=new Date(at-r.mins*M);
-    const ahead=/marinat|overnight|dry brine|brine /i.test(r.steps.join(" "))&&r.cooker!=="SV";
-    if(ahead)steps.push({t:new Date(start-4*60*M),txt:`Marinate or brine: ${r.name}`,sub:"Start 2 to 24 hours ahead (see the recipe). The time here is the latest."});
+    const a=r.ahead;
+    if(a){let by=new Date(start-a.min*M);
+      // nobody marinates at 3:30 AM: move it to 9 PM the night before when the recipe allows that long
+      if(by.getHours()<7){const nb=new Date(by);nb.setDate(nb.getDate()-1);nb.setHours(21,0,0,0);if((start-nb)/M<=a.max)by=nb}
+      const verb={marinate:"Marinate",brine:"Brine","dry brine":"Salt and refrigerate (dry brine)",soak:"Soak",chill:"Chill"}[a.what]||"Prep";
+      const late=by<new Date();
+      steps.push({t:by,txt:`${verb}: ${r.name}`,sub:`${a.optional?"Optional, but worth it. ":""}Needs at least ${fmtHrs(a.min)}${a.max>a.min?` (up to ${a.max>=1440?"24 hrs":fmtHrs(a.max)})`:""} before cooking.`+(late?" That time has already passed: give it whatever time you can (even 30 minutes helps), or pick a dish with no marinating.":"")});}
     if(r.cooker==="SC"){
       const hi=r.high?new Date(at-r.high*M):null,fin=r.finish?(r.finish==="PBC"?30:12):0,end=new Date(start-fin*M);
       const s0=new Date(end.getTime()-0);
