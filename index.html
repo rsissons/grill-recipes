@@ -1346,6 +1346,7 @@ const R = [
 if(Array.isArray(window.ADDED))window.ADDED.forEach(r=>{if(r&&r.id&&!R.some(x=>x.id===r.id))R.push({...r,added:1})});
 /* Per-serving macros: [calories, protein g, carbs g, fat g, servings, s=published by the source / e=estimate from the ingredient list, note] */
 const MACROS={
+ "kielbasa-cowboy-stir-fry":[775,23,48,55,6,"e","1/6 of the recipe"],
  "backyard-burgers":[690,37,30,45,6,"e","1 cheeseburger"],"bbq-chicken":[440,36,12,26,6,"e","2 pieces"],"lemon-herb-chicken":[310,52,2,10,4,"e"],
  "beer-brats":[510,17,35,32,5,"e","1 brat on a bun"],"grilled-pork-chops":[410,48,2,22,4,"e","1 chop"],"chicken-kabobs":[330,50,12,9,4,"e","2 skewers"],
  "grilled-shrimp":[205,34,2,7,4,"e"],"griddle-garlic-bread":[265,6,28,14,8,"e","1 thick slice"],"pbc-ribs":[790,55,24,52,4,"e","half rack, sauced"],
