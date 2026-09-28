@@ -12,19 +12,19 @@
 <style>
 :root{
   --bg:#f6f1ea; --surface:#ffffff; --surface-2:#efe7dc; --ink:#231c16; --ink-2:#5c5148; --line:#ddd1c2;
-  --ember:#c2410c; --ember-ink:#fff; --bs:#1f2937; --pbc:#7c2d12; --gr:#166534; --gold:#b45309; --focus:#2563eb;
+  --ember:#c2410c; --ember-ink:#fff; --bs:#1f2937; --pbc:#7c2d12; --gr:#166534; --sv:#1d4ed8; --gold:#b45309; --focus:#2563eb;
   --shadow:0 1px 2px rgba(0,0,0,.06),0 4px 14px rgba(0,0,0,.06);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --bg:#15120f; --surface:#1f1a16; --surface-2:#2a231d; --ink:#f3ece4; --ink-2:#b9ab9c; --line:#3a3129;
-    --ember:#f97316; --ember-ink:#1a0f06; --bs:#94a3b8; --pbc:#fb923c; --gr:#4ade80; --gold:#fbbf24; --focus:#60a5fa;
+    --ember:#f97316; --ember-ink:#1a0f06; --bs:#94a3b8; --pbc:#fb923c; --gr:#4ade80; --sv:#93c5fd; --gold:#fbbf24; --focus:#60a5fa;
     --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.3);
   }
 }
 :root[data-theme="dark"]{
   --bg:#15120f; --surface:#1f1a16; --surface-2:#2a231d; --ink:#f3ece4; --ink-2:#b9ab9c; --line:#3a3129;
-  --ember:#f97316; --ember-ink:#1a0f06; --bs:#94a3b8; --pbc:#fb923c; --gr:#4ade80; --gold:#fbbf24; --focus:#60a5fa;
+  --ember:#f97316; --ember-ink:#1a0f06; --bs:#94a3b8; --pbc:#fb923c; --gr:#4ade80; --sv:#93c5fd; --gold:#fbbf24; --focus:#60a5fa;
   --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.3);
 }
 *{box-sizing:border-box}
@@ -112,6 +112,7 @@ nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(-
 .tag.bs{background:var(--bs);color:var(--bg)}
 .tag.pbc{background:var(--pbc);color:var(--bg)}
 .tag.gr{background:var(--gr);color:var(--bg)}
+.tag.sv{background:var(--sv);color:var(--bg)}
 .tag.added{background:var(--gold);color:var(--bg)}
 a.btn{text-decoration:none;display:inline-flex;align-items:center}
 .meta{display:flex;justify-content:space-between;font-size:.82rem;color:var(--ink-2);margin-top:auto}
@@ -303,7 +304,7 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
       <p class="section-intro" style="margin:0 0 12px">Paste a link to any recipe page. It gets read, sorted and added to the site for everyone, macros included when the site publishes them. Links that aren't recipes get turned away.</p>
       <label class="fl">Recipe link<input id="addUrl" type="url" required placeholder="https://" autocomplete="off"></label>
       <div class="frow2">
-        <label class="fl">Cooker<select id="addCooker"><option>Auto-detect</option><option>Blackstone</option><option>Pit Barrel</option><option>Grill</option></select></label>
+        <label class="fl">Cooker<select id="addCooker"><option>Auto-detect</option><option>Blackstone</option><option>Pit Barrel</option><option>Grill</option><option>Sous Vide</option></select></label>
         <label class="fl">Type<select id="addType"><option>Auto-detect</option><option>Beef main</option><option>Chicken main</option><option>Pork main</option><option>Seafood main</option><option>Side dish</option><option>Appetizer</option></select></label>
       </div>
       <div id="tsBox" style="margin:12px 0"></div>
@@ -1165,13 +1166,79 @@ const R = [
  desc:"Charred flank steak sliced into a thick, peanutty panang curry sauce with makrut lime leaves.",
  ing:["1.5 lb flank steak or sirloin","Salt, oil","3 Tbsp panang curry paste","1 can (13.5 oz) full-fat coconut milk","2 Tbsp crushed roasted peanuts (or 1 Tbsp peanut butter)","1.5 Tbsp fish sauce, 1 Tbsp palm or brown sugar","5 makrut lime leaves, thinly sliced; 1 red chile","Jasmine rice"],
  steps:["Salt and oil the steak and grill over high heat 4 to 5 minutes a side to 130°F. Rest 10 minutes.","In a skillet, fry the curry paste in 1/2 cup of the coconut cream 2 to 3 minutes until the oil separates.","Add the rest of the coconut milk, the peanuts, fish sauce and sugar. Simmer until thick, 5 minutes.","Slice the steak thin against the grain and fold it into the sauce with the lime leaves.","Top with chile and serve over rice."],
- tip:"Keep the sauce thick. Panang should coat the meat, not float it.",src:["Hot Thai Kitchen: Panang Beef","https://hot-thai-kitchen.com/panang-beef/"]}
+ tip:"Keep the sauce thick. Panang should coat the meat, not float it.",src:["Hot Thai Kitchen: Panang Beef","https://hot-thai-kitchen.com/panang-beef/"]},
+/* ================= SOUS VIDE BATCH (2026-09-28) ================= */
+{id:"sv-steak",name:"Sous Vide Steak, Blackstone Seared",cooker:"SV",finish:"BS",type:"Beef",region:"American",mins:120,
+ desc:"Thick ribeyes or strips cooked edge-to-edge medium rare in the bath, then seared hard on a screaming-hot flat top.",
+ ing:["2 ribeye or NY strip steaks, 1.5 to 2 inches thick (about 2 lb)","Kosher salt, coarse pepper","Optional in the bag: 2 thyme sprigs, 2 smashed garlic cloves","1 Tbsp high smoke point oil, 2 Tbsp butter"],
+ steps:["Set the circulator to 129°F for medium rare (135°F for medium).","Salt and pepper the steaks, bag them with the thyme and garlic, and push the air out with the water displacement trick.","Cook 1.5 to 3 hours.","Heat the Blackstone to 500°F+. Take the steaks out and pat them bone dry.","Sear 45 to 60 seconds a side with the oil, adding the butter for the last 30 seconds and spooning it over. Slice and serve right away. No rest needed."],
+ tip:"Pat them really dry before the sear. Any water on the surface steams and ruins the crust.",src:["Anova (J. Kenji López-Alt): Sous Vide Ribeye","https://recipes.anovaculinary.com/recipe/ribeye-steak-time-and-temp"]},
+{id:"sv-brisket",name:"Sous Vide Smoked Brisket",cooker:"SV",finish:"PBC",type:"Beef",region:"BBQ",mins:2160,
+ desc:"Smoke the flat in the Pit Barrel for bark, then 36 hours at 155°F. Brisket that's juicy every single time.",
+ ing:["5 lb brisket flat","Rub: 1/4 cup coarse black pepper, 3 Tbsp kosher salt, 1 Tbsp garlic powder","Optional: 1/2 tsp pink curing salt in the rub (smoke ring)"],
+ steps:["Rub the brisket and hang it in the Pit Barrel 3 to 4 hours for smoke and bark (to about 150°F inside).","Chill it, then vacuum-seal it.","Cook in the bath at 155°F for 36 hours (135°F for 72 hours is steak-like and rosy).","Chill in ice water if serving later. To finish, pat dry and set it back in the Pit Barrel or on a hot grill 20 to 30 minutes to re-crisp the bark.","Slice against the grain."],
+ tip:"Smoke first, bath second. The bag traps every drop of juice that the barrel would have cooked out.",src:["AmazingRibs: Smoked and Sous Vide Texas Brisket","https://amazingribs.com/tested-recipes/beef-and-bison-recipes/smoked-sous-vide-que-bbq-brisket-recipe/"]},
+{id:"sv-short-ribs",name:"48-Hour Short Ribs, Grilled",cooker:"SV",finish:"GR",type:"Beef",region:"American",mins:2900,
+ desc:"Bone-in short ribs held at 140°F for two days until tender as a steak, then charred over a hot grill.",
+ ing:["4 lb bone-in English-cut beef short ribs","Kosher salt, coarse pepper, garlic powder","Olive oil","BBQ sauce or chimichurri to serve"],
+ steps:["Set the circulator to 140°F (131°F if you like them rosier).","Season the ribs, vacuum-seal them and cook 48 hours. Cover the pot so the water doesn't evaporate.","Chill in ice water if cooking later.","Heat the grill as hot as it goes. Pat the ribs dry, oil and season with garlic powder.","Char 1 to 2 minutes a side and serve with sauce or chimichurri."],
+ tip:"Vacuum-seal these, don't use zip bags. Two days is a long time for a bag near a bone.",src:["DadCooksDinner: 48-Hour Sous Vide Grilled Short Ribs","https://www.dadcooksdinner.com/48-hour-sous-vide-grilled-short-ribs-with-sous-vide-qa/"]},
+{id:"sv-chicken-breast",name:"Juicy Sous Vide Chicken Breast",cooker:"SV",finish:"BS",type:"Chicken",region:"American",mins:120,
+ desc:"The fix for dry chicken breast: 145°F in the bath, then a quick golden sear on the griddle.",
+ ing:["4 boneless, skinless chicken breasts","Kosher salt, pepper, garlic powder","Optional in the bag: lemon slices, thyme","1 Tbsp oil, 1 Tbsp butter"],
+ steps:["Set the circulator to 145°F (150°F for firmer, sliceable chicken).","Season, bag in a single layer and cook 1.5 to 4 hours.","Heat the Blackstone to 450°F.","Pat the chicken dry and sear 1 minute a side in oil and butter until golden.","Slice and serve, or chill for the best chicken salad you've had."],
+ tip:"145°F is safe with the hold time. It's pasteurized, not just hot, and far juicier than 165°F.",src:["Anova (J. Kenji López-Alt): Chicken Breast","https://recipes.anovaculinary.com/recipe/chicken-breast"]},
+{id:"sv-chicken-thighs",name:"Crispy-Skin Sous Vide Chicken Thighs",cooker:"SV",finish:"BS",type:"Chicken",region:"American",mins:210,
+ desc:"Boneless skin-on thighs cooked tender at 165°F, then pressed skin-down on the flat top until they crackle.",
+ ing:["8 boneless, skin-on chicken thighs","Kosher salt, pepper, smoked paprika","2 Tbsp oil or butter","Flaky salt"],
+ steps:["Set the circulator to 165°F.","Season the thighs, bag them flat and cook 2 to 4 hours.","Remove, pat very dry and let them air-dry a few minutes.","Medium-high Blackstone with oil. Lay them skin side down and press flat with a spatula or burger press 3 to 5 minutes until deep golden.","Flip 30 seconds and finish with flaky salt. Rest on a rack so the skin stays crisp."],
+ tip:"Boneless is the trick. It lets you press the whole skin flat against the steel.",src:["Fit Foodie Finds: Crispy Sous Vide Chicken Thighs","https://fitfoodiefinds.com/crispy-sous-vide-chicken-thighs-recipe/"]},
+{id:"sv-pork-chops",name:"Sous Vide Pork Chops, Grilled",cooker:"SV",finish:"GR",type:"Pork",region:"American",mins:120,
+ desc:"Thick-cut chops held at a rosy 140°F so they stay juicy, then marked hard on a hot grill.",
+ ing:["4 thick-cut bone-in pork chops, 1.5 inches","Kosher salt, pepper","Optional in the bag: sage or rosemary, garlic","Oil"],
+ steps:["Set the circulator to 140°F (145°F for just-pink, 150°F firmer).","Season, bag and cook 1 to 4 hours.","Heat the grill to high.","Pat dry, oil and sear 1 minute a side for grill marks.","Serve right away."],
+ tip:"Buy chops at least 1.5 inches thick. Thin chops overcook during the sear.",src:["Anova (J. Kenji López-Alt): Sous Vide Pork Chops","https://recipes.anovaculinary.com/recipe/sous-vide-pork-chops"]},
+{id:"sv-ribs",name:"Sous Vide BBQ Baby Back Ribs",cooker:"SV",finish:"GR",type:"Pork",region:"BBQ",mins:1250,
+ desc:"Rubbed ribs cooked 20 hours at 145°F until tender but still meaty, then sauced and charred on the grill.",
+ ing:["2 racks baby back ribs, membrane removed, cut into halves","BBQ rub","1 tsp liquid smoke (optional, in the bag)","1 cup BBQ sauce"],
+ steps:["Set the circulator to 145°F (165°F for 12 hours if you want fall-off-the-bone).","Rub the ribs, add the liquid smoke, vacuum-seal and cook 20 hours.","Heat the grill to 400°F. Pat the ribs dry.","Grill 3 minutes a side, then brush with sauce and cook 2 to 3 minutes more until sticky and charred.","Rest 5 minutes and slice between the bones."],
+ tip:"Want real smoke? Finish them in the Pit Barrel for 30 minutes instead of on the grill.",src:["Anova (J. Kenji López-Alt): The Food Lab's Guide to Sous Vide Ribs","https://anovaculinary.com/blogs/blog/the-food-lab-guide-to-sous-vide-ribs"]},
+{id:"sv-egg-bites",name:"Bacon Gruyere Egg Bites",cooker:"SV",type:"Appetizer",region:"American",mins:60,
+ desc:"The Starbucks copycat: velvety egg bites with Gruyere and bacon, cooked in jars in the bath.",
+ ing:["6 eggs","1/2 cup cottage cheese","1/2 cup shredded Gruyere","2 Tbsp cream cheese","4 slices bacon, cooked crisp and crumbled","Salt, pepper","4 oz canning jars (8), greased"],
+ steps:["Set the circulator to 172°F.","Blend the eggs, cottage cheese, Gruyere, cream cheese, salt and pepper until smooth.","Divide the bacon among the jars and pour the egg in, three-quarters full. Screw the lids on fingertip-tight.","Lower the jars into the bath and cook 1 hour.","Eat hot, or chill and reheat 30 seconds in the microwave."],
+ tip:"Blend until totally smooth. That's what gives them the silky Starbucks texture.",src:["CopyKat: Starbucks Sous Vide Egg Bites","https://copykat.com/starbucks-sous-vide-egg-bites-bacon-gruyere/"]},
+{id:"sv-shrimp-cocktail",name:"Sous Vide Shrimp Cocktail",cooker:"SV",type:"Appetizer",region:"American",mins:45,
+ desc:"Plump, snappy shrimp cooked at 140°F in butter, chilled in the bag and served with a sharp cocktail sauce.",
+ ing:["1.5 lb jumbo shrimp, peeled and deveined, tails on","2 Tbsp butter, 1 tsp Old Bay, lemon zest","Sauce: 3/4 cup ketchup, 2 to 3 Tbsp prepared horseradish, 1 Tbsp lemon juice, 1 tsp Worcestershire, dash of hot sauce","Lemon wedges"],
+ steps:["Set the circulator to 140°F.","Bag the shrimp in a single layer with the butter, Old Bay and zest.","Cook 15 minutes, then plunge the sealed bag into ice water 10 to 15 minutes.","Whisk the cocktail sauce.","Serve cold with the sauce and lemon."],
+ tip:"Chill them in the bag. They stay juicy and don't pick up water.",src:["The Salted Pepper: Sous Vide Shrimp Cocktail","https://thesaltedpepper.com/sous-vide-shrimp-cocktail-with-homemade-cocktail-sauce/"]},
+{id:"sv-corn",name:"Butter-Poached Corn on the Cob",cooker:"SV",type:"Side",region:"American",mins:45,
+ desc:"Ears sealed with butter and salt and cooked at 183°F. The sweetest, juiciest corn, with no pot of boiling water.",
+ ing:["6 ears corn, husked","6 Tbsp butter","Kosher salt","Optional: chives, chili-lime, or a compound butter"],
+ steps:["Set the circulator to 183°F.","Bag the corn flat with the butter and salt.","Cook 30 minutes (45 for softer).","Cut the bag open and pour the butter back over the corn.","Optional: 1 minute on a hot grill for char."],
+ tip:"The corn stays sweet because its sugars don't leak into boiling water.",src:["DadCooksDinner: Sous Vide Buttered Corn on the Cob","https://www.dadcooksdinner.com/sous-vide-corn-on-the-cob/"]},
+{id:"sv-carrots",name:"Honey Butter Glazed Carrots",cooker:"SV",finish:"BS",type:"Side",region:"American",mins:75,
+ desc:"Carrots cooked tender in honey butter at 183°F, then glazed and caramelized on the griddle.",
+ ing:["1.5 lb carrots or rainbow baby carrots, peeled","3 Tbsp butter, 2 Tbsp honey","Salt, pepper, thyme"],
+ steps:["Set the circulator to 183°F.","Bag the carrots with the butter, honey, salt, pepper and thyme.","Cook 1 hour.","Pour everything into a skillet on the Blackstone (or straight onto a medium zone) and toss until the liquid reduces to a glossy glaze, 5 to 8 minutes."],
+ tip:"Keep the bag liquid. That's your glaze.",src:["Anova: Sous Vide Honey Butter Glazed Carrots","https://recipes.anovaculinary.com/recipe/sous-vide-honey-butter-glazed-carrots"]},
+{id:"sv-mashed",name:"Garlic Rosemary Mashed Potatoes",cooker:"SV",type:"Side",region:"American",mins:120,
+ desc:"Potatoes cooked in butter and milk with garlic and rosemary. Creamy, never watery, and make-ahead friendly.",
+ ing:["2 lb Yukon Gold potatoes, peeled and sliced 1/8 inch thick","1 stick butter","1 cup whole milk","5 garlic cloves, smashed","2 rosemary sprigs","2 tsp kosher salt"],
+ steps:["Set the circulator to 194°F.","Bag everything together and seal.","Cook 1.5 hours.","Strain, saving the liquid, and pull out the rosemary.","Mash, adding back the buttery liquid until creamy. Season to taste."],
+ tip:"Make them days ahead: chill the sealed bag in ice water, then reheat in a 160°F bath.",src:["Anova: Sous Vide Garlic and Rosemary Mashed Potatoes","https://recipes.anovaculinary.com/recipe/sous-vide-garlic-and-rosemary-mashed-potatoes"]}
 
 ];
 /* recipes added through the "Add a recipe" form (written by the GitHub automation) */
 if(Array.isArray(window.ADDED))window.ADDED.forEach(r=>{if(r&&r.id&&!R.some(x=>x.id===r.id))R.push({...r,added:1})});
 /* Per-serving macros: [calories, protein g, carbs g, fat g, servings, s=published by the source / e=estimate from the ingredient list, note] */
 const MACROS={
+ "sv-steak":[600,48,0,45,4,"e","8 oz raw steak"],"sv-brisket":[420,45,1,26,10,"e","5 oz sliced"],"sv-short-ribs":[760,46,4,62,4,"e"],
+ "sv-chicken-breast":[280,48,0,9,4,"e","1 breast"],"sv-chicken-thighs":[460,40,1,33,4,"e","2 thighs"],"sv-pork-chops":[430,48,1,26,4,"e","1 chop"],
+ "sv-ribs":[820,56,30,52,4,"e","half rack, sauced"],"sv-egg-bites":[260,20,1,19,4,"e","2 bites"],"sv-shrimp-cocktail":[160,23,8,5,6,"e"],
+ "sv-corn":[190,3,19,13,6,"e","1 ear"],"sv-carrots":[175,2,25,8,4,"e"],"sv-mashed":[275,4,29,17,6,"e"],
+ 
  "thai-yellow-curry-from-scratch":[420,20,21,28,4,"e","without rice"],
  "tikka-masala":[670,49,16,43,4,"e","without rice"],"keema":[510,37,18,30,4,"e","without rice or naan"],
  "green-curry":[565,37,14,40,4,"e","without rice"],"panang-steak":[520,39,9,36,4,"e","without rice"],
@@ -1365,10 +1432,13 @@ const MENUS = [
  {name:"Surf Night",s:"Surf Night",why:"Lobster, halibut, snapper or swordfish. Everything cooks in under 15 minutes, so the sides go first.",ids:["lobster-tails","seared-halibut","red-snapper","swordfish","grilled-asparagus","foil-potatoes","chargrilled-oysters"]},
  {name:"Fish Taco Night",s:"Fish Tacos",why:"Blackened fish or chile shrimp tacos, street corn and grilled guac.",ids:["blackened-fish-tacos","shrimp-tacos","elote","grilled-guac"]},
  {name:"Curry Night",s:"Curry Night",why:"Pick an Indian or Thai curry. Rice and naan soak up the sauce.",ids:["tikka-masala","keema","green-curry","panang-steak","yellow-rice","griddle-naan"]},
+ {name:"Sous Vide Steak Night",s:"Sous Vide Steak",why:"Everything goes in the bath early, then the Blackstone does 5 minutes of searing right before dinner.",ids:["sv-steak","sv-pork-chops","sv-mashed","sv-carrots","sv-shrimp-cocktail"]},
+ {name:"Set It and Forget It BBQ",s:"Sous Vide BBQ",why:"The bath does the long cook for brisket, ribs or short ribs; the fire just finishes them.",ids:["sv-brisket","sv-ribs","sv-short-ribs","sv-corn","popper-mac"]},
  {name:"Mediterranean Night",s:"Mediterranean",why:"One batch of tzatziki covers both dishes.",ids:["greek-gyros","veg-kebabs","greek-meatballs"]}
 ];
 
-const COOKERS={BS:"Blackstone",PBC:"Pit Barrel",GR:"Grill"};
+const COOKERS={BS:"Blackstone",PBC:"Pit Barrel",GR:"Grill",SV:"Sous Vide"};
+const cookerLabel=r=>COOKERS[r.cooker]+(r.finish&&COOKERS[r.finish]?" + "+COOKERS[r.finish]:"");   // sous vide combos: "Sous Vide + Blackstone"
 const MAIN_T=new Set(["Beef","Chicken","Pork","Seafood","Other"]);
 const TYPES=["Beef","Chicken","Pork","Seafood",...(R.some(r=>r.type==="Other")?["Other"]:[]),"Side","Appetizer"];
 const TYPE_LABEL={Beef:"Beef Main",Chicken:"Chicken Main",Pork:"Pork Main",Seafood:"Seafood Main",Other:"Other Main",Side:"Side Dish",Appetizer:"Appetizer"};
@@ -1435,7 +1505,7 @@ function updateCounts(){
 }
 function cardHTML(r,flat){
   return `<button class="card" type="button" data-id="${r.id}">
-    <div class="tags"><span class="tag ${r.cooker.toLowerCase()}">${COOKERS[r.cooker]}</span>${flat?`<span class="tag">${TYPE_LABEL[r.type]}</span>`:""}<span class="tag">${esc(r.region)}</span>${r.added?'<span class="tag added">Added</span>':""}</div>
+    <div class="tags"><span class="tag ${r.cooker.toLowerCase()}">${cookerLabel(r)}</span>${flat?`<span class="tag">${TYPE_LABEL[r.type]}</span>`:""}<span class="tag">${esc(r.region)}</span>${r.added?'<span class="tag added">Added</span>':""}</div>
     <h3>${esc(r.name)}</h3>
     <div class="meta"><span>⏱ ${fmtTime(r.mins)}${r.mac?` · ${r.mac.cal} cal · ${r.mac.p}g protein`:""}</span><span>${inPlan(r.id)?'<span class="onlist">🛒 On list</span> ':''}${starsHTML(r)}${heartHTML(r.id)}</span></div>
   </button>`;
@@ -1622,7 +1692,7 @@ const dlg=$("#dlg");
 function openRecipe(id){
   const r=byId[id];if(!r)return;
   $("#dlgTitle").textContent=r.name;
-  $("#dlgTags").innerHTML=`<span class="tag ${r.cooker.toLowerCase()}">${COOKERS[r.cooker]}</span><span class="tag">${TYPE_LABEL[r.type]}</span><span class="tag">${esc(r.region)}</span><span class="tag">⏱ ${fmtTime(r.mins)}</span>`+
+  $("#dlgTags").innerHTML=`<span class="tag ${r.cooker.toLowerCase()}">${cookerLabel(r)}</span><span class="tag">${TYPE_LABEL[r.type]}</span><span class="tag">${esc(r.region)}</span><span class="tag">⏱ ${fmtTime(r.mins)}</span>`+
     `${ratingLineHTML(r)}${rateMeHTML(r)}`;
   const isFav=favs.has(r.id);
   $("#dlgBody").innerHTML=`${macHTML(r)}<h3${r.mac?"":' style="margin-top:0"'}>Ingredients</h3><ul>${r.ing.map(i=>`<li>${esc(i)}</li>`).join("")}</ul>
@@ -1707,11 +1777,11 @@ const bState={region:"Any",setup:"Any",protein:"Any"};
 function single(el,opts,key){el.innerHTML=opts.map(o=>`<button class="chip" type="button" aria-pressed="${o===bState[key]}" data-v="${esc(o)}">${esc(o)}</button>`).join("");
   el.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{bState[key]=c.dataset.v;el.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",x===c))});}
 single($("#b-region"),["Any",...REGIONS],"region");
-single($("#b-setup"),["Any","Blackstone only","Pit Barrel only","Grill only"],"setup");
+single($("#b-setup"),["Any","Blackstone only","Pit Barrel only","Grill only","Sous Vide only"],"setup");
 single($("#b-protein"),["Any","Beef","Chicken","Pork","Seafood"],"protein");
 const rnd=a=>a[Math.floor(Math.random()*a.length)];
 $("#build").onclick=()=>{
-  const okCooker=r=>bState.setup==="Any"||r.cooker==={"Blackstone only":"BS","Pit Barrel only":"PBC","Grill only":"GR"}[bState.setup];
+  const okCooker=r=>bState.setup==="Any"||r.cooker==={"Blackstone only":"BS","Pit Barrel only":"PBC","Grill only":"GR","Sous Vide only":"SV"}[bState.setup];
   let mains=R.filter(r=>MAIN_T.has(r.type)&&okCooker(r)&&(bState.protein==="Any"||r.type===bState.protein));
   const inRegion=mains.filter(r=>bState.region==="Any"||r.region===bState.region);
   let note="";
@@ -1806,6 +1876,13 @@ const TIPS=[
   ["Minion method (long cooks in a smoker or kettle)",["Fill the basket or one side with unlit charcoal and pour a small chimney of lit coals on top.","It lights gradually and holds a steady temperature for hours with no refueling."]],
   ["Gas grill tips",["Preheat on high with the lid down 10 to 15 minutes, then brush the grates clean.","For smoke, put a smoker box or a foil pouch of soaked chips over a lit burner.","Keep a burner off under the food for indirect cooking. The lid thermometer reads hotter than the grate, so trust a probe."]],
   ["Every cook",["Clean and oil the grates hot, and flip less. Food releases when it's seared.","Cook to temperature, not time: chicken breast 160 to 165°F, thighs 175°F+, steak 125 to 130°F for medium rare, pork 145°F, burgers 160°F.","Rest meat 5 to 10 minutes. Big roasts rest 20 or more."]],
+ ]},
+ {cooker:"SV",title:"Sous Vide",open:0,groups:[
+  ["How it works",["The circulator holds a water bath at the exact temperature you want the food to end up. It can't overcook, so a 1 inch steak at 129°F is medium rare edge to edge whether it goes 1 hour or 3.","Then you <b>finish</b> it on high heat for the crust: the Blackstone (best for steaks and chops), the grill (char) or the Pit Barrel (smoke and bark). That's why most recipes here are combos."]],
+  ["Temperature cheat sheet",["<b>Steak:</b> 120°F rare · 129°F medium rare · 135°F medium · 145°F medium well.","<b>Chicken breast:</b> 145 to 150°F (juicy, safe with the hold time) · <b>thighs:</b> 165°F for tender, 175°F for fall-apart.","<b>Pork chops:</b> 140°F · <b>ribs and pork shoulder:</b> 155 to 165°F for 12 to 24 hours · <b>short ribs and brisket:</b> 135 to 155°F for 36 to 72 hours.","<b>Salmon:</b> 115 to 125°F · <b>vegetables:</b> 183°F."]],
+  ["Bags and water",["Zip-top freezer bags work for most cooks. Use the <b>water displacement</b> trick: lower the open bag into the water and the pressure pushes the air out, then seal it just above the waterline.","Vacuum-seal anything going longer than about 4 hours, or anything with bones that could poke a hole.","Clip bags to the pot side and make sure the food stays fully under water. Cover the pot (plastic wrap or ping-pong balls) on long cooks so it doesn't evaporate dry."]],
+  ["The finish",["<b>Dry it hard</b> with paper towels. A wet surface steams instead of browning.","Sear as hot as you can for as short as you can: 45 to 60 seconds a side on a 500°F+ Blackstone. You're only building a crust, because the inside is already done.","For extra-long cooks, chill the bag in ice water first, then sear. A cold center lets you sear longer without overcooking."]],
+  ["Safety",["Keep bath temps at 130°F or above for anything cooking longer than 4 hours.","Low-temp chicken (145 to 150°F) is safe because of the hold time. Follow the recipe's minimum time.","Cooking straight from frozen works. Add about 50% to the time."]],
  ]}
 ];
 $("#tipsBox").innerHTML=TIPS.map(t=>`<div class="tipcard"><h2><span class="tag ${t.cooker.toLowerCase()}">${COOKERS[t.cooker]}</span>${esc(t.title)}</h2>${t.groups.map((g,i)=>`<details${i===0?" open":""}><summary>${esc(g[0])}</summary><ul>${g[1].map(x=>`<li>${x}</li>`).join("")}</ul></details>`).join("")}</div>`).join("");
@@ -1904,7 +1981,7 @@ async function loadHearts(){
 
 /* ---------- stats + boot ---------- */
 const c=k=>R.filter(r=>r.cooker===k).length;
-$("#stats").innerHTML=`<span><b>${R.length}</b>recipes</span><span><b>${c("BS")}</b>Blackstone</span><span><b>${c("PBC")}</b>Pit Barrel</span><span><b>${c("GR")}</b>Grill</span><span><b>${REGIONS.length}</b>regions</span><span><b>${MENUS.length}</b>meal nights</span>`;
+$("#stats").innerHTML=`<span><b>${R.length}</b>recipes</span><span><b>${c("BS")}</b>Blackstone</span><span><b>${c("PBC")}</b>Pit Barrel</span><span><b>${c("GR")}</b>Grill</span><span><b>${c("SV")}</b>Sous Vide</span><span><b>${REGIONS.length}</b>regions</span><span><b>${MENUS.length}</b>meal nights</span>`;
 render();
 loadHearts();
 if(location.hash&&byId[location.hash.slice(1)])openRecipe(location.hash.slice(1));

@@ -237,6 +237,7 @@ def pick_cooker(title, text):
         "BS": score(r"\b(blackstone|griddle|flat[- ]?top|flattop|hibachi|teppanyaki|smash(ed)? burgers?|wok|stir[- ]?fr(y|ied)|skillet|saut[eé])\b", text, title),
         "PBC": score(r"\b(pit barrel|pbc|smoker|smoked|smoking|drum smoker|low and slow|wood chunks|pellet grill|burnt ends|hooks?)\b", text, title),
         "GR": score(r"\b(grill|grilled|grilling|grates|kebabs?|kabobs?|skewers?|charcoal)\b", text, title),
+        "SV": score(r"\b(sous[- ]vide|immersion circulator|water bath|anova|joule)\b", text, title) * 3,
     }
     best = max(s, key=s.get)
     return (best, False) if s[best] > 0 else ("GR", True)
@@ -385,10 +386,18 @@ def main():
     title = name.lower()
     text = " ".join([title, desc.lower(), kw.lower(), cat, cuisine.lower(), " ".join(steps).lower(), " ".join(ings).lower()])
 
-    cooker_pick = {"blackstone": "BS", "pit barrel": "PBC", "grill": "GR"}.get(form.get("cooker", "").lower())
+    cooker_pick = {"blackstone": "BS", "pit barrel": "PBC", "grill": "GR", "sous vide": "SV"}.get(form.get("cooker", "").lower())
     guessed_cooker = False
     if not cooker_pick:
         cooker_pick, guessed_cooker = pick_cooker(title, text)
+    finish_cooker = None
+    if cooker_pick == "SV":   # sous vide combos: which cooker does the final sear/smoke?
+        fin = {k: score(pat, text, title) for k, pat in (
+            ("BS", r"\b(blackstone|griddle|flat[- ]?top|skillet|cast iron|pan[- ]?sear)"),
+            ("PBC", r"\b(pit barrel|smoker|smoked|smoke)\b"),
+            ("GR", r"\b(grill|grilled|grilling|grates|charcoal)\b"))}
+        best = max(fin, key=fin.get)
+        finish_cooker = best if fin[best] > 0 else None
     type_pick = {"beef main": "Beef", "chicken main": "Chicken", "pork main": "Pork", "seafood main": "Seafood",
                  "other main (lamb, duck, tofu)": "Other",
                  "side dish": "Side", "appetizer": "Appetizer"}.get(form.get("type", "").lower()) or pick_type(title, cat, ings)
@@ -418,6 +427,8 @@ def main():
     recipe = {"id": rid, "name": name, "cooker": cooker_pick, "type": type_pick, "region": region,
               "mins": mins, "desc": desc, "ing": ings, "steps": steps, "tip": "",
               "src": [f"{site_name(page, rec, url)}: {name}", url]}
+    if finish_cooker:
+        recipe["finish"] = finish_cooker
     mac = macros_of(rec)
     if mac:
         recipe["mac"] = mac
@@ -433,14 +444,14 @@ def main():
         items.append(recipe)
     save_added(items)
 
-    cookers = {"BS": "Blackstone", "PBC": "Pit Barrel", "GR": "Grill"}
+    cookers = {"BS": "Blackstone", "PBC": "Pit Barrel", "GR": "Grill", "SV": "Sous Vide"}
     types = {"Beef": "Beef main", "Chicken": "Chicken main", "Pork": "Pork main", "Seafood": "Seafood main",
              "Other": "Other main", "Side": "Side dish", "Appetizer": "Appetizer"}
     note = ("\n\nI couldn't tell which cooker this is for, so it's filed under **Grill**. "
             "To change it, submit the link again and pick the cooker in the form.") if guessed_cooker else ""
     verb = "Updated" if replacing is not None else "Added"
     comment = (f"{verb} **{name}**\n\n"
-               f"- Cooker: **{cookers[cooker_pick]}**\n- Type: **{types[type_pick]}**\n- Region: **{region}**\n"
+               f"- Cooker: **{cookers[cooker_pick]}{(' + ' + cookers[finish_cooker]) if finish_cooker else ''}**\n- Type: **{types[type_pick]}**\n- Region: **{region}**\n"
                f"- Time: about {mins} min · {len(ings)} ingredients · {len(steps)} steps\n"
                + (f"- Macros per serving (from the site): {mac['cal']} cal · {mac['p']}g protein · {mac['c']}g carbs · {mac['f']}g fat\n" if mac else "- Macros: the site doesn't publish them\n")
                + ("- Read from the Internet Archive's copy (the site blocks automated readers)\n" if via == "archive" else "")
