@@ -96,7 +96,8 @@ async function handleAdd(req, env, origin) {
   const cooker = COOKERS.includes(body.cooker) ? body.cooker : "Auto-detect";
   const type = TYPES.includes(body.type) ? body.type : "Auto-detect";
   const region = String(body.region || "").replace(/[^\w\s-]/g, "").slice(0, 30).trim();
-  const issueBody = `### Recipe link\n\n${url}\n\n### Cooker\n\n${cooker}\n\n### Type\n\n${type}\n\n### Region (optional)\n\n${region || "_No response_"}\n\n<!-- submitted from the site form -->`;
+  const name = String(body.name || "").replace(/[^\w\s&',()-]/g, "").replace(/\s+/g, " ").slice(0, 60).trim();
+  const issueBody = `### Recipe link\n\n${url}\n\n### Cooker\n\n${cooker}\n\n### Type\n\n${type}\n\n### Region (optional)\n\n${region || "_No response_"}\n\n### Name (optional)\n\n${name || "_No response_"}\n\n<!-- submitted from the site form -->`;
 
   const r = await gh(env, "/issues", {
     method: "POST",

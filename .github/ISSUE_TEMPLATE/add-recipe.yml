@@ -43,3 +43,8 @@ body:
     attributes:
       label: Region (optional)
       description: e.g. Mexican, Thai, Southern. Leave blank to auto-detect.
+  - type: input
+    id: name
+    attributes:
+      label: Name (optional)
+      description: Your own name for the dish, e.g. when a similar one is already on the site. Leave blank to use the page's title.

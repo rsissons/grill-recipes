@@ -372,7 +372,9 @@ def main():
 
     page, rec, via = fetch_recipe(url)
 
-    name = clean_text(rec.get("name")) or "Untitled recipe"
+    page_name = clean_text(rec.get("name")) or "Untitled recipe"
+    name_in = re.sub(r"[^\w\s&',()-]", "", form.get("name (optional)", "")).strip()[:60]
+    name = name_in or page_name
     ings = [clean_text(x) for x in (rec.get("recipeIngredient") or rec.get("ingredients") or [])]
     ings = [x for x in ings if x][:30]
     steps = flatten_steps(rec.get("recipeInstructions"))[:20]
@@ -414,10 +416,12 @@ def main():
     nn = norm_name(name)
     for bn in builtin_names:
         if norm_name(bn) == nn:
-            fail(f"**{name}** looks like a dish that's already on the site (**{bn}**).")
+            fail(f"**{name}** looks like a dish that's already on the site (**{bn}**)."
+                 + ("" if name_in else " If it's a different take, submit it again with your own **Name** (e.g. with the main ingredient in it)."))
     for i, r in enumerate(items):
         if i != replacing and norm_name(r["name"]) == nn:
-            fail(f"**{name}** is already on the site (added earlier from {r['src'][1]}).")
+            fail(f"**{name}** is already on the site (added earlier from {r['src'][1]})."
+                 + ("" if name_in else " If it's a different dish, submit it again with your own **Name**."))
 
     taken = builtin_ids | {r["id"] for i, r in enumerate(items) if i != replacing}
     rid, n = slug(name), 2
@@ -427,7 +431,7 @@ def main():
 
     recipe = {"id": rid, "name": name, "cooker": cooker_pick, "type": type_pick, "region": region,
               "mins": mins, "desc": desc, "ing": ings, "steps": steps, "tip": "",
-              "src": [f"{site_name(page, rec, url)}: {name}", url]}
+              "src": [f"{site_name(page, rec, url)}: {page_name}", url]}
     if finish_cooker:
         recipe["finish"] = finish_cooker
     mac = macros_of(rec)

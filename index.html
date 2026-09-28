@@ -38,6 +38,8 @@ button{font:inherit;cursor:pointer}
 header.hero{background:linear-gradient(135deg,#1c1410 0%,#3b1d0e 60%,#7c2d12 100%);color:#fff7ed;padding:36px 0 28px}
 .hero h1{font-size:clamp(2rem,6vw,3.4rem);text-transform:uppercase;line-height:1}
 .hero h1 span{color:#fb923c}
+.hero .cookline{font-weight:700;font-size:clamp(.84rem,3.6vw,1.05rem);margin:10px 0 2px}
+.hero .dishline{margin:0;opacity:.85}
 .hero p{max-width:720px;color:#fde6d3;margin:10px 0 0}
 .hero .stats{display:flex;gap:18px;flex-wrap:wrap;margin-top:16px;font-size:.9rem;color:#fed7aa}
 .hero .stats b{color:#fff;font-size:1.15rem;margin-right:4px}
@@ -244,7 +246,8 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
   <button class="theme-toggle" id="themeBtn" type="button" aria-label="Toggle dark mode">Theme</button>
   <div class="wrap">
     <h1>Sear, Smoke <span>&amp;</span> Simmer</h1>
-    <p>Flat top, smoker, slow cooker, sous vide &amp; grill. Beef, chicken, pork, seafood, sides and appetizers.</p>
+    <p class="cookline">Flat top · Smoker · Slow cooker · Sous vide · Grill</p>
+    <p class="dishline">Beef, chicken, pork and seafood mains, plus sides and appetizers.</p>
     <div class="stats" id="stats"></div>
     <button class="spin-cta" id="spinCta" type="button">🎡 Can't decide? Spin the wheel</button>
   </div>
@@ -359,9 +362,10 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
     <form id="addForm">
       <p class="section-intro" style="margin:0 0 12px">Paste a link to any recipe page. It gets read, sorted and added to the site for everyone, macros included when the site publishes them. Links that aren't recipes get turned away.</p>
       <label class="fl">Recipe link<input id="addUrl" type="url" required placeholder="https://" autocomplete="off"></label>
+      <label class="fl">Name (optional)<input id="addName" maxlength="60" placeholder="e.g. Kielbasa Cowboy Stir Fry" autocomplete="off"><small style="font-weight:400;color:var(--ink-2)">Give it your own name, especially if a similar dish is already on the site.</small></label>
       <div class="frow2">
         <label class="fl">Cooker<select id="addCooker"><option>Auto-detect</option><option>Blackstone</option><option>Pit Barrel</option><option>Grill</option><option>Sous Vide</option><option>Slow Cooker</option></select></label>
-        <label class="fl">Type<select id="addType"><option>Auto-detect</option><option>Beef main</option><option>Chicken main</option><option>Pork main</option><option>Seafood main</option><option>Side dish</option><option>Appetizer</option></select></label>
+        <label class="fl">Type<select id="addType"><option>Auto-detect</option><option>Beef main</option><option>Chicken main</option><option>Pork main</option><option>Seafood main</option><option>Other main (lamb, duck, tofu)</option><option>Side dish</option><option>Appetizer</option></select></label>
       </div>
       <div id="tsBox" style="margin:12px 0"></div>
       <button class="btn primary" id="addGo" type="submit">Add it</button>
@@ -2191,7 +2195,7 @@ $("#addForm").onsubmit=async e=>{
   $("#addGo").disabled=true;addStatus('<span class="spin"></span>Checking the link…');
   let res;
   try{
-    const r=await fetch(RELAY+"/add",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({url:$("#addUrl").value.trim(),cooker:$("#addCooker").value,type:$("#addType").value,token:tsToken})});
+    const r=await fetch(RELAY+"/add",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({url:$("#addUrl").value.trim(),name:$("#addName").value.trim(),cooker:$("#addCooker").value,type:$("#addType").value,token:tsToken})});
     res=await r.json();
   }catch(_){res={ok:false,reason:"Couldn't reach the recipe service. Check your connection and try again."}}
   if(window.turnstile&&tsWidget!==null){turnstile.reset(tsWidget);tsToken=""}
