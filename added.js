@@ -2549,50 +2549,6 @@ window.ADDED = [
   }
  },
  {
-  "id": "air-fryer-potatoes",
-  "name": "Air Fryer Potatoes",
-  "cooker": "AF",
-  "type": "Side",
-  "region": "American",
-  "mins": 25,
-  "serves": 4,
-  "desc": "Skip roasting—air fryer potatoes are not only perfectly crispy, but they're also done faster than your oven can preheat.",
-  "ing": [
-   "1 lb. baby potatoes, halved",
-   "1 tbsp. extra-virgin olive oil",
-   "1 tsp. garlic powder",
-   "1 tsp. Italian seasoning",
-   "1 tsp. Cajun seasoning (optional)",
-   "Kosher salt",
-   "Freshly ground black pepper",
-   "Lemon wedge, for serving",
-   "Freshly chopped parsley, for garnish"
-  ],
-  "steps": [
-   "In a large bowl, toss potatoes with oil, garlic powder, Italian seasoning, and Cajun seasoning, if using. Season with salt and pepper.",
-   "Place potatoes in basket of air fryer and cook at 400° for 10 minutes. Shake basket and stir potatoes and cook until potatoes are golden and tender, 8 to 10 minutes more.",
-   "Squeeze lemon juice over cooked potatoes and garnish with parsley before serving."
-  ],
-  "tip": "",
-  "src": [
-   "Delish: Air Fryer Potatoes",
-   "https://www.delish.com/cooking/recipe-ideas/a28414561/air-fryer-potatoes-recipe"
-  ],
-  "mac": {
-   "cal": 123,
-   "p": 3,
-   "c": 18,
-   "f": 4,
-   "s": 4,
-   "from": "s",
-   "note": ""
-  },
-  "rating": {
-   "v": 4.8,
-   "n": 39
-  }
- },
- {
   "id": "air-fryer-corn-on-the-cob",
   "name": "Air Fryer Corn on the Cob",
   "cooker": "AF",
@@ -2677,50 +2633,6 @@ window.ADDED = [
   "rating": {
    "v": 5.0,
    "n": 22
-  }
- },
- {
-  "id": "air-fryer-asparagus",
-  "name": "Air Fryer Asparagus",
-  "cooker": "AF",
-  "type": "Side",
-  "region": "European",
-  "mins": 12,
-  "serves": 2,
-  "desc": "Crispy air fryer asparagus is a fast, healthy side dish that requires just 7 minutes of cooking and 5 ingredients. Don't skip the Parmesan!",
-  "ing": [
-   "1 pound asparagus ((I prefer the thickest stalk I can find))",
-   "1 teaspoon extra-virgin olive oil",
-   "1/4 teaspoon kosher salt",
-   "1/8 teaspoon ground black pepper",
-   "1/4 teaspoon dried thyme",
-   "1 tablespoon freshly grated Parmesan cheese (optional)",
-   "Squeeze fresh lemon juice (optional)",
-   "Pinch red pepper flakes (optional)"
-  ],
-  "steps": [
-   "Snap off the hard, woody ends of the asparagus by gently bending it a few inches from the stem end. The asparagus will naturally snap at the proper place. Discard the stems and place the stalks in a large mixing bowl.",
-   "Drizzle the asparagus with olive oil, then sprinkle with the salt, pepper, and thyme. Toss to coat.",
-   "Preheat your air fryer to 400°F. Arrange half of the asparagus in the air fryer basket in an even layer.",
-   "Air fry for 6 to 8 minutes, tossing once halfway through. If your spears are super thin, start checking at 4 minutes to make sure they don't burn. Repeat with remaining asparagus (if you like, you can keep batches warm in the oven). Sprinkle the Parmesan over the top and toss to coat once more. Serve hot, with a squeeze of lemon juice and pinch of red pepper flakes as desired."
-  ],
-  "tip": "",
-  "src": [
-   "Well Plated by Erin Clarke: Air Fryer Asparagus",
-   "https://www.wellplated.com/air-fryer-asparagus/"
-  ],
-  "mac": {
-   "cal": 64,
-   "p": 5,
-   "c": 9,
-   "f": 2,
-   "s": 2,
-   "from": "s",
-   "note": "1 (of 2); without optional toppings"
-  },
-  "rating": {
-   "v": 5.0,
-   "n": 58
   }
  },
  {
@@ -2900,6 +2812,432 @@ window.ADDED = [
   "rating": {
    "v": 5.0,
    "n": 22
+  }
+ },
+ {
+  "id": "air-fryer-brussels-sprouts-with-garlic-balsamic-and-soy",
+  "name": "Air Fryer Brussels Sprouts with Garlic, Balsamic and Soy",
+  "cooker": "AF",
+  "type": "Side",
+  "region": "American",
+  "mins": 20,
+  "serves": 3,
+  "desc": "Brussels sprouts are quite possibly the best vegetable you can make in an air fryer; the leaves turn brittle and delightfully crunchy. Here they are paired with slivers of garlic,…",
+  "ing": [
+   "1 pound brussels sprouts",
+   "3 tablespoons extra-virgin olive oil",
+   "¼ teaspoon kosher salt",
+   "2 garlic cloves, thinly sliced",
+   "¼ cup balsamic vinegar",
+   "1 teaspoon fresh lime juice, plus more for serving",
+   "½ teaspoon soy sauce"
+  ],
+  "steps": [
+   "Trim the brussels sprouts and cut in halves through the stems. (Cut larger ones in quarters.) Heat air fryer to 400 degrees, if preheating is necessary.",
+   "Place brussels sprouts in the air fryer basket; drizzle with 1 tablespoon oil and the salt. Fry for 15 minutes, shaking basket or stirring the sprouts halfway through.",
+   "Sprinkle sprouts with garlic. Continue to fry until the garlic is golden brown, another 2 to 4 minutes.",
+   "Meanwhile, in a small saucepan, bring balsamic vinegar to a simmer. Continue to simmer until thickened and starting to look syrupy, adjusting heat as necessary to prevent burning, 2 to 3 minutes. (Keep a close eye on it; it will go from reduced to burned very quickly.) Remove from heat and whisk in 2 tablespoons oil, the lime juice and the soy sauce.",
+   "Transfer brussels sprouts to a serving platter and drizzle with balsamic dressing. Squeeze more lime juice on top to taste."
+  ],
+  "tip": "",
+  "src": [
+   "NYT Cooking: Air Fryer Brussels Sprouts With Garlic, Balsamic and Soy",
+   "https://cooking.nytimes.com/recipes/1020126-air-fryer-brussels-sprouts-with-garlic-balsamic-and-soy"
+  ],
+  "mac": {
+   "cal": 155,
+   "p": 4,
+   "c": 14,
+   "f": 10,
+   "s": 3,
+   "from": "s",
+   "note": ""
+  },
+  "rating": {
+   "v": 5.0,
+   "n": 3533
+  }
+ },
+ {
+  "id": "air-fryer-potatoes",
+  "name": "Air Fryer Potatoes",
+  "cooker": "AF",
+  "type": "Side",
+  "region": "American",
+  "mins": 20,
+  "serves": 2,
+  "desc": "The air fryer creates crispy, tender potatoes without having to parboil beforehand, cutting much of the cooking time. Thanks to the compact space of the air fryer, the circulated…",
+  "ing": [
+   "1 tablespoon extra-virgin olive oil",
+   "1 ½ teaspoons Dijon mustard",
+   "¾ teaspoon dried parsley (or chopped fresh parsley, for garnish)",
+   "½ teaspoon garlic salt",
+   "1 pound baby potatoes, cut into ¾- to 1-inch chunks",
+   "1 teaspoon lemon zest"
+  ],
+  "steps": [
+   "Heat air fryer to 400 degrees, if preheating is necessary.",
+   "In a medium bowl, whisk together the olive oil, mustard, dried parsley and garlic salt. Add potatoes to the bowl and toss to coat using a spatula to make sure the potatoes are well-coated.",
+   "Transfer potatoes to the air-fryer basket and fry for 15 to 18 minutes, tossing the potatoes with tongs or shaking the basket halfway through, until the potatoes are golden brown and tender when pierced with a fork. (If you’re a fan of crispier potatoes, continue to fry for an additional 1 to 2 minutes, until the potatoes are a darker golden brown.)",
+   "Transfer the potatoes to a serving bowl, drizzling any of the dressing from the basket on top, and allow to cool slightly before eating. (The potatoes will continue to steam after being pulled from the air fryer.) Top with lemon zest."
+  ],
+  "tip": "",
+  "src": [
+   "NYT Cooking: Air Fryer Potatoes",
+   "https://cooking.nytimes.com/recipes/1023665-air-fryer-potatoes"
+  ],
+  "mac": {
+   "cal": 120,
+   "p": 2,
+   "c": 20,
+   "f": 4,
+   "s": 2,
+   "from": "s",
+   "note": ""
+  },
+  "rating": {
+   "v": 5.0,
+   "n": 941
+  }
+ },
+ {
+  "id": "air-fryer-chicken-tenders",
+  "name": "Air Fryer Chicken Tenders",
+  "cooker": "AF",
+  "type": "Chicken",
+  "region": "American",
+  "mins": 40,
+  "serves": 3,
+  "desc": "There are many different ways to cook chicken tenders, but for feeding a smaller group, the air fryer is a convenient method for super-crispy and juicy results. A simple…",
+  "ing": [
+   "1 pound chicken tenders or boneless, skinless chicken breasts cut into 1-inch strips",
+   "2 teaspoons kosher salt (such as Diamond Kosher), plus more for seasoning",
+   "Black pepper",
+   "2 large eggs",
+   "2 teaspoons Dijon mustard",
+   "1 ½ cups panko bread crumbs",
+   "2 teaspoons sweet paprika",
+   "Nonstick cooking spray",
+   "Lemon wedges, for serving (optional)",
+   "BBQ sauce, ranch dressing or ketchup, for dipping (optional)"
+  ],
+  "steps": [
+   "Heat air fryer to 400 degrees, if preheating is recommended for your air fryer.",
+   "Pat the chicken tenders dry with paper towels and season all over with salt and pepper. (Chicken can be seasoned and left uncovered in the refrigerator for up to 12 hours.)",
+   "In a medium bowl, whisk together eggs and mustard. In a separate medium bowl or shallow dish, combine the panko, paprika, 1 ¼ teaspoons of salt and some black pepper.",
+   "Working with one strip at a time, dip chicken into egg mixture, allowing any excess to drip off, then roll in the seasoned panko, pressing to adhere as much as possible. Place breaded chicken on a large plate.",
+   "Lightly spray both sides of the tenders with cooking spray. Transfer as many of the tenders as possible to the air fryer basket, making sure they’re in an even layer. (For smaller air fryer baskets, cooking may need to be done in batches. Tent the cooked tenders with aluminum foil to keep warm while cooking the other batches.) Cook, flipping the tenders halfway through, until the panko is browned and the chicken is fully cooked, 10 to 12 minutes. Serve with any of the dipping sauces alongside, if desired."
+  ],
+  "tip": "",
+  "src": [
+   "NYT Cooking: Air Fryer Chicken Tenders",
+   "https://cooking.nytimes.com/recipes/1024485-air-fryer-chicken-tenders"
+  ],
+  "mac": {
+   "cal": 627,
+   "p": 22,
+   "c": 40,
+   "f": 42,
+   "s": 3,
+   "from": "s",
+   "note": ""
+  },
+  "rating": {
+   "v": 5.0,
+   "n": 606
+  }
+ },
+ {
+  "id": "easy-air-fryer-asparagus",
+  "name": "Air Fryer Asparagus",
+  "cooker": "AF",
+  "type": "Side",
+  "region": "American",
+  "mins": 10,
+  "serves": 2,
+  "desc": "Cooking asparagus in an air fryer offers a speedy, hassle-free way to produce tender emerald spears with lightly crispy tips. Before frying, toss with a smidgen of olive oil (less…",
+  "ing": [
+   "1 bunch (about 1 pound) medium asparagus, woody ends trimmed",
+   "1 teaspoon extra-virgin olive oil",
+   "½ teaspoon garlic powder",
+   "Kosher or flaky salt",
+   "Red pepper flakes (optional)",
+   "1 to 2 teaspoons finely grated lemon zest (optional)",
+   "2 tablespoons grated Parmesan (optional)"
+  ],
+  "steps": [
+   "Heat air fryer to 400 degrees for 5 minutes.",
+   "Place the asparagus in a 9-by-13-inch baking dish. Drizzle with olive oil, then sprinkle with garlic powder and season with salt and a pinch of red pepper flakes (if using). Toss to coat.",
+   "Place asparagus in an even layer in the air fryer basket. (A slight overlap is fine. If you cannot fit the asparagus spears flat in your basket, cut them in half crosswise or into 2-inch pieces.) Fry for 5 to 7 minutes, tossing the spears halfway through with tongs or shaking the basket, until the stems are bright green, and the tips are lightly crisped.",
+   "Transfer to a serving platter and season with salt, lemon zest, Parmesan and another pinch of red pepper flakes, if desired. Serve immediately."
+  ],
+  "tip": "",
+  "src": [
+   "NYT Cooking: Easy Air Fryer Asparagus",
+   "https://cooking.nytimes.com/recipes/1025542-easy-air-fryer-asparagus"
+  ],
+  "mac": {
+   "cal": 53,
+   "p": 4,
+   "c": 5,
+   "f": 2,
+   "s": 2,
+   "from": "s",
+   "note": ""
+  },
+  "rating": {
+   "v": 5.0,
+   "n": 217
+  }
+ },
+ {
+  "id": "air-fryer-steak-with-garlic-herb-butter",
+  "name": "Air Fryer Steak with Garlic-Herb Butter",
+  "cooker": "AF",
+  "type": "Beef",
+  "region": "American",
+  "mins": 45,
+  "serves": 2,
+  "desc": "A classic cast-iron steak recipe is hard to beat, but cooking steak in the air fryer is a reliable way to nail the perfect internal temperature in a fraction of the time thanks to…",
+  "ing": [
+   "1 ¼ teaspoons kosher salt (such as Diamond Kosher)",
+   "¾ teaspoon brown sugar",
+   "½ teaspoon black pepper",
+   "¼ teaspoon ground coriander",
+   "¼ teaspoon sweet paprika",
+   "1 (12- to 16-ounce) boneless steak, such as sirloin, strip or ribeye, about 1 inch thick",
+   "Olive oil, for brushing, or olive oil cooking spray",
+   "Flaky salt, for serving",
+   "4 tablespoons unsalted butter (½ stick), softened",
+   "3 garlic cloves, grated",
+   "1 ½ teaspoons chopped fresh parsley",
+   "1 ½ teaspoons chopped fresh thyme",
+   "1 teaspoon chopped fresh rosemary",
+   "1 teaspoon lemon zest",
+   "½ teaspoon flaky salt"
+  ],
+  "steps": [
+   "Bring steak to room temperature for at least 30 minutes. Heat air fryer to 400 degrees, if preheating is recommended.",
+   "Combine salt, brown sugar, pepper, coriander and paprika in a small bowl. Pat steak dry with paper towels and brush with olive oil. Rub the spice blend all over the steak. (Steak can be seasoned and left uncovered in the refrigerator for up to 12 hours.)",
+   "Transfer the steak to the air fryer basket. Cook for 5 minutes. Flip the steak and cook to medium-rare, 3 to 5 minutes more. (Remove the steak from the air fryer once an instant-read thermometer inserted into the thickest part reaches 130 degrees; it will increase 5 to 10 degrees while resting and eventually climb to 135, or medium-rare.). Transfer the steak to a cutting board and let it rest for 10 minutes.",
+   "Meanwhile, make the garlic-herb butter: In a small bowl, combine butter, garlic, parsley, thyme, rosemary, lemon zest and flaky salt until well combined. (Any leftover garlic-herb butter can be kept in an airtight container and refrigerated for up to 1 month or frozen for up to 3 months.)",
+   "Add a spoonful of the garlic-herb butter on top of the steak, sliced or unsliced, and top with any leftover chopped herbs, pepper and more flaky salt, if desired."
+  ],
+  "tip": "",
+  "src": [
+   "NYT Cooking: Air Fryer Steak with Garlic-Herb Butter",
+   "https://cooking.nytimes.com/recipes/1024558-air-fryer-steak-with-garlic-herb-butter"
+  ],
+  "mac": {
+   "cal": 1004,
+   "p": 37,
+   "c": 4,
+   "f": 95,
+   "s": 2,
+   "from": "s",
+   "note": ""
+  },
+  "rating": {
+   "v": 5.0,
+   "n": 208
+  }
+ },
+ {
+  "id": "air-fryer-turkey-breast",
+  "name": "Air Fryer Turkey Breast",
+  "cooker": "AF",
+  "type": "Other",
+  "region": "American",
+  "mins": 535,
+  "serves": 8,
+  "desc": "Succulent, flavorful turkey breast that cooks up in less than 45 minutes is possible with an air fryer. And with the air fryer method, no babysitting basting time is required.…",
+  "ing": [
+   "2 tablespoons dark brown sugar",
+   "4 teaspoons poultry seasoning",
+   "2 teaspoons garlic powder",
+   "2 teaspoons smoked paprika",
+   "½ tablespoon coarse kosher or ¾ teaspoon fine salt",
+   "1 bone-in, skin-on turkey breast (about 4 pounds), split in half (see Tip)",
+   "4 tablespoons vegetable oil"
+  ],
+  "steps": [
+   "Place a wire rack on a rimmed baking sheet. In a medium bowl, stir together the brown sugar, poultry seasoning, garlic powder, smoked paprika and salt.",
+   "On the prepared baking sheet, pat the turkey breast halves very dry with paper towels. Pull out and discard the pop-up thermometer if present. Season each half all over with the dry rub, generously rubbing until fully coated. Refrigerate, uncovered, for at least 8 hours or overnight.",
+   "An hour before you’re ready to cook, remove the turkey from the refrigerator and bring to room temperature.",
+   "Heat the air fryer to 380 degrees. Brush each turkey breast half with about 2 tablespoons oil and transfer to the air fryer basket. (Depending on the size of your air fryer, you may be able to nestle in both halves in a single batch; slight overlap is OK since the breast halves will shrink during cooking. If not, cook one breast half at a time.) Cook, flipping halfway through, until an instant-read thermometer inserted into the thickest part of the breast reads 165 degrees and the juices run clear, 40 to 45 minutes. (Because of the sugar in the dry rub, the turkey skin will become deeply burnished.)",
+   "Transfer turkey to a cutting board or platter and let rest for 20 minutes before slicing."
+  ],
+  "tip": "",
+  "src": [
+   "NYT Cooking: Air Fryer Turkey Breast",
+   "https://cooking.nytimes.com/recipes/1026037-air-fryer-turkey-breast"
+  ],
+  "mac": {
+   "cal": 313,
+   "p": 39,
+   "c": 13,
+   "f": 11,
+   "s": 8,
+   "from": "s",
+   "note": ""
+  },
+  "rating": {
+   "v": 5.0,
+   "n": 54
+  }
+ },
+ {
+  "id": "jerk-sweet-potato-street-fries",
+  "name": "Jerk Sweet Potato Street Fries",
+  "cooker": "AF",
+  "type": "Side",
+  "region": "Caribbean",
+  "mins": 30,
+  "serves": 2,
+  "desc": "Given a choice between traditional fries and sweet potato fries, for me the sweet potatoes always win. With their combination of savory and sweet, these jerk fries, adapted from…",
+  "ing": [
+   "2 medium sweet potatoes, peeled and sliced like fries, as thick or thin as you’d like",
+   "3 tablespoons avocado oil or extra-virgin olive oil, divided",
+   "2 teaspoons jerk seasoning (salt-free, if desired)",
+   "1 teaspoon garlic powder",
+   "1 teaspoon sea salt",
+   "1 teaspoon dried thyme",
+   "½ red bell pepper, diced",
+   "4 scallions, chopped, white and green parts kept separate",
+   "1 garlic clove, minced",
+   "1 tablespoon minced or grated fresh ginger",
+   "½ teaspoon whole black peppercorns",
+   "½ teaspoon freshly grated nutmeg",
+   "1 teaspoon grated lime zest, plus lime wedges, for garnish",
+   "Chopped fresh cilantro, for garnish"
+  ],
+  "steps": [
+   "Heat the air fryer to 375 degrees.",
+   "In a bowl, toss the sweet potato fries with 1 tablespoon of the oil, the jerk seasoning, garlic powder, salt and thyme.",
+   "Spread the sweet potato fries evenly into the basket of the air fryer, leaving a little space between the fries (depending on the size of your air fryer, you may need to cook the fries in batches). Air-fry for 10 to 15 minutes, until crispy and browned on the edges.",
+   "Meanwhile, in a saucepan, warm the remaining 2 tablespoons of oil over medium heat. Add the bell pepper, scallion whites, minced garlic, ginger, whole peppercorns and nutmeg and cook, stirring often, for 1 minute. Remove from the heat.",
+   "When the sweet potatoes are out of the air fryer, transfer them to a serving platter and spoon the sautéed pepper mixture over them.",
+   "Garnish with the lime zest, cilantro, scallion greens and a generous squeeze of lime juice. Serve immediately."
+  ],
+  "tip": "",
+  "src": [
+   "NYT Cooking: Jerk Sweet Potato Street Fries",
+   "https://cooking.nytimes.com/recipes/767032650-jerk-sweet-potato-street-fries"
+  ],
+  "mac": {
+   "cal": 168,
+   "p": 2,
+   "c": 18,
+   "f": 11,
+   "s": 2,
+   "from": "s",
+   "note": ""
+  },
+  "rating": {
+   "v": 5.0,
+   "n": 87
+  }
+ },
+ {
+  "id": "orange-cauliflower-bites",
+  "name": "Orange Cauliflower Bites",
+  "cooker": "AF",
+  "type": "Appetizer",
+  "region": "Chinese",
+  "mins": 45,
+  "serves": 4,
+  "desc": "Is it a snack, an appetizer or an entrée? That’s all up to you. Like its main ingredient, cauliflower, this tasty dish is Ms. Versatile. In this recipe, adapted from my cookbook,…",
+  "ing": [
+   "¾ cup all-purpose flour or gluten-free flour",
+   "1 teaspoon garlic powder",
+   "½ teaspoon sea salt",
+   "1 cup plain unsweetened soy milk or other nondairy milk",
+   "1 small head cauliflower, cut into bite-size pieces",
+   "Cooking oil spray",
+   "1 tablespoon avocado oil or coconut oil",
+   "2 tablespoons minced fresh ginger",
+   "3 garlic cloves, minced",
+   "1 cup freshly squeezed orange juice (2 to 3 oranges)",
+   "⅓ cup soy sauce or tamari",
+   "3 tablespoons rice vinegar",
+   "3 large Medjool dates, pitted",
+   "1½ tablespoons cornstarch",
+   "Sliced scallions and white and black sesame seeds (optional), for garnish"
+  ],
+  "steps": [
+   "Prepare the cauliflower bites: In a large bowl, whisk together the flour, garlic powder and salt, then whisk in the soy milk until well blended. Add the cauliflower pieces to the mixture and stir to thoroughly coat.",
+   "Heat the air fryer to 350 degrees. Line the bottom of the preheated air fryer basket with parchment paper (see Tip).",
+   "Remove the cauliflower from the batter and shake off any excess before placing the cauliflower into the air fryer in an even layer (depending on the size of your air fryer, you may need to cook the cauliflower in batches). Keep about ½ inch of space between the pieces. Spray the tops of the cauliflower with oil. Cook for 15 to 20 minutes, until crispy and golden.",
+   "Meanwhile, prepare the orange sauce: In a saucepan, heat the oil over medium. Add the ginger and garlic and cook until fragrant and slightly golden, about 1 minute. Add the orange juice, soy sauce, rice vinegar and dates. Bring to a simmer and cook for 5 minutes.",
+   "Meanwhile, in a small bowl, stir the cornstarch into ¼ cup water until dissolved.",
+   "Remove the sauce from the heat and stir in the cornstarch mixture until the sauce begins to thicken, about 1 minute. Allow the sauce to cool for a bit, then transfer it to a blender and blend until smooth.",
+   "Add the crispy cauliflower to a large bowl and pour some of the sauce over. Toss to coat all of the cauliflower pieces, garnish if you like and serve immediately."
+  ],
+  "tip": "",
+  "src": [
+   "NYT Cooking: Orange Cauliflower Bites",
+   "https://cooking.nytimes.com/recipes/767030812-orange-cauliflower-bites"
+  ],
+  "mac": {
+   "cal": 336,
+   "p": 8,
+   "c": 56,
+   "f": 10,
+   "s": 4,
+   "from": "s",
+   "note": ""
+  },
+  "rating": {
+   "v": 4.0,
+   "n": 290
+  }
+ },
+ {
+  "id": "shrimp-po-boy",
+  "name": "Shrimp Po' Boy",
+  "cooker": "AF",
+  "type": "Seafood",
+  "region": "Cajun",
+  "mins": 50,
+  "serves": 4,
+  "desc": "Simplicity is key when it comes to a great shrimp po’ boy: Crispy, fried shrimp are nestled in French bread. If you order a po’ boy at a sandwich shop in Louisiana, they’ll ask if…",
+  "ing": [
+   "1 cup all-purpose flour, divided",
+   "3 teaspoons Creole seasoning (homemade or store-bought), divided",
+   "Kosher salt (such as Diamond Crystal) and black pepper",
+   "¼ cup fine or medium grind cornmeal",
+   "2 large eggs",
+   "1 pound large peeled and deveined shrimp (26 to 30 count)",
+   "3 to 4 cups vegetable or canola oil, for frying",
+   "1 long loaf French bread, cut into 4 pieces (or 4 short loaves)",
+   "Mayonnaise, for serving",
+   "Shredded lettuce, pickle chips, tomato slices, lemon wedges and hot sauce (optional), for serving"
+  ],
+  "steps": [
+   "In a medium bowl, combine ½ cup of flour, 1½ teaspoons Creole seasoning, ½ teaspoon salt and ¼ teaspoon pepper. Whisk to combine and set aside.",
+   "In another medium bowl, combine remaining ½ cup flour and 1½ teaspoons Creole seasoning with the cornmeal, ½ teaspoon salt and ¼ teaspoon pepper. Whisk to combine and set aside.",
+   "Add the eggs to a small bowl and whisk well.",
+   "Create an assembly line of the flour mixture, the whisked eggs, the cornmeal mixture and a large plate. Dip the shrimp in flour mixture; shake off excess. Dip in egg mixture, and let excess drip off. Dredge in cornmeal mixture and set aside on the plate, repeating until all of the shrimp are double dredged.",
+   "Heat 1½ inches of oil in a heavy-bottomed saucepan to 325 to 350 degrees. Once sufficiently hot, add the shrimp in two to three batches, cooking until they are golden brown and cooked through, 3 to 4 minutes total. Remove the fried shrimp with a slotted spoon or spider, and transfer to a paper towel-lined plate and skim any stray bits of loosened coating with a small strainer or slotted spoon in between batches.",
+   "For “dressed” po’ boys, slice the French bread in half and generously spread mayonnaise inside. Add lettuce, pickle chips and tomato slices. Divide shrimp among each sandwich. Squeeze fresh lemon juice onto shrimp and drizzle lightly with hot sauce."
+  ],
+  "tip": "",
+  "src": [
+   "NYT Cooking: Shrimp Po' Boy",
+   "https://cooking.nytimes.com/recipes/770157937-shrimp-poboy"
+  ],
+  "mac": {
+   "cal": 884,
+   "p": 39,
+   "c": 73,
+   "f": 49,
+   "s": 4,
+   "from": "s",
+   "note": ""
+  },
+  "rating": {
+   "v": 4.0,
+   "n": 41
   }
  }
 ];
