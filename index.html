@@ -12,19 +12,19 @@
 <style>
 :root{
   --bg:#f6f1ea; --surface:#ffffff; --surface-2:#efe7dc; --ink:#231c16; --ink-2:#5c5148; --line:#ddd1c2;
-  --ember:#c2410c; --ember-ink:#fff; --bs:#1f2937; --pbc:#7c2d12; --gr:#166534; --sv:#1d4ed8; --sc:#7e22ce; --gold:#b45309; --focus:#2563eb;
+  --ember:#c2410c; --ember-ink:#fff; --bs:#1f2937; --pbc:#7c2d12; --gr:#166534; --sv:#1d4ed8; --sc:#7e22ce; --af:#0f766e; --gold:#b45309; --focus:#2563eb;
   --shadow:0 1px 2px rgba(0,0,0,.06),0 4px 14px rgba(0,0,0,.06);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --bg:#15120f; --surface:#1f1a16; --surface-2:#2a231d; --ink:#f3ece4; --ink-2:#b9ab9c; --line:#3a3129;
-    --ember:#f97316; --ember-ink:#1a0f06; --bs:#94a3b8; --pbc:#fb923c; --gr:#4ade80; --sv:#93c5fd; --sc:#d8b4fe; --gold:#fbbf24; --focus:#60a5fa;
+    --ember:#f97316; --ember-ink:#1a0f06; --bs:#94a3b8; --pbc:#fb923c; --gr:#4ade80; --sv:#93c5fd; --sc:#d8b4fe; --af:#5eead4; --gold:#fbbf24; --focus:#60a5fa;
     --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.3);
   }
 }
 :root[data-theme="dark"]{
   --bg:#15120f; --surface:#1f1a16; --surface-2:#2a231d; --ink:#f3ece4; --ink-2:#b9ab9c; --line:#3a3129;
-  --ember:#f97316; --ember-ink:#1a0f06; --bs:#94a3b8; --pbc:#fb923c; --gr:#4ade80; --sv:#93c5fd; --sc:#d8b4fe; --gold:#fbbf24; --focus:#60a5fa;
+  --ember:#f97316; --ember-ink:#1a0f06; --bs:#94a3b8; --pbc:#fb923c; --gr:#4ade80; --sv:#93c5fd; --sc:#d8b4fe; --af:#5eead4; --gold:#fbbf24; --focus:#60a5fa;
   --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.3);
 }
 *{box-sizing:border-box}
@@ -38,7 +38,7 @@ button{font:inherit;cursor:pointer}
 header.hero{background:linear-gradient(135deg,#1c1410 0%,#3b1d0e 60%,#7c2d12 100%);color:#fff7ed;padding:36px 0 28px}
 .hero h1{font-size:clamp(2rem,6vw,3.4rem);text-transform:uppercase;line-height:1}
 .hero h1 span{color:#fb923c}
-.hero .cookline{font-weight:700;font-size:clamp(.84rem,3.6vw,1.05rem);margin:10px 0 2px}
+.hero .cookline{font-weight:700;font-size:clamp(.7rem,3.05vw,1.05rem);margin:10px 0 2px}
 .hero .dishline{margin:0;opacity:.85}
 .hero p{max-width:720px;color:#fde6d3;margin:10px 0 0}
 .hero .stats{display:flex;gap:18px;flex-wrap:wrap;margin-top:16px;font-size:.9rem;color:#fed7aa}
@@ -151,6 +151,7 @@ nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(-
 .tag.gr{background:var(--gr);color:var(--bg)}
 .tag.sv{background:var(--sv);color:var(--bg)}
 .tag.sc{background:var(--sc);color:var(--bg)}
+.tag.af{background:var(--af);color:var(--bg)}
 .tag.added{background:var(--gold);color:var(--bg)}
 a.btn{text-decoration:none;display:inline-flex;align-items:center}
 .meta{display:flex;justify-content:space-between;font-size:.82rem;color:var(--ink-2);margin-top:auto}
@@ -252,7 +253,7 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
   <button class="theme-toggle" id="themeBtn" type="button" aria-label="Toggle dark mode">Theme</button>
   <div class="wrap">
     <h1>Sear, Smoke <span>&amp;</span> Simmer</h1>
-    <p class="cookline">Flat top · Smoker · Slow cooker · Sous vide · Grill</p>
+    <p class="cookline">Flat top · Smoker · Grill · Slow cooker · Sous vide · Air fryer</p>
     <p class="dishline">Beef, chicken, pork and seafood mains, plus sides and appetizers.</p>
     <div class="stats" id="stats"></div>
     <button class="spin-cta" id="spinCta" type="button">🎡 Can't decide? Spin the wheel</button>
@@ -373,7 +374,7 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
       <label class="fl">Recipe link<input id="addUrl" type="url" required placeholder="https://" autocomplete="off"></label>
       <label class="fl">Name (optional)<input id="addName" maxlength="60" placeholder="e.g. Kielbasa Cowboy Stir Fry" autocomplete="off"><small style="font-weight:400;color:var(--ink-2)">Give it your own name, especially if a similar dish is already on the site.</small></label>
       <div class="frow2">
-        <label class="fl">Cooker<select id="addCooker"><option>Auto-detect</option><option>Blackstone</option><option>Pit Barrel</option><option>Grill</option><option>Sous Vide</option><option>Slow Cooker</option></select></label>
+        <label class="fl">Cooker<select id="addCooker"><option>Auto-detect</option><option>Blackstone</option><option>Pit Barrel</option><option>Grill</option><option>Sous Vide</option><option>Slow Cooker</option><option>Air Fryer</option></select></label>
         <label class="fl">Type<select id="addType"><option>Auto-detect</option><option>Beef main</option><option>Chicken main</option><option>Pork main</option><option>Seafood main</option><option>Other main (lamb, duck, tofu)</option><option>Side dish</option><option>Appetizer</option></select></label>
       </div>
       <div id="tsBox" style="margin:12px 0"></div>
@@ -1348,13 +1349,144 @@ const R = [
  desc:"Dump-and-go chicken soup with beans, corn, tomatoes and chiles, loaded with toppings at the table.",
  ing:["1.5 lb boneless chicken breasts or thighs","1 can black beans, drained; 1.5 cups corn","1 can (15 oz) diced tomatoes, 1 can (10 oz) Rotel","1 onion, 3 garlic cloves, 1 can (4 oz) green chiles","4 cups chicken broth","2 tsp chili powder, 1 tsp cumin, 1 tsp smoked paprika, salt","Toppings: tortilla strips or chips, avocado, cheese, sour cream, cilantro, lime"],
  steps:["Put everything except the toppings in the slow cooker.","Cook on LOW 6 hours (or HIGH 4).","Shred the chicken in the pot.","Season to taste and serve with the toppings."],
- tip:"Crisp tortilla strips on the Blackstone in a little oil for the best topping.",src:["Cooking Classy: Slow Cooker Chicken Tortilla Soup","https://www.cookingclassy.com/slow-cooker-chicken-tortilla-soup-2/"]}
+ tip:"Crisp tortilla strips on the Blackstone in a little oil for the best topping.",src:["Cooking Classy: Slow Cooker Chicken Tortilla Soup","https://www.cookingclassy.com/slow-cooker-chicken-tortilla-soup-2/"]},
+/* ================= BLACKSTONE BLOG FAVORITES (2026-09-28) ================= */
+{id:"firecracker-chicken",name:"Firecracker Chicken",cooker:"BS",type:"Chicken",region:"Chinese",mins:30,
+ desc:"Crispy cornstarch-coated chicken tossed with peppers, onion and pineapple in a sweet chili glaze, over rice.",
+ ing:["1 lb boneless, skinless chicken breast or thighs, bite-size cubes","2 Tbsp soy sauce, 1 Tbsp cornstarch, 1 tsp all-purpose seasoning","1 red bell pepper and 1 yellow onion, large dice","1 Tbsp ginger paste, 1 Tbsp garlic paste","1 cup canned pineapple chunks plus 2 to 3 Tbsp of the juice","1/3 cup sweet chili sauce","2 to 3 Tbsp neutral oil","2 cups cooked jasmine rice","Sesame seeds and green onions"],
+ steps:["Toss the chicken with the soy, cornstarch and seasoning and let it sit 10 to 15 minutes.","Medium-high griddle, lightly oiled. Cook the peppers and onion 3 to 4 minutes until they start to char, then move them aside.","Spread the chicken in a single layer and leave it alone 2 to 3 minutes to crust. Flip and cook 2 to 3 more.","Pull the veggies back in and add the ginger, garlic, pineapple, juice and sweet chili sauce. Toss 1 to 2 minutes until glazed and the chicken hits 165°F.","Serve over rice with sesame seeds and green onions."],
+ tip:"Spread the chicken out. Crowded, it steams instead of browning.",src:["Blackstone: Firecracker Chicken","https://blackstoneproducts.com/blogs/recipes/firecracker-chicken"]},
+{id:"sloppy-joes",name:"Weeknight Sloppy Joes",cooker:"BS",type:"Beef",region:"American",mins:20,
+ desc:"Ground chuck simmered in a tangy ketchup and Worcestershire sauce with onion and pepper, piled on toasted buns.",
+ ing:["1 lb ground chuck (80/20)","1/4 cup ketchup, 1 Tbsp Worcestershire, 1 to 2 tsp red wine vinegar","1 tsp each garlic powder, onion powder and all-purpose seasoning","1/4 cup diced onion, 1/4 cup diced green pepper","4 hamburger buns (potato rolls are great)","American cheese slices and mayo, optional"],
+ steps:["Medium-high griddle. Brown the beef, breaking it up, until almost cooked through. Scrape off extra grease.","Add the ketchup, Worcestershire, spices, vinegar, onion and pepper. Toss until everything's coated and the veggies soften. Taste and adjust.","Toast the buns on the griddle meanwhile, with a swipe of mayo if you like.","Pile the meat on the buns and add a slice of cheese if you want."],
+ tip:"A splash of vinegar at the end is what keeps it from tasting like plain ketchup.",src:["Blackstone: Weeknight Sloppy Joes","https://blackstoneproducts.com/blogs/recipes/weeknight-sloppy-joes"]},
+{id:"korean-beef-bowls",name:"Korean Ground Beef Bowls",cooker:"BS",type:"Beef",region:"Korean",mins:25,
+ desc:"Ground beef in a sweet soy, garlic and ginger sauce over rice with a runny egg and quick-pickled carrot and daikon.",
+ ing:["1 lb lean ground beef","1 bunch green onions, whites and greens separated","4 eggs","Cooked white rice, sesame seeds","Sauce: 1/4 cup low-sodium soy sauce, 3 Tbsp rice vinegar, 1/4 cup honey, 2 Tbsp garlic paste, 1 Tbsp ginger paste, 1 Tbsp sesame oil, 1/2 tsp red pepper flakes","1 Tbsp cornstarch mixed with 2 Tbsp water","Quick pickles: 1 carrot and 1 small daikon, shredded; 1 cup hot water, 4 Tbsp rice vinegar, 4 Tbsp sugar, 1/2 tsp salt","Kewpie mayo or sriracha, optional"],
+ steps:["Stir the pickle ingredients in a jar and chill at least 1 hour (they keep 4 weeks).","Whisk the sauce.","Medium-high griddle. Brown the beef, breaking it up, and scrape off the fat.","Pour in the sauce and toss 2 minutes, then stir in the slurry until glossy. Add the green onion whites and sesame seeds.","Fry the eggs sunny side up on the other side of the griddle.","Build bowls: rice, beef, egg, pickles, green onion greens, and mayo or sriracha if you like."],
+ tip:"Make the pickles the night before and this is a 15-minute dinner.",src:["Blackstone: Korean Beef Bowls","https://blackstoneproducts.com/blogs/recipes/korean-beef-bowls"]},
+{id:"bang-bang-salmon",name:"Crispy Bang Bang Salmon Bites",cooker:"BS",type:"Seafood",region:"American",mins:15,
+ desc:"Seasoned salmon cubes seared crispy on every side, with a creamy sriracha bang bang sauce.",
+ ing:["1.5 lb skinless salmon, 1 inch cubes","1 Tbsp stir-fry or all-purpose seasoning","1 to 2 Tbsp avocado oil","Sauce: 1/2 cup mayo, 1 Tbsp sriracha, 2 Tbsp ketchup, 1 tsp rice vinegar, 1/2 tsp salt","2 green onions and 1 Tbsp toasted sesame seeds","Rice, optional"],
+ steps:["Toss the salmon with the seasoning.","Medium-high griddle with the oil. Lay the cubes flat side down and cook 5 to 7 minutes, turning, until crispy all over.","Stir the sauce together.","Drizzle the sauce over the bites (or serve it for dipping) and finish with green onions and sesame seeds."],
+ tip:"Turn them with tongs one side at a time. They're done when they flake at 125 to 130°F.",src:["Blackstone: Crispy Bang Bang Salmon Bites","https://blackstoneproducts.com/blogs/recipes/crispy-bang-bang-salmon-bites"]},
+{id:"breakfast-burritos",name:"Bacon, Egg & Potato Breakfast Burritos",cooker:"BS",type:"Pork",region:"Mexican",mins:30,
+ desc:"The classic Blackstone breakfast: crispy bacon and diced potatoes with scrambled eggs and cheese in griddled tortillas.",
+ ing:["6 slices bacon, chopped","3 potatoes, small dice","6 eggs, beaten","3 large flour tortillas","1 1/2 cups shredded cheese (cheddar, Monterey jack or a blend)","Salt, pepper, oil","Salsa verde or hot sauce, cilantro"],
+ steps:["Medium-high griddle, lightly oiled. Start the bacon.","When it's halfway done, add the potatoes, season and toss until golden and tender. Push to one side.","Scramble the eggs on the other side, then fold everything together and pull it off.","Warm the tortillas on an oiled spot until they bubble, flipping once.","Fill with the potato, bacon and eggs, cheese, cilantro and sauce. Roll them up."],
+ tip:"Dice the potatoes small (1/2 inch) or they won't be done by the time the bacon is.",src:["Blackstone: Ultimate Breakfast Burrito","https://blackstoneproducts.com/blogs/recipes/ultimate-breakfast-burrito"]},
+{id:"pierogi-kielbasa",name:"Pierogi, Kielbasa & Cabbage",cooker:"BS",type:"Pork",region:"European",mins:30,
+ desc:"A one-griddle Polish dinner: buttery frozen pierogi, crispy kielbasa and tender steamed cabbage and onion.",
+ ing:["2 boxes (about 24) frozen pierogi","2 links (14 oz each) kielbasa, bite-size pieces","1 head cabbage, chopped","1 large sweet onion, chopped","3 Tbsp butter, oil","Garlic powder, onion powder, dried parsley, salt and pepper","Sour cream"],
+ steps:["Medium-low griddle. Toss the cabbage and onion with oil, add a few splashes of water and steam under a dome on one side.","On the other side, melt the butter and add the frozen pierogi. Toss every couple of minutes as they thaw, then season them.","Uncover the cabbage, toss and keep cooking until tender. Season it the same way.","When both are nearly done, crisp the kielbasa in a little oil.","Serve it all together with sour cream."],
+ tip:"Go low and slow on the pierogi straight from frozen. High heat burns the outside while the middle's still icy.",src:["Blackstone: Pierogi Dinner with Kielbasa & Cabbage","https://blackstoneproducts.com/blogs/recipes/pierogi-dinner-with-kielbasa-cabbage"]},
+{id:"cbr-quesadillas",name:"Chicken Bacon Ranch Quesadillas",cooker:"BS",type:"Chicken",region:"American",mins:30,
+ desc:"Chicken, bacon, pico and ranch with crushed Cool Ranch Doritos inside a crispy cheesy quesadilla.",
+ ing:["1 lb thin chicken cutlets","6 slices thick-cut bacon","3 cups shredded Colby Jack","Pico: 2 Roma tomatoes, 1/4 cup red onion, 2 jalapeños and 2 Tbsp cilantro, diced, with the juice of 1 lime","Ranch dressing, plus the juice of 1/2 lime","4 large flour tortillas","1 cup crushed Cool Ranch Doritos","Olive oil, garlic powder, salt, pepper"],
+ steps:["Medium griddle. Oil and season the cutlets and cook to 165°F. Rest and dice.","Cook the bacon alongside, drain and chop.","Mix the pico and season it. Stir the lime into some ranch for dipping.","Drop to medium-low. Lay the tortillas down with cheese, then on one half add chicken, bacon, pico, a drizzle of ranch and crushed Doritos.","Fold and cook, flipping, until melted and crisp."],
+ tip:"The Doritos go in last, right before you fold, so they stay crunchy.",src:["Blackstone: Chicken Bacon Ranch Quesadilla","https://blackstoneproducts.com/blogs/recipes/chicken-bacon-ranch-quesadilla"]},
+{id:"griddle-potatoes",name:"Twice-Cooked Griddle Potatoes",cooker:"BS",type:"Side",region:"American",mins:30,
+ desc:"Russet slices boiled until tender, tossed with garlic and rosemary, then seared crisp on a hot griddle.",
+ ing:["6 russet potatoes, 1/2 inch slices","2 Tbsp olive oil","2 1/2 tsp garlic powder, 2 tsp dried rosemary, 2 tsp black pepper, salt"],
+ steps:["Boil the slices about 10 minutes until fork tender. Drain.","Toss with the oil, garlic powder, rosemary, pepper and salt.","High heat, thin coat of oil or butter. Sear 5 to 6 minutes a side until crusty and golden."],
+ tip:"Let them steam dry a few minutes after draining. Dry potatoes crisp, wet ones stick.",src:["Blackstone: Twice Cooked Griddle Baked Potatoes","https://blackstoneproducts.com/blogs/recipes/twice-cooked-griddle-baked-potatoes"]},
+{id:"griddle-corn-salad",name:"Charred Corn Salad",cooker:"BS",type:"Side",region:"American",mins:30,
+ desc:"Griddle-charred corn cut off the cob and tossed with pepper, tomato, red onion and cilantro.",
+ ing:["6 ears corn, shucked","1 green bell pepper, diced","2 Roma tomatoes, diced","1/4 cup red onion, diced","1/2 bunch cilantro, chopped","2 Tbsp olive oil, salt and pepper","Grated parmesan, optional"],
+ steps:["Medium-high griddle with a thin coat of oil. Roll the corn around for about 10 minutes until tender with some black spots.","Cool enough to handle, then cut the kernels off into a big bowl.","Toss with everything else, season, and top with parmesan if you like."],
+ tip:"Stand the cob in the hole of a bundt pan to cut it. The kernels stay in the pan.",src:["Blackstone: Grilled Corn Salad","https://blackstoneproducts.com/blogs/recipes/grilled-corn-salad"]},
+{id:"bang-bang-shrimp",name:"Sweet & Spicy Bang Bang Shrimp",cooker:"BS",type:"Appetizer",region:"American",mins:80,
+ desc:"Buttermilk-soaked shrimp dredged in cornstarch, fried crisp on the griddle and tossed in sweet chili sriracha mayo.",
+ ing:["1 lb shrimp, peeled and deveined","1 cup buttermilk","1 cup cornstarch, 1/2 tsp garlic powder","Sauce: 3/4 cup mayo, 1/2 cup sweet chili sauce, 1 to 2 Tbsp sriracha","Vegetable oil","Green onions and toasted sesame seeds"],
+ steps:["Soak the shrimp in the buttermilk in the fridge for 1 hour.","Stir the sauce together.","Drain the shrimp and shake them in a bag with the cornstarch and garlic powder.","Medium-high to high griddle with a few Tbsp of oil. Fry the shrimp 3 to 5 minutes a side until golden, adding oil as needed.","Drain on paper towels, then toss with 1/2 to 3/4 cup sauce. Top with green onions and sesame seeds."],
+ tip:"Great as bang bang tacos or over rice, too.",src:["Blackstone: Sweet & Spicy Bang Bang Shrimp","https://blackstoneproducts.com/blogs/recipes/sweet-spicy-bang-bang-shrimp"]},
+{id:"honey-ranch-wings",name:"Hot Honey Ranch Wings",cooker:"BS",type:"Appetizer",region:"American",mins:30,
+ desc:"Griddled wings glazed in a chili-crisp style hot honey ranch with dill and sesame.",
+ ing:["2 lb chicken wings","Olive oil, salt-pepper-garlic seasoning","Chili oil: 1/4 cup avocado oil, 2 Tbsp red pepper flakes, 1/2 Tbsp sesame seeds, 2 tsp ginger paste, 2 tsp garlic paste","1 Tbsp soy sauce, 1 Tbsp honey, 1/2 Tbsp sesame oil","1 packet ranch seasoning, 1/2 cup sour cream, 1/2 cup mayo, 2 tsp fresh dill","Green onions"],
+ steps:["In a small pot on the griddle, cook the avocado oil, pepper flakes, sesame seeds, ginger and garlic 5 to 8 minutes until toasty. Pull it off.","Toss the wings in oil and seasoning and griddle 8 to 10 minutes, turning, until cooked through (175°F plus is better for wings).","Stir the soy, honey, sesame oil, ranch mix, sour cream, mayo and dill into the chili oil.","Toss the wings in a few spoonfuls, drizzle more on top and finish with green onions."],
+ tip:"Flats and drums cook faster if you split them and pat them dry first.",src:["Blackstone: Hot Honey Ranch Chicken Wings","https://blackstoneproducts.com/blogs/recipes/hot-honey-ranch-chicken-wings"]},
+{id:"cheesesteak-egg-rolls",name:"Philly Cheesesteak Egg Rolls",cooker:"BS",finish:"AF",type:"Appetizer",region:"American",mins:45,
+ desc:"Griddled cheesesteak filling rolled in egg roll wrappers and air fried crisp, with a spicy Velveeta dip.",
+ ing:["1 lb thin-sliced NY strip or ribeye, salt and pepper","1 onion, 1 red and 1 green bell pepper, finely chopped","2.5 oz mushrooms, chopped","2 Tbsp butter","1 pack egg roll wrappers","Dip: 1 small block Velveeta, cubed; 1/2 poblano and 2 to 4 fresh cayenne or jalapeño peppers, charred and chopped","Cooking spray"],
+ steps:["Low to medium griddle. Cook the steak to your liking, and cook the onion, peppers and mushrooms in the butter until soft. Combine and let cool.","Char the poblano and hot peppers, then chop.","Melt the Velveeta in a small pan on the griddle, stirring, and stir in the chopped peppers.","Roll 2 to 3 Tbsp of filling in each wrapper and spray lightly.","Air fry at 350°F in a single layer 10 minutes, turn, and 10 to 15 more until golden. Cool 5 minutes and serve with the dip."],
+ tip:"Let the filling cool before rolling or the wrappers tear.",src:["Blackstone: Philly Cheesesteak Egg Rolls","https://blackstoneproducts.com/blogs/recipes/philly-cheesesteak-egg-rolls"]},
+/* ================= AIR FRYER (2026-09-28) ================= */
+{id:"af-wings",name:"Crispy Air Fryer Wings",cooker:"AF",type:"Appetizer",region:"American",mins:100,
+ desc:"Baking powder and a low-then-high two-stage cook give wings shatter-crisp skin with no frying.",
+ ing:["2 lb chicken wings, split, tips removed","Per lb: 1 tsp coarse salt and 1 tsp baking powder (aluminum-free)","Per lb: 1 tsp cornstarch, 1/2 tsp garlic powder, 1/2 tsp smoked paprika, 1/4 tsp onion powder, 1/8 tsp pepper","Oil for the basket","Your sauce: buffalo, BBQ, hot honey or lemon pepper"],
+ steps:["Pat the wings very dry.","Toss with the salt and baking powder, set on a rack over a sheet pan and refrigerate uncovered at least 1 hour.","Pat dry again and toss in the cornstarch and spices.","Grease the basket and air fry at 300°F in a single layer, not touching, for 15 minutes.","Flip, crank it to 450°F (or your max) and cook 10 minutes more until crisp and at least 165°F (175 to 185°F is better for wings). Toss in sauce."],
+ tip:"The low first stage renders the fat; the high second stage crisps the skin. Don't skip either.",src:["Budget Bytes: Crispy Air Fryer Chicken Wings","https://www.budgetbytes.com/crispy-air-fryer-chicken-wings/"]},
+{id:"af-chicken-breast",name:"Juicy Air Fryer Chicken Breast",cooker:"AF",type:"Chicken",region:"American",mins:45,
+ desc:"Pounded even, dry-brined and rubbed with paprika and garlic: juicy weeknight chicken in about 12 minutes of cooking.",
+ ing:["2 boneless, skinless chicken breasts (about 6 oz each)","1/2 tsp kosher salt","2 tsp olive oil","1 tsp paprika, 1/2 tsp garlic powder, 1/2 tsp onion powder, 1/4 tsp pepper"],
+ steps:["Pound the breasts to an even thickness under plastic wrap.","Dry brine: salt them and refrigerate uncovered 30 minutes to 1 day (optional, but it's the secret).","Let them sit out 15 minutes, then rub with the oil and spices.","Air fry at 375°F smooth side down for 6 minutes. Flip and cook 2 to 8 minutes more to 155 to 160°F.","Rest 5 to 10 minutes (carryover takes it to 165°F), then slice."],
+ tip:"Pull at 155 to 160°F and let it rest. That's the difference between juicy and dry.",src:["Well Plated: Air Fryer Chicken Breast","https://www.wellplated.com/air-fryer-chicken-breast/"]},
+{id:"af-chicken-thighs",name:"Crispy Air Fryer Chicken Thighs",cooker:"AF",type:"Chicken",region:"American",mins:30,
+ desc:"Bone-in thighs with a smoky paprika rub and shatteringly crisp skin in about 20 minutes.",
+ ing:["4 bone-in, skin-on chicken thighs (2 to 2 1/2 lb)","1 Tbsp paprika, 1/2 Tbsp smoked paprika","2 tsp kosher salt, 1 tsp garlic powder, 1/2 tsp pepper","2 Tbsp olive oil","Lemon wedges, parsley or cilantro"],
+ steps:["Mix the spices in a big bowl.","Pat the thighs very dry, add them to the bowl, drizzle with oil and toss to coat.","Air fry at 400°F skin side down, not touching, for about 9 minutes.","Flip skin side up and cook 9 to 13 more minutes to at least 165°F (175°F is even better for thighs).","Rest 5 minutes and finish with lemon and herbs."],
+ tip:"Trim the extra flap of skin and fat. Loose skin stays flabby; skin that's pulled tight crisps.",src:["Well Plated: Air Fryer Chicken Thighs","https://www.wellplated.com/air-fryer-chicken-thighs/"]},
+{id:"af-chicken-tenders",name:"Air Fryer Chicken Tenders",cooker:"AF",type:"Chicken",region:"American",mins:30,
+ desc:"Golden, crunchy breadcrumb-and-panko tenders the kids will eat, with barely any oil.",
+ ing:["12 chicken tenders (about 1 1/4 lb)","1 tsp kosher salt, black pepper","2 large eggs, beaten","1/2 cup seasoned breadcrumbs and 1/2 cup seasoned panko","Olive oil spray","Lemon wedges and your dipping sauce"],
+ steps:["Season the chicken with salt and pepper.","Dip each tender in egg, then the breadcrumb-panko mix, and shake off the extra.","Spray both sides generously with oil.","Air fry at 400°F in batches, 5 to 6 minutes a side, until golden and 165°F."],
+ tip:"Spray every dry spot of breading. Dry crumbs stay pale and dusty.",src:["Skinnytaste: Air Fryer Chicken Tenders","https://www.skinnytaste.com/air-fryer-chicken-tenders/"]},
+{id:"af-salmon",name:"10-Minute Air Fryer Salmon",cooker:"AF",type:"Seafood",region:"American",mins:10,
+ desc:"Garlic-paprika salmon fillets that come out flaky inside with a lightly crisp top. No flipping.",
+ ing:["4 salmon fillets (6 oz each)","1 Tbsp olive oil","1 tsp garlic powder, 1/2 tsp paprika, 1/2 tsp salt, 1/2 tsp pepper","Lemon wedges and tartar sauce"],
+ steps:["Preheat the air fryer to 400°F.","Rub the fillets with oil and season them.","Air fry 7 to 9 minutes depending on thickness.","Check with a fork; give it 1 to 2 more minutes if needed (125°F for medium, 145°F well done)."],
+ tip:"Skin side down and don't flip. The skin protects the bottom and releases easily when done.",src:["Feel Good Foodie: Air Fryer Salmon","https://feelgoodfoodie.net/recipe/air-fryer-salmon/"]},
+{id:"af-pork-chops",name:"Air Fryer Pork Chops",cooker:"AF",type:"Pork",region:"American",mins:20,
+ desc:"Boneless chops with a paprika, garlic and Italian herb rub, juicy and browned in about 12 minutes.",
+ ing:["1 lb boneless pork chops (about 3)","1 Tbsp olive oil","1/2 tsp salt, 1 tsp paprika, 1 tsp garlic powder, 1 tsp onion powder","1/4 tsp pepper, 1/2 tsp Italian seasoning"],
+ steps:["Preheat the air fryer to 380°F.","Rub the chops with oil.","Mix the seasoning and rub it on every side.","Air fry 10 to 15 minutes, flipping halfway, to 145°F. Rest 3 minutes."],
+ tip:"Thicker chops (1 inch) stay juicier. For thin ones, start checking at 8 minutes.",src:["Natasha's Kitchen: Air Fryer Pork Chops","https://natashaskitchen.com/air-fryer-pork-chops-recipe/"]},
+{id:"af-ribeye",name:"Air Fryer Ribeye",cooker:"AF",type:"Beef",region:"American",mins:20,
+ desc:"Thick ribeyes air fried to medium rare in about 12 minutes, finished with a pat of butter.",
+ ing:["2 boneless ribeyes (about 16 oz each, 1 1/2 inches thick), at room temperature","1/2 tsp sea salt, 1/4 tsp pepper, 1/2 tsp garlic powder","2 Tbsp butter","Chives or parsley"],
+ steps:["Preheat the air fryer to 400°F.","Season both sides.","Air fry 5 to 6 minutes a side. Pull at 130°F for medium rare.","Rest 5 minutes loosely tented, then top with butter and herbs."],
+ tip:"It won't crust like the Blackstone. For the best of both, air fry to 120°F and sear 45 seconds a side on a ripping hot griddle.",src:["Running to the Kitchen: Juiciest Air Fryer Ribeye","https://www.runningtothekitchen.com/air-fryer-ribeye/"]},
+{id:"af-meatballs",name:"Juicy Air Fryer Meatballs",cooker:"AF",type:"Beef",region:"European",mins:27,
+ desc:"Beef and pork Italian meatballs browned all over in the air fryer in 12 minutes. Sub them, sauce them or pasta them.",
+ ing:["1 lb lean ground beef and 1/2 lb ground pork","1/3 cup seasoned breadcrumbs, 1 egg, 2 Tbsp milk","2 Tbsp chopped parsley, 1 Tbsp grated parmesan","1/2 tsp Italian seasoning, 1/2 tsp onion powder, 1/2 tsp salt, 1/4 tsp pepper","Marinara, for serving"],
+ steps:["Mix everything except the meat, then gently mix in the beef and pork. Don't overwork it.","Roll into 16 meatballs.","Preheat to 400°F, add the meatballs in a single layer, then turn it down to 380°F.","Cook 12 to 14 minutes to 165°F. Rest 3 minutes."],
+ tip:"They freeze great cooked. Reheat from frozen at 350°F for about 8 minutes.",src:["Spend With Pennies: Juicy Air Fryer Meatballs","https://www.spendwithpennies.com/juicy-air-fryer-meatballs/"]},
+{id:"af-coconut-shrimp",name:"Air Fryer Coconut Shrimp",cooker:"AF",type:"Appetizer",region:"Caribbean",mins:20,
+ desc:"Shrimp in a crunchy coconut-panko coat, air fried golden. Serve with sweet chili sauce.",
+ ing:["1 lb large shrimp (20 to 30 count), peeled, tails off, patted dry","1/3 cup flour, 1/2 tsp kosher salt, 1/4 tsp pepper","4 egg whites, whisked frothy","3/4 cup sweetened coconut flakes, pulsed finer","1/2 cup panko","Cooking spray","Sweet chili sauce"],
+ steps:["Set up three bowls: seasoned flour, egg whites, coconut plus panko.","Flour, egg, then press each shrimp into the coconut mix on both sides.","Spray the basket, add a single layer and spray the tops.","Air fry at 325°F for 5 minutes, flip, spray and cook 4 more. Repeat with the rest."],
+ tip:"Keep it at 325°F. Coconut scorches fast at higher heat.",src:["Rachel Cooks: Air Fryer Coconut Shrimp","https://www.rachelcooks.com/air-fryer-coconut-shrimp/"]},
+{id:"af-fries",name:"Crispy Air Fryer French Fries",cooker:"AF",type:"Side",region:"American",mins:58,
+ desc:"Soaked and dried russet fries that come out crisp outside and fluffy inside with 2 Tbsp of oil.",
+ ing:["2 russet potatoes","2 Tbsp olive oil","1 tsp garlic powder, 1/2 tsp seasoned salt"],
+ steps:["Scrub (peel if you like) and cut into 1/4 inch fries.","Soak in cold water at least 30 minutes.","Drain and dry them completely.","Preheat to 390°F. Toss with the oil and seasoning.","Air fry 10 minutes, shake, then 6 to 8 minutes more until crisp. Salt to taste."],
+ tip:"Dry means dry. Any water left turns to steam and you get limp fries.",src:["Spend With Pennies: Crispy Air Fryer French Fries","https://www.spendwithpennies.com/crispy-air-fryer-french-fries/"]},
+{id:"af-baked-potato",name:"Air Fryer Baked Potatoes",cooker:"AF",type:"Side",region:"American",mins:45,
+ desc:"Salty, crackly skin and fluffy insides, no foil and no oven.",
+ ing:["4 medium russet potatoes (7 to 9 oz each)","1 Tbsp olive oil or cooking spray","1/2 tsp sea salt","Butter, sour cream, chives, bacon, cheese"],
+ steps:["Scrub and dry the potatoes thoroughly.","Poke each 4 or 5 times with a fork, rub with oil and salt.","Air fry at 400°F (375°F for toaster-oven style) 35 to 45 minutes, flipping halfway, until a knife slides in easily.","Split and load them up."],
+ tip:"Skip the foil. Foil steams the skin soft.",src:["Natasha's Kitchen: Air Fryer Baked Potato","https://natashaskitchen.com/air-fryer-baked-potatoes/"]},
+{id:"af-brussels",name:"Crispy Air Fryer Brussels Sprouts",cooker:"AF",type:"Side",region:"American",mins:22,
+ desc:"Halved sprouts air fried until the leaves crisp, with garlic, a drizzle of balsamic glaze and parmesan.",
+ ing:["1 lb Brussels sprouts, trimmed and halved","2 tsp olive oil, 1/4 tsp kosher salt, 1/4 tsp pepper","3 garlic cloves, thinly sliced","1 Tbsp balsamic glaze, 2 tsp maple syrup","3 Tbsp grated parmesan"],
+ steps:["Preheat to 375°F.","Toss the sprouts with the oil, salt and pepper.","Air fry 5 minutes, shake, 5 more, shake.","Add the garlic and cook 2 to 4 minutes more until crisp.","Toss with the glaze, maple and parmesan."],
+ tip:"Cut big ones in quarters so every piece finishes at the same time.",src:["Well Plated: Air Fryer Brussels Sprouts","https://www.wellplated.com/air-fryer-brussels-sprouts/"]}
 
 ];
 /* recipes added through the "Add a recipe" form (written by the GitHub automation) */
 if(Array.isArray(window.ADDED))window.ADDED.forEach(r=>{if(r&&r.id&&!R.some(x=>x.id===r.id))R.push({...r,added:1})});
 /* Per-serving macros: [calories, protein g, carbs g, fat g, servings, s=published by the source / e=estimate from the ingredient list, note] */
 const MACROS={
+ "chicken-and-elote-tacos":[330,20,29,16,10,"e","1 taco"],"easy-bbq-chicken-flatbread":[580,41,39,28,4,"e"],
+ "firecracker-chicken":[450,32,55,10,3,"e"],"sloppy-joes":[470,24,34,24,4,"e","without cheese"],"korean-beef-bowls":[590,30,70,18,4,"e","with 1 cup rice and an egg"],
+ "bang-bang-salmon":[530,34,4,42,4,"e"],"breakfast-burritos":[910,38,90,44,3,"e","1 burrito"],"pierogi-kielbasa":[760,24,50,50,6,"e"],
+ "cbr-quesadillas":[970,55,60,55,4,"e","1 quesadilla"],"griddle-potatoes":[210,4,38,5,6,"e"],"griddle-corn-salad":[140,3,21,6,6,"e"],
+ "bang-bang-shrimp":[450,24,26,28,4,"e"],"honey-ranch-wings":[550,24,6,48,4,"e"],"cheesesteak-egg-rolls":[520,26,42,24,6,"e","2 egg rolls with dip"],
+ "af-wings":[282,23,3,20,4,"s","1/2 lb wings, before sauce"],"af-chicken-breast":[237,36,2,9,2,"s"],"af-chicken-thighs":[389,24,2,31,4,"s"],
+ "af-chicken-tenders":[291,39,17,7,4,"s","3 tenders"],"af-salmon":[276,34,1,14,4,"s"],"af-pork-chops":[284,33,2,15,3,"s"],
+ "af-ribeye":[360,28,0,27,4,"s"],"af-meatballs":[456,36,8,32,4,"s","4 meatballs, no sauce"],"af-coconut-shrimp":[237,21,23,6,4,"s","5 shrimp"],
+ "af-fries":[148,2,20,7,4,"s"],"af-baked-potato":[199,5,38,4,4,"s","plain"],"af-brussels":[67,4,10,2,4,"s"],
  "kielbasa-cowboy-stir-fry":[775,23,48,55,6,"e","1/6 of the recipe"],
  "backyard-burgers":[690,37,30,45,6,"e","1 cheeseburger"],"bbq-chicken":[440,36,12,26,6,"e","2 pieces"],"lemon-herb-chicken":[310,52,2,10,4,"e"],
  "beer-brats":[510,17,35,32,5,"e","1 brat on a bun"],"grilled-pork-chops":[410,48,2,22,4,"e","1 chop"],"chicken-kabobs":[330,50,12,9,4,"e","2 skewers"],
@@ -1525,7 +1657,7 @@ const MACROS={
  "shishitos":[50, 1, 4, 4, 4, "e"]};
 R.forEach(r=>{const m=MACROS[r.id];if(m)r.mac={cal:m[0],p:m[1],c:m[2],f:m[3],s:m[4],from:m[5],note:m[6]||""}});
 /* Star ratings published by the source site: [stars, number of ratings]. Pit Barrel's look like template placeholders, so they are left out. */
-const RATINGS={"hibachi-chicken":[5.0,2],"gyoza":[4.8,9],"chuck-burnt-ends":[4.8,114],"hanging-chicken":[5.0,2],"alabama-white":[4.5,388],"teppanyaki":[5.0,59],"meatloaf":[4.9,103],"kra-pao":[5.0,25],"huli-huli":[5.0,63],"pad-thai":[4.0,311],"chicken-parm":[4.7,9],"gai-yang":[5.0,17],"hibachi-rice":[5.0,12],"pineapple-rice":[5.0,49],"garlic-mushrooms":[5.0,2],"collards":[5.0,18],"pork-belly-burnt-ends":[4.4,8],"yakitori":[4.8,228],"steak-bites":[5.0,65],"moink":[3.7,118],"satay":[5.0,513],"shish-kebab":[5.0,24],"kofta":[4.7,66],"london-broil":[4.8,26],"filet-cowboy":[5.0,1],"souvlaki":[5.0,125],"pollo-brasa":[5.0,124],"piri-piri":[5.0,20],"pollo-asado":[4.8,65],"dak-bulgogi":[4.5,349],"grilled-caesar":[4.5,26],"grilled-asparagus":[5.0,17],"foil-potatoes":[5.0,4],"grilled-zucchini":[5.0,5],"shishitos":[5.0,6],"pad-see-ew":[5.0,41],"drunken-noodles":[4.9,227],"samgyeopsal":[4.6,26],"corn-cheese":[5.0,3],"tikka-masala":[5.0,238],"keema":[4.9,73],"green-curry":[4.9,98],"panang-steak":[4.9,19]};
+const RATINGS={"af-wings":[4.8,8],"af-chicken-breast":[4.7,850],"af-chicken-thighs":[4.8,244],"af-chicken-tenders":[4.9,220],"af-salmon":[5.0,37446],"af-pork-chops":[5.0,220],"af-ribeye":[4.8,82],"af-meatballs":[5.0,196],"af-coconut-shrimp":[4.3,6],"af-fries":[5.0,40],"af-baked-potato":[5.0,514],"af-brussels":[4.5,321],"hibachi-chicken":[5.0,2],"gyoza":[4.8,9],"chuck-burnt-ends":[4.8,114],"hanging-chicken":[5.0,2],"alabama-white":[4.5,388],"teppanyaki":[5.0,59],"meatloaf":[4.9,103],"kra-pao":[5.0,25],"huli-huli":[5.0,63],"pad-thai":[4.0,311],"chicken-parm":[4.7,9],"gai-yang":[5.0,17],"hibachi-rice":[5.0,12],"pineapple-rice":[5.0,49],"garlic-mushrooms":[5.0,2],"collards":[5.0,18],"pork-belly-burnt-ends":[4.4,8],"yakitori":[4.8,228],"steak-bites":[5.0,65],"moink":[3.7,118],"satay":[5.0,513],"shish-kebab":[5.0,24],"kofta":[4.7,66],"london-broil":[4.8,26],"filet-cowboy":[5.0,1],"souvlaki":[5.0,125],"pollo-brasa":[5.0,124],"piri-piri":[5.0,20],"pollo-asado":[4.8,65],"dak-bulgogi":[4.5,349],"grilled-caesar":[4.5,26],"grilled-asparagus":[5.0,17],"foil-potatoes":[5.0,4],"grilled-zucchini":[5.0,5],"shishitos":[5.0,6],"pad-see-ew":[5.0,41],"drunken-noodles":[4.9,227],"samgyeopsal":[4.6,26],"corn-cheese":[5.0,3],"tikka-masala":[5.0,238],"keema":[4.9,73],"green-curry":[4.9,98],"panang-steak":[4.9,19]};
 R.forEach((r,i)=>{r.order=i;const x=RATINGS[r.id];if(x)r.rating={v:x[0],n:x[1]};else if(r.rating&&!(r.rating.v>0&&r.rating.n>0))delete r.rating});
 
 
@@ -1573,10 +1705,15 @@ const MENUS = [
  {name:"Thanksgiving on the Barrel",s:"Thanksgiving",nowheel:true,why:"The turkey hangs in the barrel and frees up the oven for everything else.",ids:["smoked-turkey","sv-mashed","sv-carrots","honey-brussels"]},
  {name:"Fajita & Quesadilla Night",s:"Fajita Night",why:"Steak fajitas or chicken quesadillas, all on the Blackstone.",ids:["steak-fajitas","chicken-quesadillas","mexican-rice","elote"]},
  {name:"Soup & Stew Day",s:"Soup Day",why:"Load the slow cooker in the morning. Garlic bread on the griddle right before dinner.",ids:["sc-beef-stew","sc-tortilla-soup","griddle-garlic-bread","grilled-guac"],pair:{"sc-beef-stew":["griddle-garlic-bread"],"sc-tortilla-soup":["grilled-guac"]}},
+ {name:"Air Fryer Weeknight",s:"Air Fryer",why:"Salmon, chicken or chops in 10 to 15 minutes, with potatoes and sprouts. No grill to light.",ids:["af-salmon","af-chicken-breast","af-pork-chops","af-baked-potato","af-brussels"],pair:{"af-salmon":["af-brussels","af-baked-potato"],"af-chicken-breast":["af-baked-potato","af-brussels"],"af-pork-chops":["af-baked-potato","af-brussels"]}},
+ {name:"Game Day Air Fryer",s:"Air Fry Game Day",why:"Tenders and fries for the kids, wings and coconut shrimp for everybody else.",ids:["af-chicken-tenders","af-meatballs","af-fries","af-wings","af-coconut-shrimp"]},
+ {name:"Rice Bowl Night",s:"Rice Bowls",why:"Korean beef, firecracker chicken or bang bang salmon over rice, all on the Blackstone in 30 minutes.",ids:["korean-beef-bowls","firecracker-chicken","bang-bang-salmon","hibachi-veg","bang-bang-shrimp"]},
+ {name:"Polish Night",s:"Polish Night",why:"Pierogi, kielbasa and cabbage on one griddle. Beer optional but encouraged.",ids:["pierogi-kielbasa","beer-brats","griddle-potatoes"]},
+ {name:"Breakfast for Dinner",s:"Breakfast Dinner",why:"Bacon, egg and potato burritos with crispy griddle potatoes. Nobody complains.",ids:["breakfast-burritos","griddle-potatoes","hash-browns"]},
  {name:"Mediterranean Night",s:"Mediterranean",why:"One batch of tzatziki covers both dishes.",ids:["greek-gyros","veg-kebabs","greek-meatballs"]}
 ];
 
-const COOKERS={BS:"Blackstone",PBC:"Pit Barrel",GR:"Grill",SV:"Sous Vide",SC:"Slow Cooker"};
+const COOKERS={BS:"Blackstone",PBC:"Pit Barrel",GR:"Grill",SV:"Sous Vide",SC:"Slow Cooker",AF:"Air Fryer"};
 const cookerLabel=r=>COOKERS[r.cooker]+(r.finish&&COOKERS[r.finish]?" + "+COOKERS[r.finish]:"");   // sous vide combos: "Sous Vide + Blackstone"
 const MAIN_T=new Set(["Beef","Chicken","Pork","Seafood","Other"]);
 const TYPES=["Beef","Chicken","Pork","Seafood",...(R.some(r=>r.type==="Other")?["Other"]:[]),"Side","Appetizer"];
@@ -2319,6 +2456,12 @@ const TIPS=[
   ["The finish",["<b>Dry it hard</b> with paper towels. A wet surface steams instead of browning.","Sear as hot as you can for as short as you can: 45 to 60 seconds a side on a 500°F+ Blackstone. You're only building a crust, because the inside is already done.","For extra-long cooks, chill the bag in ice water first, then sear. A cold center lets you sear longer without overcooking."]],
   ["Safety",["Keep bath temps at 130°F or above for anything cooking longer than 4 hours.","Low-temp chicken (145 to 150°F) is safe because of the hold time. Follow the recipe's minimum time.","Cooking straight from frozen works. Add about 50% to the time."]],
  ]},
+ {cooker:"AF",title:"Air Fryer",open:0,groups:[
+  ["Crisp, not steamed",["<b>Single layer, not touching.</b> Crowding is the #1 reason air fryer food comes out soggy. Cook in batches.","<b>Dry it first.</b> Pat meat and potatoes dry; water turns to steam.","A light spray or toss of oil is what browns and crisps. Dry breading with no oil stays pale."]],
+  ["Temps and times",["Most things go at <b>375 to 400°F</b>. Coconut or sugary coatings go lower (325°F) so they don't scorch.","Shake or flip halfway.","Models vary a lot. Start checking a few minutes early the first time and go by internal temp."]],
+  ["Two-stage trick",["Wings and thick fries: start low (300°F) to cook through, then finish at 400 to 450°F to crisp.","Steaks: air fry to 10°F under your target, then sear 45 seconds a side on a hot Blackstone for a real crust."]],
+  ["Reheating",["It's the best reheater you own: pizza, fries, wings and fried chicken at 350°F for 3 to 5 minutes come back crisp.","Cooked meatballs straight from frozen: 350°F for about 8 minutes."]],
+ ]},
  {cooker:"SC",title:"Slow Cooker / Crockpot",open:0,groups:[
   ["Low vs. High",["Roughly, <b>1 hour on HIGH = 2 hours on LOW</b>. LOW gives tougher cuts (chuck, pork shoulder) more tender, better texture. HIGH is for when you started late.","Every recipe here lists LOW time first, and the ⏰ planner shows both start times.","<b>Warm</b> is for holding only (up to about 2 hours). It's not for cooking."]],
   ["Fill it right",["Fill it half to two-thirds full. Too little and it scorches; too full and it won't come up to temperature safely.","Put dense vegetables (potatoes, carrots) on the bottom and meat on top.","Don't add much liquid. Nothing evaporates, and meat releases its own juice."]],
@@ -2369,7 +2512,7 @@ function fmtClock(t,ref){const s=t.toLocaleTimeString([],{hour:"numeric",minute:
   return dd===0?s:dd===1?`Day before ${s}`:`${WD[t.getDay()]} ${s}`}
 function buildSteps(ids,ready,day){
   const at=dayDate(day);const [hh,mm]=(ready||"17:00").split(":").map(Number);at.setHours(hh,mm,0,0);
-  const M=6e4,steps=[],pre={};
+  const M=6e4,steps=[],pre={},afUse=[];
   const preheat=(key,t,txt)=>{if(!pre[key]||t<pre[key].t)pre[key]={t,txt}};
   ids.map(id=>byId[id]).filter(Boolean).forEach(r=>{
     const start=new Date(at-r.mins*M);
@@ -2391,8 +2534,10 @@ function buildSteps(ids,ready,day){
         steps.push({t:f,txt:`Finish ${r.name} on the ${COOKERS[r.finish]}`,sub:r.finish==="PBC"?"Pat dry and let the bark re-crisp 20 to 30 minutes.":"Pat dry, then a quick, very hot finish (see the recipe)."})}
     }else{
       const lead=r.cooker==="PBC"?25:15;
-      preheat(r.cooker,new Date(start-lead*M),r.cooker==="PBC"?"Light the Pit Barrel":r.cooker==="GR"?"Light or preheat the grill":"Preheat the Blackstone");
-      steps.push({t:start,txt:`Start: ${r.name}`,sub:`About ${fmtTime(r.mins)} total`});
+      preheat(r.cooker,new Date(start-(r.cooker==="AF"?5:lead)*M),r.cooker==="PBC"?"Light the Pit Barrel":r.cooker==="GR"?"Light or preheat the grill":r.cooker==="AF"?"Preheat the air fryer":"Preheat the Blackstone");
+      const busy=r.cooker==="AF"&&afUse.find(u=>start<u.end&&u.start<at);
+      steps.push({t:start,txt:`Start: ${r.name}`,sub:`About ${fmtTime(r.mins)} total`+(busy?`. Runs alongside ${busy.name}: use your second air fryer, or cook the longer one first and hold it in a 200°F oven.`:"")});
+      if(r.cooker==="AF")afUse.push({name:r.name,start,end:at});
     }
   });
   Object.values(pre).forEach(x=>steps.push(x));
@@ -2487,7 +2632,7 @@ async function loadHearts(){
 
 /* ---------- stats + boot ---------- */
 const c=k=>R.filter(r=>r.cooker===k).length;
-$("#stats").innerHTML=`<span><b>${R.length}</b>recipes</span><span><b>${c("BS")}</b>Blackstone</span><span><b>${c("PBC")}</b>Pit Barrel</span><span><b>${c("GR")}</b>Grill</span><span><b>${c("SV")}</b>Sous Vide</span><span><b>${c("SC")}</b>Slow Cooker</span><span><b>${REGIONS.length}</b>regions</span><span><b>${MENUS.length}</b>meal nights</span>`;
+$("#stats").innerHTML=`<span><b>${R.length}</b>recipes</span><span><b>${c("BS")}</b>Blackstone</span><span><b>${c("PBC")}</b>Pit Barrel</span><span><b>${c("GR")}</b>Grill</span><span><b>${c("SV")}</b>Sous Vide</span><span><b>${c("SC")}</b>Slow Cooker</span><span><b>${c("AF")}</b>Air Fryer</span><span><b>${REGIONS.length}</b>regions</span><span><b>${MENUS.length}</b>meal nights</span>`;
 render();
 loadHearts();
 if(location.hash&&byId[location.hash.slice(1)])openRecipe(location.hash.slice(1));

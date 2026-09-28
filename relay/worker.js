@@ -18,7 +18,7 @@ const REPO = "rsissons/grill-recipes";
 const ALLOWED_ORIGINS = ["https://rsissons.github.io", "http://localhost:8788", "http://127.0.0.1:8788"];
 const UA = "Mozilla/5.0";
 
-const COOKERS = ["Auto-detect", "Blackstone", "Pit Barrel", "Grill", "Sous Vide", "Slow Cooker"];
+const COOKERS = ["Auto-detect", "Blackstone", "Pit Barrel", "Grill", "Sous Vide", "Slow Cooker", "Air Fryer"];
 const TYPES = ["Auto-detect", "Beef main", "Chicken main", "Pork main", "Seafood main", "Other main (lamb, duck, tofu)", "Side dish", "Appetizer"];
 
 function cors(origin) {
@@ -58,6 +58,8 @@ async function looksLikeRecipe(url) {
     const blocks = [...html.matchAll(/<script[^>]*application\/ld\+json[^>]*>([\s\S]*?)<\/script>/gi)].map(m => m[1]);
     if (blocks.some(b => /"@type"\s*:\s*(\[[^\]]*"Recipe"[^\]]*\]|"Recipe")/.test(b))) return "recipe";
     if (/itemtype=["']https?:\/\/schema\.org\/Recipe["']/i.test(html)) return "recipe";
+    // No recipe card, but plain Ingredients + Directions lists: let the importer try to read them
+    if (/>\s*Ingredients:?\s*</i.test(html) && />\s*(Directions|Instructions|Method|Steps):?\s*</i.test(html)) return "unknown";
     return "not-recipe";
   } catch {
     return "unknown";
@@ -80,17 +82,17 @@ async function handleAdd(req, env, origin) {
   form.append("response", String(body.token || ""));
   form.append("remoteip", ip);
   const ts = await (await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", { method: "POST", body: form })).json();
-  if (!ts.success) return json({ ok: false, reason: "The human check didn't pass. Reload the page and try again." }, 403, origin);
+  if (!ts.success) return json({ ok: false, reason: "The \"Verify you are human\" check didn't pass or expired. Reload the page and try again." }, 403, origin);
 
   // Rate limit per visitor (limit set in wrangler.toml)
   if (env.LIMITER) {
     const { success } = await env.LIMITER.limit({ key: ip });
-    if (!success) return json({ ok: false, reason: "That's a lot of recipes at once. Wait a minute and try again." }, 429, origin);
+    if (!success) return json({ ok: false, reason: "That's more than 3 recipes in a minute (a spam guard). Wait a minute and send this one again." }, 429, origin);
   }
 
   // Not a recipe? Don't add it.
   if ((await looksLikeRecipe(url)) === "not-recipe") {
-    return json({ ok: false, reason: "That page isn't a recipe (it has no recipe card), so it wasn't added." }, 422, origin);
+    return json({ ok: false, reason: "That page doesn't look like a recipe: it has no recipe card and no Ingredients and Directions lists. Check the link goes to the recipe itself, not a list or home page." }, 422, origin);
   }
 
   const cooker = COOKERS.includes(body.cooker) ? body.cooker : "Auto-detect";
@@ -103,7 +105,7 @@ async function handleAdd(req, env, origin) {
     method: "POST",
     body: JSON.stringify({ title: "Add recipe (from the site)", body: issueBody, labels: ["add-recipe"] }),
   });
-  if (!r.ok) return json({ ok: false, reason: "Couldn't hand it off right now. Try again in a minute." }, 502, origin);
+  if (!r.ok) return json({ ok: false, reason: "GitHub, which files the recipe, didn't answer. Nothing was added; try again in a minute." }, 502, origin);
   const issue = await r.json();
   return json({ ok: true, issue: issue.number }, 200, origin);
 }

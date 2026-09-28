@@ -23,6 +23,7 @@ body:
         - Grill
         - Sous Vide
         - Slow Cooker
+        - Air Fryer
       default: 0
   - type: dropdown
     id: type

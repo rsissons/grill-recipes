@@ -170,8 +170,52 @@ def fetch_recipe(url):
             if rec:
                 return r.text, rec, "archive"
     if page_seen is not None:
-        fail("that page doesn't include standard recipe data (most big recipe sites do; some blogs and store sites don't).")
+        rec = extract_text(page_seen)
+        if rec:
+            return page_seen, rec, "text"
+        fail("that page has no recipe card and no Ingredients and Directions lists I could read, so it doesn't look like a recipe.")
     fail(f"the site blocked the automated reader (answered {', '.join(codes)}) and the Internet Archive has no readable copy.")
+
+
+JUNK_LINE = re.compile(r"^(view cart|checkout|add to cart|print|pin|share|jump to|save|\(\d+\)|\d+ reviews?)\b", re.I)
+END_HEAD = re.compile(r"^(find similar articles|recipe video|notes?|nutrition|share|related|you may also like|recommended|more recipes|comments?|leave a (comment|review))\b", re.I)
+
+
+def extract_text(page):
+    """No recipe card? Read plain "Ingredients" and "Directions" lists (older Blackstone posts, many blogs)."""
+    body = re.sub(r"<(script|style|noscript|svg)[^>]*>.*?</\1>", " ", page, flags=re.S | re.I)
+    body = re.sub(r"<br\s*/?>|</(p|li|h\d|div|tr)>", "\n", body, flags=re.I)
+    lines = [re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", x))).strip() for x in body.split("\n")]
+    lines = [x for x in lines if x]
+    ing_at = next((i for i, x in enumerate(lines) if re.fullmatch(r"ingredients:?", x, re.I)), None)
+    if ing_at is None:
+        return None
+    dir_at = next((i for i in range(ing_at + 1, len(lines)) if re.fullmatch(r"(directions|instructions|method|steps|preparation):?", lines[i], re.I)), None)
+    if dir_at is None:
+        return None
+    ings = [x for x in lines[ing_at + 1:dir_at] if not JUNK_LINE.match(x) and len(x) < 200 and not x.endswith(":")]
+    steps = []
+    for x in lines[dir_at + 1:dir_at + 60]:
+        if END_HEAD.match(x) or x.lower().startswith("©"):
+            break
+        if JUNK_LINE.match(x) or len(x) < 12:
+            continue
+        steps.append(x)
+    if len(ings) < 2 or not steps:
+        return None
+    m = re.search(r'<meta[^>]+property=["\']og:title["\'][^>]+content=["\']([^"\']+)', page, re.I) or re.search(r"<h1[^>]*>(.*?)</h1>", page, re.S | re.I)
+    name = clean_text(m.group(1)) if m else ""
+    name = re.split(r"\s+[|–-]\s+", name)[0]
+    head = " ".join(lines[max(0, ing_at - 6):ing_at])
+    rec = {"name": name, "recipeIngredient": ings, "recipeInstructions": steps}
+    sv = re.search(r"\bserves\s+(\d+)", head, re.I)
+    if sv:
+        rec["recipeYield"] = sv.group(1)
+    tm = re.search(r"(?:time|cook time)\s*:?\s*((?:\d+\s*hours?\s*)?(?:\d+\s*min(?:ute)?s?)?)", head, re.I)
+    if tm and tm.group(1).strip():
+        h = re.search(r"(\d+)\s*hour", tm.group(1)); mi = re.search(r"(\d+)\s*min", tm.group(1))
+        rec["totalTime"] = f"PT{int(h.group(1)) if h else 0}H{int(mi.group(1)) if mi else 0}M"
+    return rec
 
 
 def extract(page):
@@ -239,6 +283,7 @@ def pick_cooker(title, text):
         "GR": score(r"\b(grill|grilled|grilling|grates|kebabs?|kabobs?|skewers?|charcoal)\b", text, title),
         "SV": score(r"\b(sous[- ]vide|immersion circulator|water bath|anova|joule)\b", text, title) * 3,
         "SC": score(r"\b(slow[- ]cooker|crock[- ]?pot|crockpot)\b", text, title) * 3,
+        "AF": score(r"\b(air[- ]?fr(y|yer|yers|ied|ying))\b", text, title) * 3,
     }
     best = max(s, key=s.get)
     return (best, False) if s[best] > 0 else ("GR", True)
@@ -355,7 +400,7 @@ STOP = {"the", "best", "easy", "recipe", "homemade", "perfect", "simple", "ultim
 
 def norm_name(n):
     words = re.findall(r"[a-z0-9]+", re.sub(r"\([^)]*\)", " ", n.lower()))
-    return " ".join(w for w in words if w not in STOP)
+    return " ".join((w[:-1] if len(w) > 3 and w.endswith("s") and not w.endswith("ss") else w) for w in words if w not in STOP)
 
 
 def slug(n):
@@ -389,10 +434,13 @@ def main():
     title = name.lower()
     text = " ".join([title, desc.lower(), kw.lower(), cat, cuisine.lower(), " ".join(steps).lower(), " ".join(ings).lower()])
 
-    cooker_pick = {"blackstone": "BS", "pit barrel": "PBC", "grill": "GR", "sous vide": "SV", "slow cooker": "SC"}.get(form.get("cooker", "").lower())
+    cooker_pick = {"blackstone": "BS", "pit barrel": "PBC", "grill": "GR", "sous vide": "SV", "slow cooker": "SC", "air fryer": "AF"}.get(form.get("cooker", "").lower())
     guessed_cooker = False
     if not cooker_pick:
         cooker_pick, guessed_cooker = pick_cooker(title, text)
+        # Blackstone's own sites are griddle recipes unless the page is clearly for another cooker
+        if cooker_pick in ("GR", "PBC") and re.search(r"blackstoneproducts\.com|griddlesizzle\.com", url):
+            cooker_pick, guessed_cooker = "BS", False
     finish_cooker = None
     if cooker_pick in ("SV", "SC"):   # combos: which cooker does the final sear/crisp/smoke?
         fin = {k: score(pat, text, title) for k, pat in (
@@ -460,7 +508,7 @@ def main():
         items.append(recipe)
     save_added(items)
 
-    cookers = {"BS": "Blackstone", "PBC": "Pit Barrel", "GR": "Grill", "SV": "Sous Vide", "SC": "Slow Cooker"}
+    cookers = {"BS": "Blackstone", "PBC": "Pit Barrel", "GR": "Grill", "SV": "Sous Vide", "SC": "Slow Cooker", "AF": "Air Fryer"}
     types = {"Beef": "Beef main", "Chicken": "Chicken main", "Pork": "Pork main", "Seafood": "Seafood main",
              "Other": "Other main", "Side": "Side dish", "Appetizer": "Appetizer"}
     note = ("\n\nI couldn't tell which cooker this is for, so it's filed under **Grill**. "
