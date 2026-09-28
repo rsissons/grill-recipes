@@ -1742,7 +1742,7 @@ addDlg.addEventListener("click",e=>{if(e.target===addDlg)addDlg.close()});
 addDlg.addEventListener("close",()=>{clearTimeout(pollTimer)});
 $("#addForm").onsubmit=async e=>{
   e.preventDefault();
-  if(TURNSTILE_KEY&&!tsToken){addStatus("Hang on, the human check is still loading. Try again in a second.");return}
+  if(TURNSTILE_KEY&&!tsToken){addStatus("Tick the <b>Verify you are human</b> box first (it only shows up sometimes), then tap Add it.");return}
   $("#addGo").disabled=true;addStatus('<span class="spin"></span>Checking the link…');
   let res;
   try{
