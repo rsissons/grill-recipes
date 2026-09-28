@@ -180,6 +180,7 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
 .onlist{font-size:.78rem;color:var(--ember);font-weight:600}
 .night-actions{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
 .ntime{font-size:.85rem;font-weight:600;color:var(--ink);margin:-4px 0 6px}
+.smk{font-size:.88rem;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin:0 0 12px}
 .nh{margin:10px 0 4px;font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-2)}
 .opt{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;padding:4px 0;cursor:pointer}
 .opt input{accent-color:var(--ember);width:18px;height:18px;flex:none;margin:0}
@@ -1906,7 +1907,7 @@ function openRecipe(id){
   $("#dlgTags").innerHTML=`<span class="tag ${r.cooker.toLowerCase()}">${cookerLabel(r)}</span><span class="tag">${TYPE_LABEL[r.type]}</span><span class="tag">${esc(r.region)}</span><span class="tag">⏱ ${fmtTime(r.mins)}</span>`+
     `${ratingLineHTML(r)}${rateMeHTML(r)}`;
   const isFav=favs.has(r.id);
-  $("#dlgBody").innerHTML=`${macHTML(r)}<h3${r.mac?"":' style="margin-top:0"'}>Ingredients</h3><ul>${r.ing.map(i=>`<li>${esc(i)}</li>`).join("")}</ul>
+  $("#dlgBody").innerHTML=`${macHTML(r)}${smokerHTML(r)}<h3${r.mac?"":' style="margin-top:0"'}>Ingredients</h3><ul>${r.ing.map(i=>`<li>${esc(i)}</li>`).join("")}</ul>
     <h3>Steps</h3><ol>${r.steps.map(s=>`<li>${esc(s)}</li>`).join("")}</ol>
     ${r.tip?`<div class="tip"><b>Tip:</b> ${esc(r.tip)}</div>`:""}
     <div class="pairs-wrap"><h3>Pairs with</h3><div class="pairs">${pairsFor(r).map(p=>`<button type="button" data-id="${p.id}">${esc(p.name)}<small>${COOKERS[p.cooker]} · ${TYPE_LABEL[p.type]} · ${esc(p.region)}</small></button>`).join("")}</div></div>
@@ -1921,6 +1922,27 @@ function openRecipe(id){
   $("#favBtn").onclick=()=>{const on=!favs.has(r.id);on?favs.add(r.id):favs.delete(r.id);store.set("ftb-favs",[...favs]);sendHeart(r.id,on);openRecipe(r.id);render()};
   $("#shareBtn").onclick=async e=>{const url=location.href.split("#")[0]+"#"+r.id;try{await navigator.clipboard.writeText(url);e.target.textContent="Copied!"}catch(_){prompt("Copy this link:",url)}};
   history.replaceState(null,"","#"+r.id);
+  $("#dlgBody").scrollTop=0;
+  if(!dlg.open)dlg.showModal();
+}
+// One page for the whole night: the timing order, then every recipe in the order you start it.
+function openCookAll(title,ids,ready,day){
+  if(!ids.length)return;
+  const {at}=buildSteps(ids,ready,day),M=6e4;
+  const startOf=r=>new Date(at-(r.mins+(r.cooker==="SC"&&r.finish?(r.finish==="PBC"?30:12):0))*M);
+  const rs=ids.map(id=>byId[id]).filter(Boolean).sort((a,b)=>startOf(a)-startOf(b));
+  $("#dlgTitle").textContent=title;
+  $("#dlgTags").innerHTML=`<span class="tag">👨‍🍳 Cook it all</span><span class="tag">${rs.length} dishes</span><span class="tag">Ready at ${fmtClock(at,at)}</span>`;
+  $("#dlgBody").innerHTML=`<p style="margin-top:0;font-size:.9rem;color:var(--ink-2)">Everything starts on its own clock so it all lands at once. Follow the timeline, then jump to each recipe.</p>
+    ${timelineHTML(ids,ready,day)}
+    <div class="nh">Recipes, in start order</div><div class="chips" style="margin-bottom:6px">${rs.map(r=>`<button class="chip" type="button" data-jump="ca-${r.id}">${esc(r.name)}</button>`).join("")}</div>
+    ${rs.map((r,n)=>`<section id="ca-${r.id}" style="border-top:1px solid var(--line);margin-top:16px;padding-top:12px">
+      <h3 style="margin-top:0">${n+1}. ${esc(r.name)} <small style="font-weight:400;color:var(--ink-2)">· ${COOKERS[r.cooker]}${r.finish?" → "+COOKERS[r.finish]:""} · ${fmtTime(r.mins)} · start ${fmtClock(startOf(r),at)}</small></h3>
+      ${smokerHTML(r)}<h4 style="margin:8px 0 4px">Ingredients</h4><ul>${r.ing.map(i=>`<li>${esc(i)}</li>`).join("")}</ul>
+      <h4 style="margin:8px 0 4px">Steps</h4><ol>${r.steps.map(x=>`<li>${esc(x)}</li>`).join("")}</ol>
+      ${r.tip?`<div class="tip"><b>Tip:</b> ${esc(r.tip)}</div>`:""}</section>`).join("")}`;
+  $("#dlgBody").querySelectorAll("[data-jump]").forEach(b=>b.onclick=()=>$("#"+b.dataset.jump).scrollIntoView({behavior:"smooth",block:"start"}));
+  const ics=$("#dlgBody").querySelector("[data-ics]");if(ics)ics.onclick=()=>downloadIcs(ics);
   $("#dlgBody").scrollTop=0;
   if(!dlg.open)dlg.showModal();
 }
@@ -1948,7 +1970,7 @@ function nightCard(m,i,pfx,chosen){
     <div data-with>${withHTML(extras)}</div>
     <p class="plate" data-plate>${plateText([sel,...extras])}</p>
     <div class="night-actions"><select aria-label="Which day">${dayOpts("Tonight")}</select><button class="btn primary" type="button" data-add>＋ Add to list</button>${pfx==="w"?'<button class="btn" type="button" data-respin>Spin again</button>':""}</div>
-    <div class="night-actions"><label class="rb">Ready by <input type="time" value="17:00" data-ready></label><button class="btn" type="button" data-time>⏰ Plan my timing</button></div>
+    <div class="night-actions"><label class="rb">Ready by <input type="time" value="17:00" data-ready></label><button class="btn" type="button" data-time>⏰ Plan my timing</button><button class="btn${pfx==="w"?" primary":""}" type="button" data-cookall>👨‍🍳 Cook it all</button></div>
     <div data-timeline></div></div>`;
 }
 $("#menus").innerHTML=MENUS.map((m,i)=>nightCard(m,i,"n")).join("");
@@ -1988,6 +2010,10 @@ function nightClick(e){
     const ids=[main&&main.value,...[...card.querySelectorAll("input[data-x]:checked")].map(x=>x.dataset.x)].filter(Boolean);
     card.querySelector("[data-timeline]").innerHTML=timelineHTML(ids,card.querySelector("[data-ready]").value,card.querySelector("select").value);return}
   const ics=e.target.closest("[data-ics]");if(ics)return downloadIcs(ics);
+  const ca=e.target.closest("[data-cookall]");
+  if(ca){const card=ca.closest("[data-card]");const main=card.querySelector('input[type=radio]:checked');
+    const ids=[main&&main.value,...[...card.querySelectorAll("input[data-x]:checked")].map(x=>x.dataset.x)].filter(Boolean);
+    return openCookAll(MENUS[+card.dataset.mi].name,ids,card.querySelector("[data-ready]").value,card.querySelector("select").value)}
   const add=e.target.closest("[data-add]");if(!add)return;
   const card=add.closest("[data-card]");
   const main=card.querySelector('input[type=radio]:checked');
@@ -2130,6 +2156,7 @@ const TIPS=[
  ]},
  {cooker:"PBC",title:"Pit Barrel Cooker",open:0,groups:[
   ["The standard fire",["Fill the charcoal basket level with briquettes (PBC is built around Kingsford Original).","Light about 40 briquettes in a chimney and wait 15 to 20 minutes until they're ashed over.","Dump them on the basket, set the rebars, hang or place the food, and put the lid on. It settles around 275 to 310°F with no babysitting.","Set the bottom intake for your elevation using the chart on <a href=\"https://pitbarrelcooker.com/pages/instructions\" target=\"_blank\" rel=\"noopener\">PBC's instructions page</a>, then leave it alone."]],
+  ["Using a Traeger or another smoker",["Every Pit Barrel recipe here has a <b>🌡️ set temp</b> line for a pellet grill or any smoker with a dial.","The barrel runs about 270 to 310°F on its own, so low-and-slow cooks are set at 275°F, and chicken at 325 to 350°F so the skin crisps.","You can't hang meat in most smokers. Lay it on the grate, and go by internal temp, not the clock."]],
   ["Hang vs. grate",["<b>Hang:</b> brisket, ribs, whole birds, tri-tip, pork butt. The drippings hit the coals and smoke back onto the meat.","<b>Grate:</b> wings, poppers, pans (beans, mac, dips) and the final sear.","Hook through the thickest part and keep pieces from touching each other or the barrel wall."]],
   ["Controlling it",["Don't peek. Every time the lid comes off, the fire flares and the cook stretches out.","<b>Crack the lid:</b> set a rebar under one edge to run hotter for crisp chicken skin or a faster finish.","Add a fist-size wood chunk or two on top of the coals for more smoke (hickory or oak for beef, apple or cherry for poultry and pork).","In wind or cold, expect longer cooks. Go by the thermometer, not the clock."]],
   ["Drippings trick",["Set a pan of beans, mac or collards on the grate under hanging meat. It catches the drippings and it's the best side you'll make."]],
@@ -2185,6 +2212,14 @@ $("#sourcesBox").innerHTML=BOOKS.map(b=>`<div class="src"><h3><a href="${b[1]}" 
 
 /* ---------- "Ready by" timing planner ---------- */
 // Extra minutes a sous vide item can sit in the bath past its listed time without harm
+// Pit Barrel has no dial (it runs about 270 to 310°F). The temp to set on a Traeger or any other smoker for the same cook.
+const SMOKER={"hanging-brisket":[275],"brisket-burnt-ends":[275],"chuck-burnt-ends":[275],"barbacoa":[275],"pbc-pulled-pork":[275],"pbc-ribs":[275],"pork-belly-burnt-ends":[275],"meatloaf":[275],"sv-brisket":[275,"For the smoke-first step, before the bath."],"drip-beans":[275],"collards":[275],"prime-rib":[250,"Pull 10°F under your target, then 500°F (or the grill) for 10 minutes to crust it."],"tomahawk":[250,"Then sear 1 to 2 minutes a side over high heat."],"tri-tip":[250,"Then sear 1 to 2 minutes a side over high heat."],"picanha":[275,"Then sear the fat cap hot for a minute."],"hanging-chicken":[350],"smoked-wings":[350],"jerk-chicken":[350],"tandoori":[350],"char-siu-chicken":[350],"huli-huli":[350],"gai-yang":[350],"alabama-white":[325],"chicken-tinga":[325],"lollipops":[325],"smoked-turkey":[325],"popper-mac":[300],"hasselback":[350],"smoked-sweet-potatoes":[350],"yellow-rice":[325],"veg-kebabs":[375],"corn-bean-salsa":[350],"jalapeno-poppers":[325],"smoked-cream-cheese":[225,"Low on purpose: it's there for smoke, not heat."],"buffalo-dip":[325],"pickle-shots":[325],"stuffed-mushrooms":[350],"greek-meatballs":[350],"taco-queso":[300],"bacon-dates":[350],"moink":[300],"smokies":[300]};
+function smokerHTML(r){
+  if(r.cooker!=="PBC"&&r.finish!=="PBC")return "";
+  const [t,n]=SMOKER[r.id]||[285];
+  const chk=t>=325?"Times run a little shorter at this heat, so go by internal temp.":"Times run about the same as the Pit Barrel. Go by internal temp.";
+  return `<div class="smk">🌡️ <b>Traeger or other smoker:</b> set ${t}°F. ${esc(n||"")}${n?" ":""}${chk}</div>`;
+}
 const HOLD={"sv-steak":90,"sv-chicken-breast":150,"sv-chicken-thighs":120,"sv-pork-chops":180,"sv-corn":60,"sv-carrots":60,"sv-mashed":60,"sv-ribs":240,"sv-brisket":720,"sv-short-ribs":720};
 const WD=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 function dayDate(day){const d=new Date();d.setSeconds(0,0);const i=WD.indexOf(day);if(i>=0){let k=(i-d.getDay()+7)%7;d.setDate(d.getDate()+k)}return d}
