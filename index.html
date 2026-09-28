@@ -1943,6 +1943,11 @@ const svTemps=r=>{const st=r.steps.find(x=>/circulator|bath/i.test(x)&&/\d{3}\s*
 const svClash=(x,y)=>{const a=svTemps(x),b=svTemps(y);return !a.size||!b.size||![...a].some(t=>b.has(t))};
 const overKit=(x,chosen)=>(x.cooker==="SV"&&chosen.some(c=>c&&c.cooker==="SV"&&svClash(x,c)))||(x.cooker==="SC"&&chosen.some(c=>c&&c.cooker==="SC"))||(x.cooker==="AF"&&chosen.filter(c=>c&&c.cooker==="AF").length>=2);
 const BREAKFASTY=/egg bites|breakfast|pancake|french toast|hash browns?/i;
+// shared by Build me a cook and the recipe page's suggestions
+const KIND=/burnt ends|bang bang|potato|fries|tots|corn|rice|beans|mac|slaw|bread|salad|mushroom|asparagus|zucchini|broccoli|brussels|egg roll|wings|dip|poppers|nachos|shrimp/i;
+const kind=r=>(r.name.match(KIND)||[""])[0].toLowerCase().replace(/fries|tots/,"potato");
+const PLATED=/roast|stew|soup|meatloaf|turkey breast|breast|\bchops?\b|tenderloin|salmon|cod\b|mahi|halibut|scampi|stroganoff|fettuccine|pasta|piccata|\bparm|curry|katsu|prime rib|short ribs|lamb|\bsteak\b(?! (fajita|bite|taco))|filet|ribeye|tomahawk/i;
+const isCasual=main=>{const gi=GOES.findIndex(([m])=>m.test(main.name));return !PLATED.test(main.name)&&([0,1,2,4].includes(gi)||/wing|nacho|slider|game day|dog/i.test(main.name))};
 function goesWith(main,side){const g=GOES.find(([m])=>m.test(main.name));return !g?0:g[1].test(side.name)?10:g[2].test(side.name)?7:0}
 function score(a,b){let s=0;if(a.region===b.region)s+=5;
   const [m,x]=MAIN_T.has(a.type)?[a,b]:[b,a];
@@ -1951,13 +1956,15 @@ function score(a,b){let s=0;if(a.region===b.region)s+=5;
   if(FAM[a.region]&&FAM[a.region]===FAM[b.region])s+=3;
   if(a.cooker!==b.cooker)s+=1; return s;}
 function pairsFor(r){
-  const want=MAIN_T.has(r.type)?["Side","Appetizer"]:["Beef","Chicken"];
-  const out=[];
-  // two picks per type, and not two of the same thing (no potatoes + potatoes)
-  const KEYW=/potato|fries|corn|rice|beans|mac|slaw|bread|salad|mushroom|asparagus|zucchini|broccoli|brussels|egg roll|wings|dip|poppers/i;
-  want.forEach(t=>{const got=[];R.filter(x=>x.type===t&&x.id!==r.id).map(x=>[x,score(r,x)]).sort((a,b)=>b[1]-a[1]||a[0].name.localeCompare(b[0].name))
-    .forEach(([x])=>{if(got.length>=2)return;const k=(x.name.match(KEYW)||[""])[0].toLowerCase();if(k&&got.some(g=>(g.name.match(KEYW)||[""])[0].toLowerCase()===k))return;got.push(x)});out.push(...got)});
-  return out;
+  if(!MAIN_T.has(r.type)){   // a side or appetizer: suggest mains it goes with
+    const out=[];["Beef","Chicken"].forEach(t=>R.filter(x=>x.type===t&&fits(x,r)).map(x=>[x,score(x,r)]).sort((a,b)=>b[1]-a[1]).slice(0,2).forEach(([x])=>out.push(x)));return out}
+  const nights=MENUS.filter(m=>!m.gone&&m.ids.includes(r.id));
+  const fromN=[...new Set(nights.flatMap(m=>[...withFor(m,r.id),...m.ids]))].map(id=>byId[id]).filter(x=>x&&x.id!==r.id&&!MAIN_T.has(x.type));
+  const ok=x=>fits(r,x)&&!BREAKFASTY.test(x.name);
+  const ranked=t=>[...fromN.filter(x=>x.type===t),...R.filter(x=>x.type===t).map(x=>[x,score(r,x)]).sort((a,b)=>b[1]-a[1]).map(a=>a[0])].filter(ok);
+  const take=(t,n,chosen)=>{const got=[];for(const x of ranked(t)){if(got.length>=n)break;if(got.includes(x)||[...chosen,...got].some(c=>kind(c)&&kind(c)===kind(x))||overKit(x,[...chosen,...got]))continue;got.push(x)}return got};
+  const sides=take("Side",3,[r]);
+  return [...sides,...(isCasual(r)?take("Appetizer",2,[r,...sides]):[])];
 }
 
 /* ---------- plan + grocery list ---------- */
@@ -2324,6 +2331,7 @@ function openRecipe(id){
     ${r.tip?`<div class="tip"><b>Tip:</b> ${esc(r.tip)}</div>`:""}
     <details class="pairs-wrap fold"><summary><h3>Make it a meal</h3><span class="chev">▾</span></summary><p class="cahint" style="margin:4px 0 8px">Tick what goes with it. Add to list, Plan my timing and Cook it all include your picks.</p><div class="pairpick">${pairsFor(r).map(p=>optRow(p.id,`<input type="checkbox" data-pair="${p.id}">`)).join("")}</div></details>
     <p style="margin-top:16px;font-size:.88rem">Source: <a href="${esc(r.src[1])}" target="_blank" rel="noopener">${esc(r.src[0])}</a>${r.added&&RELAY?` · <button type="button" class="lnk" id="fixBtn">✏️ Fix sorting</button>`:""}${RELAY?` · <button type="button" class="lnk" id="ownerBtn">🔒 Edit</button>`:""}</p>
+    ${MAIN_T.has(r.type)?`<div class="dlg-actions"><button class="btn" type="button" id="sugBtn">🍽️ Suggest sides</button></div>`:""}
     <div class="dlg-actions"><select id="dayPick" aria-label="Which day">${dayOpts(inPlan(r.id)?inPlan(r.id).day:"Tonight")}</select><button class="btn primary" id="listBtn" type="button">${inPlan(r.id)?'✓ On list (remove)':'＋ Add to list'}</button><button class="btn ${isFav?'primary':''}" id="favBtn" type="button">${isFav?'♥ Saved':'♡ Save to favorites'}</button><button class="btn" type="button" onclick="window.print()">Print</button><button class="btn" id="shareBtn" type="button">Copy link</button></div>
     <div class="dlg-actions"><label class="rb">Ready by <input type="time" value="17:00" id="dlgReady"></label><button class="btn" type="button" id="dlgTime">⏰ Plan my timing</button><button class="btn" type="button" id="dlgCook">👨‍🍳 Cook it all</button></div><div id="dlgTimeline"></div>`;
   // the picked sides/apps ride along with this recipe
@@ -2336,6 +2344,11 @@ function openRecipe(id){
   $("#dlgBody").querySelectorAll("[data-also]").forEach(b=>b.onclick=()=>openRecipe(b.dataset.also));
   const fx=$("#dlgBody").querySelector("#fixBtn");if(fx)fx.onclick=()=>{dlg.close();openAdd(r)};
   const ob=$("#dlgBody").querySelector("#ownerBtn");if(ob)ob.onclick=()=>ownerEdit(r);
+  const sg=$("#dlgBody").querySelector("#sugBtn");
+  if(sg)sg.onclick=()=>{const w=$("#dlgBody").querySelector(".pairs-wrap");if(!w)return;w.open=true;
+    const boxes=[...w.querySelectorAll("[data-pair]")],side=boxes.find(x=>byId[x.dataset.pair].type==="Side"),app=boxes.find(x=>byId[x.dataset.pair].type==="Appetizer");
+    boxes.forEach(x=>x.checked=false);[side,app].forEach(x=>{if(x){x.checked=true;x.dispatchEvent(new Event("change"))}});
+    w.scrollIntoView({behavior:"smooth",block:"start"})};
   $("#listBtn").onclick=()=>{if(inPlan(r.id))removeFromPlan(r.id);else [r.id,...picks()].forEach(id=>addToPlan(id,$("#dayPick").value,+$("#dlgServes").value));openRecipe(r.id);render()};
   $("#dlgServes").onchange=e=>{const n=+e.target.value;setHousehold(n);const p=inPlan(r.id);if(p){p.serves=n;savePlan()}$("#dlgIng").innerHTML=ingHTML(r,n)};
   $("#dayPick").onchange=()=>{if(inPlan(r.id)){addToPlan(r.id,$("#dayPick").value);render()}};
@@ -2568,8 +2581,6 @@ $("#build").onclick=()=>{
   // pick the cooker first (evenly across the ones you picked), then the dish, so 12 air fryer mains aren't drowned out by 100 Blackstone ones
   const ck=rnd([...new Set(pool.map(r=>r.cooker))]),main=rnd(pool.filter(r=>r.cooker===ck));
   // sides come from the main's hand-built Meal Night first; the scored pick is only the fallback, and never two of the same thing (potato + potato skins)
-  const KIND=/burnt ends|bang bang|potato|fries|tots|corn|rice|beans|mac|slaw|bread|salad|mushroom|asparagus|zucchini|broccoli|brussels|egg roll|wings|dip|poppers|nachos|shrimp/i;
-  const kind=r=>(r.name.match(KIND)||[""])[0].toLowerCase().replace(/fries|tots/,"potato");
   const clash=(x,chosen)=>chosen.some(c=>c&&kind(c)&&kind(c)===kind(x))||overKit(x,chosen);
   const usable=x=>x&&okCooker(x)&&timeOK(x,true)&&!BREAKFASTY.test(x.name);
   const night=rnd(MENUS.filter(m=>!m.gone&&m.ids.includes(main.id)))||null;
@@ -2579,9 +2590,8 @@ $("#build").onclick=()=>{
     return c.length?rnd(c.filter(x=>x[1]>=c[0][1]-3).slice(0,6))[0]:null};   // any of the best few, so it isn't potato skins every time
   // appetizers belong with casual food (tacos, takeout, burgers, BBQ); a pot roast or salmon dinner just gets its side,
   // unless its hand-built Meal Night deliberately includes an appetizer
-  const PLATED=/roast|stew|soup|meatloaf|turkey breast|breast|\bchops?\b|tenderloin|salmon|cod\b|mahi|halibut|scampi|stroganoff|fettuccine|pasta|piccata|\bparm|curry|katsu|prime rib|short ribs|lamb|\bsteak\b(?! (fajita|bite|taco))|filet|ribeye|tomahawk/i;
-  const gi=GOES.findIndex(([m])=>m.test(main.name)),casual=!PLATED.test(main.name)&&([0,1,2,4].includes(gi)||/wing|nacho|slider|game day|dog/i.test(main.name));
   const side=pick("Side",[main]),nightApps=fromNight("Appetizer").filter(x=>!clash(x,[main,side]));
+  const casual=isCasual(main);
   const app=!casual?null:nightApps.length?rnd(nightApps):pick("Appetizer",[main,side]);
   const items=[main,side,app].filter(Boolean);
   const mixed=new Set(items.map(i=>i.cooker)).size>1;
