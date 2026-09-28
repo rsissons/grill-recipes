@@ -224,6 +224,7 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
 .mnnote{font-size:.85rem;color:var(--ink-2);flex:1;min-width:180px}
 .mnhead .lnk{background:none;border:0;color:var(--ember);font-weight:600;text-decoration:underline;cursor:pointer}
 .alsoon{margin:0 0 12px;font-size:.88rem;color:var(--ink-2)}
+.cahint{margin:6px 0 0;font-size:.82rem;color:var(--ink-2)}
 .nh{margin:10px 0 4px;font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-2)}
 .opt{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;padding:4px 0;cursor:pointer}
 .opt input{accent-color:var(--ember);width:18px;height:18px;flex:none;margin:0}
@@ -2291,6 +2292,7 @@ function nightCard(m,i,pfx,chosen){
     <p class="plate" data-plate>${plateText([sel,...extras])}</p>
     <div class="night-actions">${servesSelect(household||4,0,"data-serves")}<select aria-label="Which day">${dayOpts("Tonight")}</select><button class="btn primary" type="button" data-add>＋ Add to list</button>${pfx==="w"?'<button class="btn" type="button" data-respin>Spin again</button>':""}</div>
     <div class="night-actions"><label class="rb">Ready by <input type="time" value="17:00" data-ready></label><button class="btn" type="button" data-time>⏰ Plan my timing</button><button class="btn${pfx==="w"?" primary":""}" type="button" data-cookall>👨‍🍳 Cook it all</button></div>
+    <p class="cahint">👨‍🍳 <b>Cook it all:</b> every recipe on one page, timed so it all lands at once.</p>
     <div data-timeline></div></details></div>`;
 }
 $("#menus").innerHTML=MENUS.map((m,i)=>nightCard(m,i,"n")).join("");
@@ -2448,7 +2450,7 @@ $("#build").onclick=()=>{
   $("#buildOut").innerHTML=`${note?`<p class="section-intro">${esc(note)}</p>`:""}<div class="menu"><h3>Tonight's cook</h3><ol>${items.map(r=>`<li><button type="button" data-id="${r.id}">${esc(r.name)}</button> <small>${COOKERS[r.cooker]} · ${TYPE_LABEL[r.type]} · ${fmtTime(r.mins)}</small></li>`).join("")}</ol>
    <p class="plate">${plateText(items.map(r=>r.id))}</p>
    <p style="margin-top:10px">${!mixed?"Game plan: start the longest item first and work down the list so it all lands hot together.":items.some(r=>r.cooker==="PBC")?"Game plan: light the Pit Barrel first. Its items take longest. Fire the other cooker about 30 minutes before the barrel stuff comes off.":"Game plan: light the grill first and start the longest item. The Blackstone only needs 10 to 15 minutes to heat, so fire it last."}</p>
-   <div class="night-actions">${servesSelect(household||4,0,'id="bServes" data-serves')}<select id="bDay" aria-label="Which day">${dayOpts("Tonight")}</select><button class="btn primary" type="button" id="bAdd">＋ Add to list</button><button class="btn" type="button" id="bCook">👨‍🍳 Cook it all</button><button class="btn" type="button" id="again">Reroll</button></div></div>`;
+   <div class="night-actions">${servesSelect(household||4,0,'id="bServes" data-serves')}<select id="bDay" aria-label="Which day">${dayOpts("Tonight")}</select><button class="btn primary" type="button" id="bAdd">＋ Add to list</button><button class="btn" type="button" id="bCook">👨‍🍳 Cook it all</button><button class="btn" type="button" id="again">Reroll</button></div><p class="cahint">👨‍🍳 <b>Cook it all:</b> every recipe on one page, timed so it all lands at once.</p></div>`;
   $("#bAdd").onclick=e=>{items.forEach(r=>addToPlan(r.id,$("#bDay").value,+$("#bServes").value));render();e.target.textContent="✓ Added to list"};
   $("#bServes").onchange=e=>setHousehold(+e.target.value);
   $("#bCook").onclick=()=>openCookAll("Tonight's cook",items.map(r=>r.id),"17:00",$("#bDay").value,+$("#bServes").value);
