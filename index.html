@@ -2248,7 +2248,7 @@ function nightCard(m,i,pfx,chosen){
     <details class="nbody fold"${pfx==="w"?" open":""}><summary>${mains.length>1?`Pick from ${mains.length} mains, add to list, timing`:"See the menu, add to list, timing"}<span class="chev">▾</span></summary>
     <div class="nh">${mains.length>1?"Main (pick one)":"Main"}</div>
     ${mains.map(id=>row(id,`<input type="radio" name="m-${pfx}${i}" value="${id}"${id===sel?" checked":""}${mains.length===1?" hidden":""}>`)).join("")}
-    <div data-with>${withHTML(extras)}</div>
+    <div data-with>${withHTML(extras)}</div><div data-mix></div>
     <p class="plate" data-plate>${plateText([sel,...extras])}</p>
     <div class="night-actions">${servesSelect(household||4,0,"data-serves")}<select aria-label="Which day">${dayOpts("Tonight")}</select><button class="btn primary" type="button" data-add>＋ Add to list</button>${pfx==="w"?'<button class="btn" type="button" data-respin>Spin again</button>':""}</div>
     <div class="night-actions"><label class="rb">Ready by <input type="time" value="17:00" data-ready></label><button class="btn" type="button" data-time>⏰ Plan my timing</button><button class="btn${pfx==="w"?" primary":""}" type="button" data-cookall>👨‍🍳 Cook it all</button></div>
@@ -2259,7 +2259,7 @@ function setMain(c,id,already){
   const m=MENUS[+c.dataset.mi];
   if(!already){const r=c.querySelector(`input[type=radio][value="${id}"]`);if(!r||r.checked)return;r.checked=true}
   if(m.pair){c.querySelector("[data-with]").innerHTML=withHTML(withFor(m,id));c.querySelector("[data-timeline]").innerHTML="";applySides(c)}
-  c.querySelector("[data-ntime]").innerHTML=ntimeHTML(m,id);updatePlate(c);
+  c.querySelector("[data-ntime]").innerHTML=ntimeHTML(m,id);applySides(c);
 }
 const mnState={cooker:new Set(),region:new Set(),protein:new Set(),time:new Set()};
 // "Cookers" means the ones you've got: a dish fits when its cooker (and its finishing cooker) are picked
@@ -2271,7 +2271,29 @@ const timeOK=(r,side)=>!mnState.time.size||[...mnState.time].some(k=>side&&k==="
 // mains in a night that fit every filter row (any chip within a row)
 const fitMains=m=>m.ids.filter(isMain).filter(x=>mainOK(byId[x])&&(!mnState.time.size||NTIMES.some(t=>mnState.time.has(t[0])&&t[2](m,x))));
 // with a cooker filter on, untick sides that need a cooker you don't have
-function applySides(c){c.querySelectorAll("input[data-x]").forEach(x=>{x.checked=cookerOK(byId[x.dataset.x])});updatePlate(c)}
+// With a cooker filter on: hide dishes that need a cooker you didn't pick, and with 2+ cookers picked,
+// mix in a side from the one the night doesn't use yet (Blackstone night + air fryer fries)
+function applySides(c){
+  const m=MENUS[+c.dataset.mi],on=mnState.cooker.size>0,box=c.querySelector("[data-mix]");
+  if(box)box.innerHTML="";
+  c.querySelectorAll("label.opt").forEach(l=>{const inp=l.querySelector("input");if(!inp)return;
+    const id=inp.type==="radio"?inp.value:inp.dataset.x,ok=cookerOK(byId[id]);
+    l.hidden=on&&!ok;if(inp.type==="checkbox")inp.checked=ok});
+  const main=(c.querySelector("input[type=radio]:checked")||{}).value;
+  if(box&&main&&mnState.cooker.size>1){
+    const used=new Set([main,...[...c.querySelectorAll("[data-with] input[data-x]:checked")].map(x=>x.dataset.x)].flatMap(id=>[byId[id].cooker,byId[id].finish]).filter(Boolean));
+    const ck=[...mnState.cooker].find(k=>!used.has(k)&&R.some(r=>r.cooker===k&&r.type==="Side"));
+    if(ck){const have=new Set(m.ids);
+      // skip anything that repeats a dish already on the card (Brussels next to Brussels), then pick among the 3 best matches
+      const GENERIC=new Set(["crispy","garlic","butter","black","pepper","honey","loaded","sweet","spicy","fresh","roasted","smashed","charred","style","parmesan","lemon","herb"]);
+      const words=id=>dishKey(byId[id].name).split(" ").filter(w=>w.length>2&&!GENERIC.has(w));
+      const onCard=new Set([main,...[...c.querySelectorAll("[data-with] input[data-x]")].map(x=>x.dataset.x)].flatMap(words));
+      const top=R.filter(r=>r.cooker===ck&&r.type==="Side"&&cookerOK(r)&&!have.has(r.id)&&!words(r.id).some(w=>onCard.has(w))).map(r=>[r,score(byId[main],r)]).sort((a,b)=>b[1]-a[1]);
+      const best=top.length?rnd(top.filter(x=>x[1]>=top[Math.min(2,top.length-1)][1]).slice(0,3)):null;
+      if(best)box.innerHTML=`<div class="nh">Mix in from your ${COOKERS[ck]}</div>`+optRow(best[0].id,`<input type="checkbox" data-x="${best[0].id}" checked>`)}
+  }
+  updatePlate(c);
+}
 function filterNights(){
   let shown=0;
   document.querySelectorAll("#menus [data-card]").forEach(c=>{
@@ -2347,14 +2369,19 @@ filterNights();   // after the wheel exists: draws it from the visible nights
 let wheelRot=0,spinning=false;
 function spin(){
   if(spinning)return;spinning=true;$("#spin").disabled=true;
-  const n=wheelList.length,seg=360/n,slot=Math.floor(Math.random()*n),i=wheelList[slot];
+  const n=wheelList.length,seg=360/n;let slot=Math.floor(Math.random()*n),ck=null;
+  if(mnState.cooker.size>1){
+    const groups=[...mnState.cooker].map(k=>[k,wheelList.map((mi,sl)=>[mi,sl]).filter(([mi])=>fitMains(MENUS[mi]).some(id=>byId[id].cooker===k))]).filter(g=>g[1].length);
+    if(groups.length){const g=rnd(groups);ck=g[0];slot=rnd(g[1])[1]}
+  }
+  const i=wheelList[slot];
   const jitter=(Math.random()-.5)*seg*.6;
   const target=((-(slot+.5)*seg+jitter)%360+360)%360;
   wheelRot+=360*6+((target-wheelRot)%360+360)%360;
   const w=$("#wheel");
   w.style.transform=`rotate(${wheelRot}deg)`;
   const done=()=>{w.removeEventListener("transitionend",done);spinning=false;$("#spin").disabled=false;
-    const m=MENUS[i],mains=fitMains(m).length?fitMains(m):m.ids.filter(isMain);
+    const m=MENUS[i],fit=fitMains(m),onCk=fit.filter(id=>byId[id].cooker===ck),mains=onCk.length?onCk:fit.length?fit:m.ids.filter(isMain);
     $("#wheelOut").innerHTML=nightCard(m,i,"w",mains[Math.floor(Math.random()*mains.length)]);applySides($("#wheelOut [data-card]"));
     $("#wheelOut").scrollIntoView({behavior:"smooth",block:"nearest"});};
   w.addEventListener("transitionend",done);
