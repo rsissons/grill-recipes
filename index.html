@@ -300,6 +300,7 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
           <span class="rb" id="groupBox" hidden>Group by <button class="chip" type="button" data-group="aisle">Aisle</button><button class="chip" type="button" data-group="store">Store</button></span>
           <span class="rb" id="stopsBox" hidden>Stops <button class="chip" type="button" data-stops="1">1</button><button class="chip" type="button" data-stops="2">2</button><button class="chip" type="button" data-stops="3">3</button><button class="chip" type="button" data-stops="99">All</button></span></div>
         <p class="gsum" id="dealSum" hidden></p>
+        <div class="frow" id="shopAtRow" hidden style="margin-top:8px"><span class="lbl">Shop at</span><div class="chips" id="shopAt"></div></div>
         <p class="gsum" id="gSum"></p>
         <div id="gItems"></div>
         <p class="gnote">Check off what you already have. Share to Keep sends only what you still need: pick Keep on your phone's share sheet, then tap "Show checkboxes" in Keep. The list is saved in this browser only.</p>
@@ -1755,7 +1756,24 @@ $("#gHide").onclick=()=>{hideHave=!hideHave;store.set("ftb-hide",hideHave);rende
 $("#gPrint").onclick=()=>window.print();
 $("#planClear").onclick=()=>{if(plan.length&&confirm("Clear the cook plan and grocery list?")){plan=[];have=new Set();custom=[];store.set("ftb-have",[]);store.set("ftb-custom",[]);savePlan();renderGrocery();render()}};
 /* ---------- weekly-ad sale prices (Flipp, via the relay) ---------- */
-let deals={},dealWeek="";
+let deals={},dealWeek="",rawDeals={},dealMeta=null;
+let hiddenStores=new Set(store.get("ftb-hidestores",[]));      // stores you won't shop at (tap to toggle)
+function applyDeals(){
+  deals={};let n=0,ends=null;const all=new Set();
+  for(const [k,ds] of Object.entries(rawDeals)){
+    ds.forEach(x=>all.add(storeName(x.store)));
+    const vis=ds.filter(x=>!hiddenStores.has(storeName(x.store))).slice(0,3);
+    if(vis.length){deals[k]=vis;n++;vis.forEach(x=>{if(x.ends&&(!ends||x.ends<ends))ends=x.ends})}
+  }
+  if(dealMeta){
+    $("#dealSum").hidden=false;
+    $("#dealSum").innerHTML=n?`🏷️ Found sale prices for <b>${n}</b> of ${dealMeta.total} items near ${dealMeta.zip}${ends?` · ads run through ${new Date(ends).toLocaleDateString([],{weekday:"short",month:"short",day:"numeric"})}`:""}. Weekly ads via Flipp; check prices in store.`:`No matching sale prices this week near ${dealMeta.zip}${hiddenStores.size?" at the stores you shop":""}.`;
+    const list=[...all].sort((a,b)=>a.localeCompare(b));
+    $("#shopAtRow").hidden=!list.length;
+    $("#shopAt").innerHTML=list.map(st=>`<button class="chip" type="button" data-shop="${esc(st)}" aria-pressed="${!hiddenStores.has(st)}">${hiddenStores.has(st)?"✕ ":""}${esc(st)}</button>`).join("");
+  }
+  renderGrocery();
+}
 const SKIP_STORES=/restaurant depot|cabela|bass pro|home depot|lowe'?s|petsmart|petco|harbor freight|big 5|dick'?s|michaels|joann|staples|office depot|best buy|kohl|macy|ulta|walgreens|cvs|rite aid|dollar tree|party city|ace hardware|tractor supply|sportsman/i;   // not grocery stores (Restaurant Depot is business-only)
 function dealPrice(d){
   const txt=`${d.pre||""} ${d.post||""}`,pr="$"+Number(d.price).toFixed(2);
@@ -1787,10 +1805,9 @@ $("#dealGo").onclick=async()=>{
   try{
     const d=await (await fetch(`${RELAY}/deals?zip=${zip}&q=${encodeURIComponent(qs.join("|"))}`)).json();
     if(!d.ok)throw new Error(d.reason||"failed");
-    deals={};let n=0,ends=null;
-    for(const [k,t] of Object.entries(terms)){const ds=(d.results[t]||[]).filter(x=>!SKIP_STORES.test(x.store));if(ds.length){deals[k]=ds;n++;ds.forEach(x=>{if(x.ends&&(!ends||x.ends<ends))ends=x.ends})}}
-    $("#dealSum").innerHTML=n?`🏷️ Found sale prices for <b>${n}</b> of ${items.length} items near ${zip}${ends?` · ads run through ${new Date(ends).toLocaleDateString([],{weekday:"short",month:"short",day:"numeric"})}`:""}. Weekly ads via Flipp; check prices in store.`:`No matching sale prices this week near ${zip}.`;
-    renderGrocery();
+    rawDeals={};
+    for(const [k,t] of Object.entries(terms)){const ds=(d.results[t]||[]).filter(x=>!SKIP_STORES.test(x.store));if(ds.length)rawDeals[k]=ds}
+    dealMeta={zip,total:items.length};applyDeals();
   }catch(_){$("#dealSum").textContent="Couldn't reach the weekly ads right now. Try again in a minute."}
   $("#dealGo").disabled=false;
 };
@@ -1828,6 +1845,8 @@ function storeViewHTML(items){
   return out+(rest.length?`<div class="aisle"><h4>Buy anywhere <small style="text-transform:none;letter-spacing:0;color:var(--ink-2)">at your ${order.length?"stops above or any":""} store</small></h4>${rest.map(i=>rowHTML(i,dealHTML(i.k))).join("")}</div>`:"");
 }
 document.querySelectorAll("#groupBox [data-group]").forEach(b=>b.onclick=()=>{groupBy=b.dataset.group;store.set("ftb-groupby",groupBy);renderGrocery()});
+$("#shopAt").addEventListener("click",e=>{const c=e.target.closest("[data-shop]");if(!c)return;const st=c.dataset.shop;
+  hiddenStores.has(st)?hiddenStores.delete(st):hiddenStores.add(st);store.set("ftb-hidestores",[...hiddenStores]);applyDeals()});
 document.querySelectorAll("#stopsBox [data-stops]").forEach(b=>b.onclick=()=>{maxStops=+b.dataset.stops;store.set("ftb-stops",maxStops);renderGrocery()});
 
 function listText(){

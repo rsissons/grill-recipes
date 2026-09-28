@@ -196,7 +196,7 @@ async function flippSearch(zip, q) {
   }
   out.sort((a, b) => a.price - b.price);
   const seen = new Set();
-  return out.filter(x => (seen.has(x.store) ? false : seen.add(x.store))).slice(0, 3);   // cheapest per store, top 3
+  return out.filter(x => (seen.has(x.store) ? false : seen.add(x.store))).slice(0, 8);   // cheapest per store, top 8 (the site shows 3 after hidden stores)
 }
 async function handleDeals(req, env, origin) {
   const u = new URL(req.url);
