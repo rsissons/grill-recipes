@@ -79,6 +79,14 @@ nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(-
 .tipgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px;align-items:start}
 .tipcard{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:var(--shadow)}
 .tipcard h2{font-size:1.4rem;display:flex;gap:8px;align-items:center}
+.fold>summary{list-style:none;cursor:pointer}
+.fold>summary::-webkit-details-marker{display:none}
+.fold>summary .chev{display:inline-block;transition:transform .15s;margin-left:6px;color:var(--ink-2);font-size:.85em}
+.fold[open]>summary .chev{transform:rotate(180deg)}
+details.group>summary h2{display:inline}
+.nbody>summary{margin-top:8px;font-weight:600;color:var(--ember);font-size:.92rem}
+.pairs-wrap>summary h3{display:inline}
+.planfold>summary h2{display:inline}
 .tipcard details{border-top:1px solid var(--line);padding:10px 0}
 .tipcard details:first-of-type{border-top:0}
 .tipcard summary{cursor:pointer;font-weight:600;list-style-position:outside}
@@ -324,8 +332,9 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
   <section class="panel" id="tab-grocery" hidden>
     <div class="gwrap">
       <div class="menu">
-        <div class="ghead"><h2>Cook plan</h2><button class="btn" id="planClear" type="button">Clear plan</button></div>
-        <div id="planBox"></div>
+        <details class="planfold fold" id="planFold" open><summary class="ghead"><span><h2>Cook plan</h2><span class="chev">▾</span></span></summary>
+        <div style="text-align:right;margin:4px 0"><button class="btn" id="planClear" type="button">Clear plan</button></div>
+        <div id="planBox"></div></details>
       </div>
       <div class="menu">
         <div class="ghead"><h2>Grocery list</h2>
@@ -1794,7 +1803,7 @@ function render(){
   const SORT_TITLE={new:"Newest",top:"Top rated",fav:"Most favorited",az:"A to Z",quick:"Quickest",cal:"Lowest calories",pro:"Most protein"};
   if(list.length&&sortBy!=="rec"){   // any real sort: one ranked list across every category
     $("#grid").innerHTML=`<section class="group"><h2>${SORT_TITLE[sortBy]}<small>${list.length}</small></h2><div class="grid">${list.map(r=>cardHTML(r,true)).join("")}</div></section>`;
-  }else $("#grid").innerHTML=list.length?TYPES.map(t=>{const g=list.filter(r=>r.type===t);return g.length?`<section class="group"><h2>${GROUP[t]}<small>${g.length}</small></h2><div class="grid">${g.map(r=>cardHTML(r)).join("")}</div></section>`:""}).join(""):`<div class="empty">No matches. Clear a filter or hit Reset.</div>`;
+  }else $("#grid").innerHTML=list.length?TYPES.map(t=>{const g=list.filter(r=>r.type===t);return g.length?`<details class="group fold" data-g="${t}"${state.q||!foldedGroups.has(t)?" open":""}><summary><h2>${GROUP[t]}<small>${g.length}</small></h2><span class="chev">▾</span></summary><div class="grid">${g.map(r=>cardHTML(r)).join("")}</div></details>`:""}).join(""):`<div class="empty">No matches. Clear a filter or hit Reset.</div>`;
   $("#count").textContent=`${list.length} of ${R.length} recipes`;
   const nf=state.cooker.size+state.type.size+state.region.size+state.time.size+state.mac.size;$("#fCount").textContent=nf||"";
   updateCounts();
@@ -1806,6 +1815,9 @@ $("#q").oninput=e=>{state.q=e.target.value.trim().toLowerCase();render()};
 $("#favOnly").onclick=e=>{state.favOnly=!state.favOnly;e.currentTarget.setAttribute("aria-pressed",state.favOnly);e.currentTarget.classList.toggle("primary",state.favOnly);render()};
 $("#reset").onclick=()=>{["cooker","type","region","time","mac"].forEach(k=>state[k].clear());state.q="";state.favOnly=false;$("#q").value="";
   document.querySelectorAll(".filters .chip").forEach(c=>c.setAttribute("aria-pressed","false"));$("#favOnly").classList.remove("primary");$("#favOnly").setAttribute("aria-pressed","false");render()};
+// folded recipe categories are remembered (a search opens them all)
+const foldedGroups=new Set(store.get("ftb-folded",[]));
+$("#grid").addEventListener("toggle",e=>{const d=e.target;if(!d.matches||!d.matches("details.group")||state.q)return;d.open?foldedGroups.delete(d.dataset.g):foldedGroups.add(d.dataset.g);store.set("ftb-folded",[...foldedGroups])},true);
 $("#grid").onclick=e=>{const c=e.target.closest(".card");if(c)openRecipe(c.dataset.id)};
 
 /* ---------- pairing suggestions ---------- */
@@ -1969,6 +1981,8 @@ function renderGrocery(){
     return `<div class="aisle"><h4>${name}</h4>${list.map(i=>`<label class="gi${have.has(i.k)?" have":""}"><input type="checkbox" data-k="${esc(i.k)}"${have.has(i.k)?" checked":""}><span>${esc(i.t)}${i.from.size?`<small>${esc([...i.from].join(", "))}</small>`:""}${dealHTML(i.k)}</span>${i.custom?`<button class="x" type="button" data-cx="${esc(i.t)}" aria-label="Remove">×</button>`:""}</label>`).join("")}</div>`;
   }).join("");
 }
+$("#planFold").open=store.get("ftb-planopen",true);
+$("#planFold").addEventListener("toggle",()=>store.set("ftb-planopen",$("#planFold").open));
 $("#planBox").addEventListener("click",e=>{
   const tb=e.target.closest("[data-ptime]");
   if(tb){const g=tb.closest("[data-gday]");const d=g.dataset.gday;g.querySelector("[data-timeline]").innerHTML=timelineHTML(plan.filter(p=>p.day===d).map(p=>p.id),g.querySelector("[data-ready]").value,d);return}
@@ -2175,7 +2189,7 @@ function openRecipe(id){
   $("#dlgBody").innerHTML=`${macHTML(r)}${smokerHTML(r)}<div class="inghead"><h3${r.mac?"":' style="margin-top:0"'}>Ingredients</h3>${servesSelect(servesFor(r.id),nativeServes(r),'id="dlgServes"')}</div><div id="dlgIng">${ingHTML(r,servesFor(r.id))}</div>
     <h3>Steps</h3><ol>${r.steps.map(s=>`<li>${esc(s)}</li>`).join("")}</ol>
     ${r.tip?`<div class="tip"><b>Tip:</b> ${esc(r.tip)}</div>`:""}
-    <div class="pairs-wrap"><h3>Pairs with</h3><div class="pairs">${pairsFor(r).map(p=>`<button type="button" data-id="${p.id}">${esc(p.name)}<small>${COOKERS[p.cooker]} · ${TYPE_LABEL[p.type]} · ${esc(p.region)}</small></button>`).join("")}</div></div>
+    <details class="pairs-wrap fold"><summary><h3>Pairs with</h3><span class="chev">▾</span></summary><div class="pairs">${pairsFor(r).map(p=>`<button type="button" data-id="${p.id}">${esc(p.name)}<small>${COOKERS[p.cooker]} · ${TYPE_LABEL[p.type]} · ${esc(p.region)}</small></button>`).join("")}</div></details>
     <p style="margin-top:16px;font-size:.88rem">Source: <a href="${esc(r.src[1])}" target="_blank" rel="noopener">${esc(r.src[0])}</a></p>
     <div class="dlg-actions"><select id="dayPick" aria-label="Which day">${dayOpts(inPlan(r.id)?inPlan(r.id).day:"Tonight")}</select><button class="btn primary" id="listBtn" type="button">${inPlan(r.id)?'✓ On list (remove)':'＋ Add to list'}</button><button class="btn ${isFav?'primary':''}" id="favBtn" type="button">${isFav?'♥ Saved':'♡ Save to favorites'}</button><button class="btn" type="button" onclick="window.print()">Print</button><button class="btn" id="shareBtn" type="button">Copy link</button></div>
     <div class="dlg-actions"><label class="rb">Ready by <input type="time" value="17:00" id="dlgReady"></label><button class="btn" type="button" id="dlgTime">⏰ Plan my timing</button></div><div id="dlgTimeline"></div>`;
@@ -2232,13 +2246,14 @@ function nightCard(m,i,pfx,chosen){
   const row=optRow;
   const cks=[...new Set(m.ids.flatMap(id=>[byId[id].cooker,byId[id].finish]).filter(Boolean))],rgs=[...new Set(mains.map(id=>byId[id].region))];
   return `<div class="menu" data-card data-mi="${i}" data-cookers="${cks.join(" ")}" data-regions="${esc(rgs.join("|"))}"><h3>${esc(m.name)}</h3><p>${esc(m.why)}</p><div class="ntime" data-ntime>${ntimeHTML(m,sel)}</div>
+    <details class="nbody fold"${pfx==="w"?" open":""}><summary>${mains.length>1?`Pick from ${mains.length} mains, add to list, timing`:"See the menu, add to list, timing"}<span class="chev">▾</span></summary>
     <div class="nh">${mains.length>1?"Main (pick one)":"Main"}</div>
     ${mains.map(id=>row(id,`<input type="radio" name="m-${pfx}${i}" value="${id}"${id===sel?" checked":""}${mains.length===1?" hidden":""}>`)).join("")}
     <div data-with>${withHTML(extras)}</div>
     <p class="plate" data-plate>${plateText([sel,...extras])}</p>
     <div class="night-actions">${servesSelect(household||4,0,"data-serves")}<select aria-label="Which day">${dayOpts("Tonight")}</select><button class="btn primary" type="button" data-add>＋ Add to list</button>${pfx==="w"?'<button class="btn" type="button" data-respin>Spin again</button>':""}</div>
     <div class="night-actions"><label class="rb">Ready by <input type="time" value="17:00" data-ready></label><button class="btn" type="button" data-time>⏰ Plan my timing</button><button class="btn${pfx==="w"?" primary":""}" type="button" data-cookall>👨‍🍳 Cook it all</button></div>
-    <div data-timeline></div></div>`;
+    <div data-timeline></div></details></div>`;
 }
 $("#menus").innerHTML=MENUS.map((m,i)=>nightCard(m,i,"n")).join("");
 function setMain(c,id,already){
