@@ -184,9 +184,6 @@ dialog::backdrop{background:rgba(10,6,3,.6)}
 .dlg-body ul,.dlg-body ol{margin:0;padding-left:22px}
 .dlg-body li{margin:3px 0}
 .tip{background:var(--surface-2);border-left:4px solid var(--ember);padding:10px 12px;border-radius:8px;margin-top:14px}
-.pairs{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
-.pairs button{text-align:left;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);border-radius:10px;padding:8px 10px;font-size:.9rem}
-.pairs small{display:block;color:var(--ink-2);font-size:.75rem}
 .dlg-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
 
 .menus{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
@@ -318,7 +315,6 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
   </section>
 
   <section class="panel" id="tab-menus" hidden>
-    <div class="filters mnf"><div class="mnbar"><button class="btn" type="button" data-mnopen id="mnToggle">🔍 Filters<span class="badge" data-mnbadge id="mnBadge"></span></button><span class="mnsum" data-mnsum></span><button class="lnk" type="button" data-mnclear hidden id="mnClear">✕ Clear</button></div></div>
     <div class="builder wheelbox">
       <h2>I don't know</h2>
       <div class="mnbar"><button class="btn" type="button" data-mnopen>🔍 Filters<span class="badge" data-mnbadge></span></button><span class="mnsum" data-mnsum></span><button class="lnk" type="button" data-mnclear hidden>✕ Clear</button></div>
@@ -329,6 +325,7 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
     <div class="builder">
       <h2>Build me a cook</h2>
       <p class="section-intro" style="margin:4px 0 0">A main, a side and an appetizer that go together and fit your filters.</p>
+      <div class="mnbar" style="margin-top:10px"><button class="btn" type="button" data-mnopen id="mnToggle">🔍 Filters<span class="badge" data-mnbadge id="mnBadge"></span></button><span class="mnsum" data-mnsum></span><button class="lnk" type="button" data-mnclear hidden id="mnClear">✕ Clear</button></div>
       <div style="margin-top:12px"><button class="btn primary" id="build" type="button">🎲 Build the menu</button></div>
       <div class="out" id="buildOut"></div>
     </div>
@@ -1873,14 +1870,34 @@ $("#grid").addEventListener("toggle",e=>{const d=e.target;if(!d.matches||!d.matc
 $("#grid").onclick=e=>{const c=e.target.closest(".card");if(c)openRecipe(c.dataset.id)};
 
 /* ---------- pairing suggestions ---------- */
+// what actually goes with what: [main dish words, side/app words]
+const GOES=[   // checked in order, most specific first; [main dish words, the classic sides, other good sides]
+ [/taco|fajita|burrito|quesadilla|enchilada|carne asada|al pastor|pollo asado|tostada|birria|barbacoa|carnitas|tinga|taco salad|arroz/i,/elote|street corn|mexican rice|guac/i,/bean salsa|black beans|refried|charro|pinto|borracho|queso|nachos|corn/i],
+ [/fried rice|teriyaki|hibachi|teppanyaki|stir|lo mein|chow|orange chicken|general tso|sweet and sour|pepper steak|kung pao|mongolian|bulgogi|galbi|korean|pad |curry|katsu|yakisoba|broccoli|char siu|\bbowls?\b|firecracker|noodle|samgyeopsal|gai yang|satay/i,/rice|egg rolls?|potsticker|gyoza|dumpling/i,/broccoli|green beans|bok choy|wonton|rangoon|shrimp toast|edamame|cucumber|kimchi|japchae|noodle|hibachi|spring roll|cauliflower|satay/i],
+ [/burger|smash|patty melt|sloppy|hot ?dog|chili dog|brat|sandwich|\bsubs?\b|po'? ?boy|club|cheesesteak|philly|\bblt\b|chopped cheese|melt|sliders?|reuben|cuban/i,/fries|tots|onion rings?|chips/i,/slaw|pickle|potato salad|mac salad|corn|mozzarella|baked beans|drip beans|potato skins/i],
+ [/steak|ribeye|strip|filet|tomahawk|prime rib|tri-?tip|picanha|london broil|\bchops?\b|tenderloin|lamb/i,/potato|mushroom|asparagus/i,/caesar|green beans?|brussels|garlic bread|onion|creamed|mac|carrots/i],
+ [/bbq|brisket|\bribs?\b|pulled pork|burnt ends|smoked|wings|drumstick|fried chicken|nashville|turkey|whole chicken|hanging chicken|huli|jerk|alabama/i,/beans|mac|slaw|corn/i,/collard|potato|cornbread|pickle|fries|sweet potato|green beans/i],
+ [/salmon|shrimp|fish|cod|mahi|scallop|crab|tuna|catfish|halibut|scampi/i,/asparagus|rice|potato/i,/slaw|green beans|zucchini|corn|fries|salad|brussels/i],
+ [/gyro|souvlaki|kofta|shawarma|greek|kebab|kabob|mediterranean|piri/i,/zucchini|naan|pita|rice/i,/tzatziki|salad|hummus|potato|veg|kebabs/i],
+ [/pasta|fettuccine|scampi|stroganoff|parm|meatball|italian|lasagna|tortellini|piccata/i,/garlic bread|caesar/i,/zucchini|broccoli|asparagus|salad|bruschetta|mushroom/i],
+];
+const FAM={"BBQ":"bbq","Southern":"bbq","Cajun":"bbq","American":"bbq","Mexican":"mx","Chinese":"asia","Japanese":"asia","Korean":"asia","Thai":"asia","Mediterranean":"med","European":"med","Indian":"med","South American":"sa","Caribbean":"sa","Hawaiian":"asia","African":"sa"};
+const fits=(main,side)=>goesWith(main,side)>0||(FAM[main.region]&&FAM[main.region]===FAM[side.region]);
+const BREAKFASTY=/egg bites|breakfast|pancake|french toast|hash browns?/i;
+function goesWith(main,side){const g=GOES.find(([m])=>m.test(main.name));return !g?0:g[1].test(side.name)?10:g[2].test(side.name)?7:0}
 function score(a,b){let s=0;if(a.region===b.region)s+=5;
-  const fam={"BBQ":"bbq","Southern":"bbq","Cajun":"bbq","American":"bbq","Mexican":"mx","Chinese":"asia","Japanese":"asia","Korean":"asia","Thai":"asia","Mediterranean":"med","European":"med","Indian":"med","South American":"sa","Caribbean":"sa","Hawaiian":"asia","African":"sa"};
-  if(fam[a.region]&&fam[a.region]===fam[b.region])s+=3;
+  const [m,x]=MAIN_T.has(a.type)?[a,b]:[b,a];
+  s+=goesWith(m,x);
+  if(BREAKFASTY.test(x.name)&&!BREAKFASTY.test(m.name))s-=20;
+  if(FAM[a.region]&&FAM[a.region]===FAM[b.region])s+=3;
   if(a.cooker!==b.cooker)s+=1; return s;}
 function pairsFor(r){
   const want=MAIN_T.has(r.type)?["Side","Appetizer"]:["Beef","Chicken"];
   const out=[];
-  want.forEach(t=>{R.filter(x=>x.type===t&&x.id!==r.id).map(x=>[x,score(r,x)]).sort((a,b)=>b[1]-a[1]||a[0].name.localeCompare(b[0].name)).slice(0,2).forEach(([x])=>out.push(x))});
+  // two picks per type, and not two of the same thing (no potatoes + potatoes)
+  const KEYW=/potato|fries|corn|rice|beans|mac|slaw|bread|salad|mushroom|asparagus|zucchini|broccoli|brussels|egg roll|wings|dip|poppers/i;
+  want.forEach(t=>{const got=[];R.filter(x=>x.type===t&&x.id!==r.id).map(x=>[x,score(r,x)]).sort((a,b)=>b[1]-a[1]||a[0].name.localeCompare(b[0].name))
+    .forEach(([x])=>{if(got.length>=2)return;const k=(x.name.match(KEYW)||[""])[0].toLowerCase();if(k&&got.some(g=>(g.name.match(KEYW)||[""])[0].toLowerCase()===k))return;got.push(x)});out.push(...got)});
   return out;
 }
 
@@ -2246,17 +2263,21 @@ function openRecipe(id){
   $("#dlgBody").innerHTML=`${alsoOnHTML(r)}${macHTML(r)}${smokerHTML(r)}<div class="inghead"><h3${r.mac?"":' style="margin-top:0"'}>Ingredients</h3>${servesSelect(servesFor(r.id),nativeServes(r),'id="dlgServes"')}</div><div id="dlgIng">${ingHTML(r,servesFor(r.id))}</div>
     <h3>Steps</h3><ol>${r.steps.map(s=>`<li>${esc(s)}</li>`).join("")}</ol>
     ${r.tip?`<div class="tip"><b>Tip:</b> ${esc(r.tip)}</div>`:""}
-    <details class="pairs-wrap fold"><summary><h3>Pairs with</h3><span class="chev">▾</span></summary><div class="pairs">${pairsFor(r).map(p=>`<button type="button" data-id="${p.id}">${esc(p.name)}<small>${COOKERS[p.cooker]} · ${TYPE_LABEL[p.type]} · ${esc(p.region)}</small></button>`).join("")}</div></details>
+    <details class="pairs-wrap fold"><summary><h3>Make it a meal</h3><span class="chev">▾</span></summary><p class="cahint" style="margin:4px 0 8px">Tick what goes with it. Add to list, Plan my timing and Cook it all include your picks.</p><div class="pairpick">${pairsFor(r).map(p=>optRow(p.id,`<input type="checkbox" data-pair="${p.id}">`)).join("")}</div></details>
     <p style="margin-top:16px;font-size:.88rem">Source: <a href="${esc(r.src[1])}" target="_blank" rel="noopener">${esc(r.src[0])}</a>${r.added&&RELAY?` · <button type="button" class="lnk" id="fixBtn">✏️ Fix sorting</button>`:""}</p>
     <div class="dlg-actions"><select id="dayPick" aria-label="Which day">${dayOpts(inPlan(r.id)?inPlan(r.id).day:"Tonight")}</select><button class="btn primary" id="listBtn" type="button">${inPlan(r.id)?'✓ On list (remove)':'＋ Add to list'}</button><button class="btn ${isFav?'primary':''}" id="favBtn" type="button">${isFav?'♥ Saved':'♡ Save to favorites'}</button><button class="btn" type="button" onclick="window.print()">Print</button><button class="btn" id="shareBtn" type="button">Copy link</button></div>
-    <div class="dlg-actions"><label class="rb">Ready by <input type="time" value="17:00" id="dlgReady"></label><button class="btn" type="button" id="dlgTime">⏰ Plan my timing</button></div><div id="dlgTimeline"></div>`;
-  $("#dlgBody").querySelectorAll(".pairs button").forEach(b=>b.onclick=()=>openRecipe(b.dataset.id));
+    <div class="dlg-actions"><label class="rb">Ready by <input type="time" value="17:00" id="dlgReady"></label><button class="btn" type="button" id="dlgTime">⏰ Plan my timing</button><button class="btn" type="button" id="dlgCook">👨‍🍳 Cook it all</button></div><div id="dlgTimeline"></div>`;
+  // the picked sides/apps ride along with this recipe
+  const picks=()=>[...$("#dlgBody").querySelectorAll("[data-pair]:checked")].map(x=>x.dataset.pair);
+  $("#dlgBody").querySelectorAll(".pairpick [data-id]").forEach(b=>b.onclick=e=>{e.preventDefault();openRecipe(b.dataset.id)});
+  $("#dlgBody").querySelectorAll("[data-pair]").forEach(x=>x.onchange=()=>{const n=picks().length;if(!inPlan(r.id))$("#listBtn").textContent=n?`＋ Add meal to list (${n+1})`:"＋ Add to list";$("#dlgTimeline").innerHTML=""});
+  $("#dlgCook").onclick=()=>openCookAll(r.name+(picks().length?" + sides":""),[r.id,...picks()],$("#dlgReady").value,$("#dayPick").value,+$("#dlgServes").value);
   $("#dlgBody").querySelectorAll("[data-also]").forEach(b=>b.onclick=()=>openRecipe(b.dataset.also));
   const fx=$("#dlgBody").querySelector("#fixBtn");if(fx)fx.onclick=()=>{dlg.close();openAdd(r)};
-  $("#listBtn").onclick=()=>{inPlan(r.id)?removeFromPlan(r.id):addToPlan(r.id,$("#dayPick").value,+$("#dlgServes").value);openRecipe(r.id);render()};
+  $("#listBtn").onclick=()=>{if(inPlan(r.id))removeFromPlan(r.id);else [r.id,...picks()].forEach(id=>addToPlan(id,$("#dayPick").value,+$("#dlgServes").value));openRecipe(r.id);render()};
   $("#dlgServes").onchange=e=>{const n=+e.target.value;setHousehold(n);const p=inPlan(r.id);if(p){p.serves=n;savePlan()}$("#dlgIng").innerHTML=ingHTML(r,n)};
   $("#dayPick").onchange=()=>{if(inPlan(r.id)){addToPlan(r.id,$("#dayPick").value);render()}};
-  $("#dlgTime").onclick=()=>{$("#dlgTimeline").innerHTML=timelineHTML([r.id],$("#dlgReady").value,$("#dayPick").value)};
+  $("#dlgTime").onclick=()=>{$("#dlgTimeline").innerHTML=timelineHTML([r.id,...picks()],$("#dlgReady").value,$("#dayPick").value)};
   $("#dlgTimeline").onclick=e=>{const b=e.target.closest("[data-ics]");if(b)downloadIcs(b)};
   $("#favBtn").onclick=()=>{const on=!favs.has(r.id);on?favs.add(r.id):favs.delete(r.id);store.set("ftb-favs",[...favs]);sendHeart(r.id,on);openRecipe(r.id);render()};
   $("#shareBtn").onclick=async e=>{const url=location.href.split("#")[0]+"#"+r.id;try{await navigator.clipboard.writeText(url);e.target.textContent="Copied!"}catch(_){prompt("Copy this link:",url)}};
@@ -2354,8 +2375,8 @@ function applySides(c){
       const GENERIC=new Set(["crispy","garlic","butter","black","pepper","honey","loaded","sweet","spicy","fresh","roasted","smashed","charred","style","parmesan","lemon","herb"]);
       const words=id=>dishKey(byId[id].name).split(" ").filter(w=>w.length>2&&!GENERIC.has(w));
       const onCard=new Set([main,...[...c.querySelectorAll("[data-with] input[data-x]")].map(x=>x.dataset.x)].flatMap(words));
-      const top=R.filter(r=>r.cooker===ck&&r.type==="Side"&&cookerOK(r)&&!have.has(r.id)&&!words(r.id).some(w=>onCard.has(w))).map(r=>[r,score(byId[main],r)]).sort((a,b)=>b[1]-a[1]);
-      const best=top.length?rnd(top.filter(x=>x[1]>=top[Math.min(2,top.length-1)][1]).slice(0,3)):null;
+      const top=R.filter(r=>r.cooker===ck&&r.type==="Side"&&cookerOK(r)&&!have.has(r.id)&&!words(r.id).some(w=>onCard.has(w))&&fits(byId[main],r)).map(r=>[r,score(byId[main],r)]).sort((a,b)=>b[1]-a[1]);
+      const best=top.length?rnd(top.filter(x=>x[1]>=top[0][1]-2).slice(0,3)):null;
       if(best)box.innerHTML=`<div class="nh">Mix in from your ${COOKERS[ck]}</div>`+optRow(best[0].id,`<input type="checkbox" data-x="${best[0].id}" checked>`)}
   }
   updatePlate(c);
