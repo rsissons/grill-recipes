@@ -190,12 +190,13 @@ window.ADDED = [
   "added_on": "2026-09-27"
  },
  {
-  "id": "easy-smoked-white-queso-dip-on-the-traeger-ironwood-885",
-  "name": "Easy Smoked White Queso Dip on the Traeger Ironwood 885",
+  "id": "easy-smoked-white-queso-dip",
+  "name": "Easy Smoked White Queso Dip",
   "cooker": "PBC",
   "type": "Appetizer",
   "region": "BBQ",
   "mins": 135,
+  "serves": 4,
   "desc": "Which one of y’all doesn’t love cheese? I’m guessin’ none! My recipe for Smoked White Queso Dip is super simple and can be prepped in 15 minutes. This is a great, mostly hands-off…",
   "ing": [
    "Heath Riles Garlic Jalapeno Rub",
@@ -220,11 +221,11 @@ window.ADDED = [
    "Heath Riles BBQ: Easy Smoked White Queso Dip on the Traeger Ironwood 885",
    "https://www.heathrilesbbq.com/blogs/favorite-recipes/easy-smoked-white-queso-dip-on-the-traeger-ironwood-885"
   ],
+  "added_on": "2026-09-28",
   "rating": {
    "v": 3.7,
    "n": 111
-  },
-  "added_on": "2026-09-28"
+  }
  },
  {
   "id": "kielbasa-cowboy-stir-fry",
