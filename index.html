@@ -179,6 +179,7 @@ footer{border-top:1px solid var(--line);padding:18px 0 30px;color:var(--ink-2);f
 select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px 8px}
 .onlist{font-size:.78rem;color:var(--ember);font-weight:600}
 .night-actions{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
+.ntime{font-size:.85rem;font-weight:600;color:var(--ink);margin:-4px 0 6px}
 .nh{margin:10px 0 4px;font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-2)}
 .opt{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;padding:4px 0;cursor:pointer}
 .opt input{accent-color:var(--ember);width:18px;height:18px;flex:none;margin:0}
@@ -280,6 +281,7 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
     <div class="filters" style="margin-bottom:12px">
       <div class="frow"><span class="lbl">Cooker</span><div class="chips" id="mn-cooker"></div></div>
       <div class="frow"><span class="lbl">Region</span><div class="chips" id="mn-region"></div></div>
+      <div class="frow"><span class="lbl">Time</span><div class="chips" id="mn-time"></div></div>
     </div>
     <div class="count" id="mnCount"></div>
     <div class="menus" id="menus"></div>
@@ -1504,7 +1506,7 @@ const MENUS = [
  {name:"Southern Fried Saturday",s:"Southern Fried",why:"Nashville hot on the griddle; mac, collards and pickle shots in the barrel.",ids:["nashville-hot","popper-mac","collards","pickle-shots"]},
  {name:"Game Day Spread",s:"Game Day",why:"Wings and dip in the barrel, tots and sliders on the griddle. Feeds about 10.",ids:["smoked-wings","buffalo-dip","moink","lollipops"]},
  {name:"Diner Night",s:"Diner Night",why:"Patty melts or Reubens on the flat top, with fried potatoes and onions.",ids:["patty-melt","reuben","fried-potatoes-onions"]},
- {name:"Holiday Prime Rib",s:"Prime Rib",why:"The brie goes on the barrel while the roast rests.",ids:["prime-rib","honey-brussels","hasselback","smoked-cream-cheese"]},
+ {name:"Holiday Prime Rib",s:"Prime Rib",nowheel:true,why:"The smoked cream cheese goes on the barrel while the roast rests.",ids:["prime-rib","honey-brussels","hasselback","smoked-cream-cheese"]},
  {name:"Island Jerk Cookout",s:"Jerk Cookout",why:"Jerk quarters in the barrel, shrimp and cabbage on the griddle.",ids:["jerk-chicken","yellow-rice","fried-cabbage","cajun-shrimp"]},
  {name:"Backyard Burger Night",s:"Backyard Burgers",why:"Juicy Lucys on the grill, potatoes in foil right next to them.",ids:["backyard-burgers","juicy-lucy","beer-brats","foil-potatoes","grilled-caesar","grilled-guac"]},
  {name:"Grilled Steak Night",s:"Grilled Steak",why:"Filets or a marinated London broil, garlic bread and asparagus. All on the grill except the bread.",ids:["filet-cowboy","london-broil","grilled-asparagus","foil-potatoes","griddle-garlic-bread"]},
@@ -1526,7 +1528,7 @@ const MENUS = [
  {name:"Crockpot Game Day",s:"Crockpot Game Day",why:"Everything cooks itself and holds on WARM through the whole game.",ids:["sc-italian-beef","sc-pulled-pork","sc-mac","sc-creamed-corn","sc-jelly-meatballs","sc-spinach-dip"]},
  {name:"Walk In the Door Dinner",s:"Crockpot Dinner",why:"Load it before work and dinner's done when you get home.",ids:["sc-mississippi-roast","sc-crack-chicken","sc-butter-chicken","sc-kalua-pork","sv-mashed","sv-carrots","blistered-green-beans","yellow-rice","griddle-naan","pineapple-rice","fried-cabbage"],pair:{"sc-mississippi-roast":["sv-mashed","sv-carrots"],"sc-crack-chicken":["sv-mashed","blistered-green-beans"],"sc-butter-chicken":["yellow-rice","griddle-naan"],"sc-kalua-pork":["pineapple-rice","fried-cabbage"]}},
  {name:"Rib Night",s:"Rib Night",why:"The Pit Barrel's famous ribs with beans catching the drippings underneath.",ids:["pbc-ribs","pbc-pulled-pork","drip-beans","popper-mac","smokies"]},
- {name:"Thanksgiving on the Barrel",s:"Thanksgiving",why:"The turkey hangs in the barrel and frees up the oven for everything else.",ids:["smoked-turkey","sv-mashed","sv-carrots","honey-brussels"]},
+ {name:"Thanksgiving on the Barrel",s:"Thanksgiving",nowheel:true,why:"The turkey hangs in the barrel and frees up the oven for everything else.",ids:["smoked-turkey","sv-mashed","sv-carrots","honey-brussels"]},
  {name:"Fajita & Quesadilla Night",s:"Fajita Night",why:"Steak fajitas or chicken quesadillas, all on the Blackstone.",ids:["steak-fajitas","chicken-quesadillas","mexican-rice","elote"]},
  {name:"Soup & Stew Day",s:"Soup Day",why:"Load the slow cooker in the morning. Garlic bread on the griddle right before dinner.",ids:["sc-beef-stew","sc-tortilla-soup","griddle-garlic-bread","grilled-guac"],pair:{"sc-beef-stew":["griddle-garlic-bread"],"sc-tortilla-soup":["grilled-guac"]}},
  {name:"Mediterranean Night",s:"Mediterranean",why:"One batch of tzatziki covers both dishes.",ids:["greek-gyros","veg-kebabs","greek-meatballs"]}
@@ -1537,7 +1539,9 @@ const cookerLabel=r=>COOKERS[r.cooker]+(r.finish&&COOKERS[r.finish]?" + "+COOKER
 const MAIN_T=new Set(["Beef","Chicken","Pork","Seafood","Other"]);
 const TYPES=["Beef","Chicken","Pork","Seafood",...(R.some(r=>r.type==="Other")?["Other"]:[]),"Side","Appetizer"];
 const TYPE_LABEL={Beef:"Beef Main",Chicken:"Chicken Main",Pork:"Pork Main",Seafood:"Seafood Main",Other:"Other Main",Side:"Side Dish",Appetizer:"Appetizer"};
-const TIMES=[["q","Under 30 min",m=>m<30],["h","30 to 90 min",m=>m>=30&&m<=90],["l","Low & slow (90+)",m=>m>90]];
+// Ready by 5: start it in the morning or early afternoon and walk away. Slow cooker, sous vide (holds), or a Pit Barrel cook of 2 to 10 hours.
+const ready5=r=>r.cooker==="SC"||(r.cooker==="SV"&&r.mins<=600)||(r.cooker==="PBC"&&r.mins>=120&&r.mins<=600);
+const TIMES=[["q","Under 30 min",r=>r.mins<30],["h","30 to 90 min",r=>r.mins>=30&&r.mins<=90],["l","Low & slow (90+)",r=>r.mins>90],["r5","Ready by 5 (start early)",ready5]];
 const REGIONS=[...new Set(R.map(r=>r.region))].sort();
 const byId=Object.fromEntries(R.map(r=>[r.id,r]));
 
@@ -1583,7 +1587,7 @@ function matches(r,skip){
   if(skip!=="cooker"&&state.cooker.size&&!state.cooker.has(r.cooker))return false;
   if(skip!=="type"&&state.type.size&&!state.type.has(r.type))return false;
   if(skip!=="region"&&state.region.size&&!state.region.has(r.region))return false;
-  if(skip!=="time"&&state.time.size&&!TIMES.some(t=>state.time.has(t[0])&&t[2](r.mins)))return false;
+  if(skip!=="time"&&state.time.size&&!TIMES.some(t=>state.time.has(t[0])&&t[2](r)))return false;
   if(skip!=="mac"&&state.mac.size&&!MACF.every(t=>!state.mac.has(t[0])||t[2](r)))return false;
   if(state.favOnly&&!favs.has(r.id))return false;
   if(state.q){const hay=(r.name+" "+r.desc+" "+r.region+" "+r.ing.join(" ")).toLowerCase();
@@ -1595,7 +1599,7 @@ function updateCounts(){
   document.querySelectorAll("#f-cooker .chip").forEach(c=>c.querySelector(".n").textContent=cnt("cooker",r=>r.cooker===c.dataset.v));
   document.querySelectorAll("#f-type .chip").forEach(c=>c.querySelector(".n").textContent=cnt("type",r=>r.type===c.dataset.v));
   document.querySelectorAll("#f-region .chip").forEach(c=>c.querySelector(".n").textContent=cnt("region",r=>r.region===c.dataset.v));
-  document.querySelectorAll("#f-time .chip").forEach(c=>{const t=TIMES.find(x=>x[0]===c.dataset.v);c.querySelector(".n").textContent=cnt("time",r=>t[2](r.mins))});
+  document.querySelectorAll("#f-time .chip").forEach(c=>{const t=TIMES.find(x=>x[0]===c.dataset.v);c.querySelector(".n").textContent=cnt("time",t[2])});
   document.querySelectorAll("#f-mac .chip").forEach(c=>{const t=MACF.find(x=>x[0]===c.dataset.v);c.querySelector(".n").textContent=cnt("mac",t[2])});
 }
 function cardHTML(r,flat){
@@ -1929,12 +1933,16 @@ const isMain=id=>MAIN_T.has(byId[id].type);
 // Sides that go with the chosen main: a night's pair map when it has one (so Kalua pork doesn't get mashed potatoes), else all its sides.
 const withFor=(m,main)=>(m.pair&&m.pair[main])||m.ids.filter(id=>!isMain(id));
 function optRow(id,input){const r=byId[id];return `<label class="opt">${input}<button type="button" class="lnk" data-id="${id}">${esc(r.name)}</button><small>${COOKERS[r.cooker]} · ${fmtTime(r.mins)}</small></label>`}
+// A night's cook time = the longest dish, since the sides cook alongside the main.
+const nightMins=(m,main)=>Math.max(...[main,...withFor(m,main)].map(id=>byId[id].mins));
+const NTIMES=[["30","Under 30 min",(m,x)=>nightMins(m,x)<=30],["60","Under 1 hr",(m,x)=>nightMins(m,x)<=60],["120","Under 2 hrs",(m,x)=>nightMins(m,x)<=120],["r5","Ready by 5 (start early)",(m,x)=>ready5(byId[x])]];
+const ntimeHTML=(m,main)=>`⏱ ${fmtTime(nightMins(m,main))}${ready5(byId[main])?" · start it early, done by dinner":""}`;
 const withHTML=ids=>ids.length?`<div class="nh">With</div>${ids.map(id=>optRow(id,`<input type="checkbox" data-x="${id}" checked>`)).join("")}`:"";
 function nightCard(m,i,pfx,chosen){
   const mains=m.ids.filter(isMain),sel=chosen||mains[0],extras=withFor(m,sel);
   const row=optRow;
   const cks=[...new Set(m.ids.flatMap(id=>[byId[id].cooker,byId[id].finish]).filter(Boolean))],rgs=[...new Set(mains.map(id=>byId[id].region))];
-  return `<div class="menu" data-card data-mi="${i}" data-cookers="${cks.join(" ")}" data-regions="${esc(rgs.join("|"))}"><h3>${esc(m.name)}</h3><p>${esc(m.why)}</p>
+  return `<div class="menu" data-card data-mi="${i}" data-cookers="${cks.join(" ")}" data-regions="${esc(rgs.join("|"))}"><h3>${esc(m.name)}</h3><p>${esc(m.why)}</p><div class="ntime" data-ntime>${ntimeHTML(m,sel)}</div>
     <div class="nh">${mains.length>1?"Main (pick one)":"Main"}</div>
     ${mains.map(id=>row(id,`<input type="radio" name="m-${pfx}${i}" value="${id}"${id===sel?" checked":""}${mains.length===1?" hidden":""}>`)).join("")}
     <div data-with>${withHTML(extras)}</div>
@@ -1944,21 +1952,33 @@ function nightCard(m,i,pfx,chosen){
     <div data-timeline></div></div>`;
 }
 $("#menus").innerHTML=MENUS.map((m,i)=>nightCard(m,i,"n")).join("");
-const mnState={cooker:new Set(),region:new Set()};
+function setMain(c,id,already){
+  const m=MENUS[+c.dataset.mi];
+  if(!already){const r=c.querySelector(`input[type=radio][value="${id}"]`);if(!r||r.checked)return;r.checked=true}
+  if(m.pair){c.querySelector("[data-with]").innerHTML=withHTML(withFor(m,id));c.querySelector("[data-timeline]").innerHTML=""}
+  c.querySelector("[data-ntime]").innerHTML=ntimeHTML(m,id);updatePlate(c);
+}
+const mnState={cooker:new Set(),region:new Set(),time:new Set()};
+// mains in a night that fit the chosen time chips (any chip)
+const fitMains=m=>m.ids.filter(isMain).filter(x=>!mnState.time.size||NTIMES.some(t=>mnState.time.has(t[0])&&t[2](m,x)));
 function filterNights(){
   let shown=0;
   document.querySelectorAll("#menus [data-card]").forEach(c=>{
     const cks=c.dataset.cookers.split(" "),rgs=c.dataset.regions.split("|");
-    const ok=(!mnState.cooker.size||cks.some(x=>mnState.cooker.has(x)))&&(!mnState.region.size||rgs.some(x=>mnState.region.has(x)));
+    const fit=fitMains(MENUS[+c.dataset.mi]);
+    const ok=(!mnState.cooker.size||cks.some(x=>mnState.cooker.has(x)))&&(!mnState.region.size||rgs.some(x=>mnState.region.has(x)))&&fit.length>0;
     c.hidden=!ok;if(ok)shown++;
+    // pick a main you have time for
+    const cur=c.querySelector("input[type=radio]:checked");if(ok&&cur&&!fit.includes(cur.value))setMain(c,fit[0]);
   });
+  drawWheel();
   $("#mnCount").textContent=`${shown} of ${MENUS.length} meal nights`;
 }
 (function nightChips(){
   const rgs=[...new Set(MENUS.flatMap(m=>m.ids.filter(isMain).map(id=>byId[id].region)))].sort();
   const mk=(el,items,key)=>{el.innerHTML=items.map(([v,l])=>`<button class="chip" type="button" aria-pressed="false" data-v="${esc(v)}">${esc(l)}</button>`).join("");
     el.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{const v=c.dataset.v;mnState[key].has(v)?mnState[key].delete(v):mnState[key].add(v);c.setAttribute("aria-pressed",mnState[key].has(v));filterNights()})};
-  mk($("#mn-cooker"),Object.entries(COOKERS),"cooker");mk($("#mn-region"),rgs.map(r=>[r,r]),"region");filterNights();
+  mk($("#mn-cooker"),Object.entries(COOKERS),"cooker");mk($("#mn-region"),rgs.map(r=>[r,r]),"region");mk($("#mn-time"),NTIMES.map(t=>[t[0],t[1]]),"time");
 })();
 function nightClick(e){
   const b=e.target.closest("button[data-id]");if(b){e.preventDefault();return openRecipe(b.dataset.id)}
@@ -1977,34 +1997,41 @@ function nightClick(e){
 }
 $("#menus").addEventListener("click",nightClick);
 ["#menus","#wheelOut"].forEach(sel=>$(sel).addEventListener("change",e=>{const c=e.target.closest("[data-card]");if(!c)return;
-  if(e.target.type==="radio"){const m=MENUS[+c.dataset.mi];if(m.pair){c.querySelector("[data-with]").innerHTML=withHTML(withFor(m,e.target.value));c.querySelector("[data-timeline]").innerHTML=""}}
+  if(e.target.type==="radio")setMain(c,e.target.value,true);
   updatePlate(c)}));
 $("#wheelOut").addEventListener("click",nightClick);
 
 /* ---------- "I don't know" wheel ---------- */
 const WHEEL_COLORS=["#c2410c","#9a3412","#ea580c","#7c2d12","#b45309"];
-(function drawWheel(){
-  const n=MENUS.length,seg=360/n,R=98,rad=d=>d*Math.PI/180;
+let wheelList=[];   // MENUS indexes on the wheel
+function drawWheel(){
+  const vis=[...document.querySelectorAll("#menus [data-card]")].filter(c=>!c.hidden).map(c=>+c.dataset.mi);
+  let list=vis.filter(i=>!MENUS[i].nowheel);
+  if(!list.length)list=MENUS.map((m,i)=>i).filter(i=>!MENUS[i].nowheel);
+  if(list.join()===wheelList.join())return;
+  wheelList=list;
+  const n=list.length,seg=360/n,R=98,rad=d=>d*Math.PI/180;
   let out="";
-  MENUS.forEach((m,i)=>{
+  list.map(i=>MENUS[i]).forEach((m,i)=>{
     const a0=rad(i*seg-90),a1=rad((i+1)*seg-90),mid=(i+.5)*seg-90;
     out+=`<path d="M0 0 L${R*Math.cos(a0)} ${R*Math.sin(a0)} A${R} ${R} 0 0 1 ${R*Math.cos(a1)} ${R*Math.sin(a1)} Z" fill="${WHEEL_COLORS[i%WHEEL_COLORS.length]}" stroke="#1c1410" stroke-width=".6"/>`;
     out+=`<text transform="rotate(${mid}) translate(${R-5} 0)" text-anchor="end" dominant-baseline="middle">${esc(m.s||m.name)}</text>`;
   });
   out+=`<circle r="${R}" fill="none" stroke="#1c1410" stroke-width="2"/>`;
   $("#wheel").innerHTML=out;
-})();
+}
+filterNights();   // after the wheel exists: draws it from the visible nights
 let wheelRot=0,spinning=false;
 function spin(){
   if(spinning)return;spinning=true;$("#spin").disabled=true;
-  const n=MENUS.length,seg=360/n,i=Math.floor(Math.random()*n);
+  const n=wheelList.length,seg=360/n,slot=Math.floor(Math.random()*n),i=wheelList[slot];
   const jitter=(Math.random()-.5)*seg*.6;
-  const target=((-(i+.5)*seg+jitter)%360+360)%360;
+  const target=((-(slot+.5)*seg+jitter)%360+360)%360;
   wheelRot+=360*6+((target-wheelRot)%360+360)%360;
   const w=$("#wheel");
   w.style.transform=`rotate(${wheelRot}deg)`;
   const done=()=>{w.removeEventListener("transitionend",done);spinning=false;$("#spin").disabled=false;
-    const m=MENUS[i],mains=m.ids.filter(isMain);
+    const m=MENUS[i],mains=fitMains(m).length?fitMains(m):m.ids.filter(isMain);
     $("#wheelOut").innerHTML=nightCard(m,i,"w",mains[Math.floor(Math.random()*mains.length)]);
     $("#wheelOut").scrollIntoView({behavior:"smooth",block:"nearest"});};
   w.addEventListener("transitionend",done);
