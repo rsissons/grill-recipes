@@ -1433,9 +1433,9 @@ function updateCounts(){
   document.querySelectorAll("#f-time .chip").forEach(c=>{const t=TIMES.find(x=>x[0]===c.dataset.v);c.querySelector(".n").textContent=cnt("time",r=>t[2](r.mins))});
   document.querySelectorAll("#f-mac .chip").forEach(c=>{const t=MACF.find(x=>x[0]===c.dataset.v);c.querySelector(".n").textContent=cnt("mac",t[2])});
 }
-function cardHTML(r){
+function cardHTML(r,flat){
   return `<button class="card" type="button" data-id="${r.id}">
-    <div class="tags"><span class="tag ${r.cooker.toLowerCase()}">${COOKERS[r.cooker]}</span><span class="tag">${esc(r.region)}</span>${r.added?'<span class="tag added">Added</span>':""}</div>
+    <div class="tags"><span class="tag ${r.cooker.toLowerCase()}">${COOKERS[r.cooker]}</span>${flat?`<span class="tag">${TYPE_LABEL[r.type]}</span>`:""}<span class="tag">${esc(r.region)}</span>${r.added?'<span class="tag added">Added</span>':""}</div>
     <h3>${esc(r.name)}</h3>
     <div class="meta"><span>⏱ ${fmtTime(r.mins)}${r.mac?` · ${r.mac.cal} cal · ${r.mac.p}g protein`:""}</span><span>${inPlan(r.id)?'<span class="onlist">🛒 On list</span> ':''}${starsHTML(r)}${heartHTML(r.id)}</span></div>
   </button>`;
@@ -1443,7 +1443,10 @@ function cardHTML(r){
 function render(){
   const list=R.filter(r=>matches(r)).sort(SORTS[sortBy]||SORTS.rec);
   const GROUP={Beef:"Beef Mains",Chicken:"Chicken Mains",Pork:"Pork Mains",Seafood:"Seafood Mains",Other:"Other Mains",Side:"Side Dishes",Appetizer:"Appetizers"};
-  $("#grid").innerHTML=list.length?TYPES.map(t=>{const g=list.filter(r=>r.type===t);return g.length?`<section class="group"><h2>${GROUP[t]}<small>${g.length}</small></h2><div class="grid">${g.map(cardHTML).join("")}</div></section>`:""}).join(""):`<div class="empty">No matches. Clear a filter or hit Reset.</div>`;
+  const SORT_TITLE={new:"Newest",top:"Top rated",fav:"Most favorited",az:"A to Z",quick:"Quickest",cal:"Lowest calories",pro:"Most protein"};
+  if(list.length&&sortBy!=="rec"){   // any real sort: one ranked list across every category
+    $("#grid").innerHTML=`<section class="group"><h2>${SORT_TITLE[sortBy]}<small>${list.length}</small></h2><div class="grid">${list.map(r=>cardHTML(r,true)).join("")}</div></section>`;
+  }else $("#grid").innerHTML=list.length?TYPES.map(t=>{const g=list.filter(r=>r.type===t);return g.length?`<section class="group"><h2>${GROUP[t]}<small>${g.length}</small></h2><div class="grid">${g.map(r=>cardHTML(r)).join("")}</div></section>`:""}).join(""):`<div class="empty">No matches. Clear a filter or hit Reset.</div>`;
   $("#count").textContent=`${list.length} of ${R.length} recipes`;
   const nf=state.cooker.size+state.type.size+state.region.size+state.time.size+state.mac.size;$("#fCount").textContent=nf||"";
   updateCounts();
