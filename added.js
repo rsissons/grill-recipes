@@ -339,5 +339,43 @@ window.ADDED = [
    "v": 4.0,
    "n": 7
   }
+ },
+ {
+  "id": "teriyaki-chicken-bowl",
+  "name": "Teriyaki Chicken Bowl",
+  "cooker": "BS",
+  "type": "Chicken",
+  "region": "Japanese",
+  "mins": 30,
+  "serves": 4,
+  "desc": "",
+  "ing": [
+   "1.5–2 lbs boneless, skinless chicken thighs, thinly sliced",
+   "1 tsp garlic powder",
+   "½ tsp black pepper",
+   "½–¾ cup Bachan’s Sweet &amp; Spicy Japanese BBQ Sauce",
+   "2 tbsp cornstarch",
+   "2 tbsp oil (plus more as needed)",
+   "2 cups broccoli florets",
+   "Salt, to taste",
+   "2 cups cooked white rice"
+  ],
+  "steps": [
+   "In a large bowl, combine the sliced chicken, garlic powder, black pepper, and Bachan’s Sweet &amp; Spicy sauce. Add the cornstarch and mix until the chicken is evenly coated.",
+   "Preheat your Blackstone griddle to medium-high heat and add a little oil.",
+   "Add the chicken to the griddle and cook, stirring occasionally, until fully cooked and slightly caramelized.",
+   "On the side of the griddle, add the broccoli with a little oil and a pinch of salt. Cook until tender but still slightly crisp.",
+   "Remove the chicken from the griddle once done.",
+   "Build your bowls by adding a base of white rice, then topping with broccoli and the cooked chicken."
+  ],
+  "tip": "",
+  "src": [
+   "Blackstone Products: Teriyaki Chicken Bowl",
+   "https://blackstoneproducts.com/blogs/recipes/teriyaki-chicken-bowl"
+  ],
+  "rating": {
+   "v": 5.0,
+   "n": 1
+  }
  }
 ];
