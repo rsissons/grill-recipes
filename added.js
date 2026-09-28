@@ -295,5 +295,49 @@ window.ADDED = [
    "Blackstone Products: Chicken and Elote Tacos",
    "https://blackstoneproducts.com/blogs/recipes/chicken-and-elote-tacos"
   ]
+ },
+ {
+  "id": "easy-bbq-chicken-flatbread",
+  "name": "Easy BBQ Chicken Flatbread",
+  "cooker": "BS",
+  "type": "Appetizer",
+  "region": "BBQ",
+  "mins": 10,
+  "serves": 4,
+  "desc": "Tender seasoned chicken, melted Monterey Jack and cheddar, sweet pineapple, and red onion come together on crispy flatbread for an easy BBQ-inspired meal that's perfect for lunch,…",
+  "ing": [
+   "1 lb chicken breast, thinly chopped",
+   "1 tbsp cooking oil, plus more for the griddle",
+   "Blackstone Parmesan Ranch Seasoning, to taste",
+   "1 tbsp fresh garlic, chopped",
+   "1 cup shredded Monterey Jack cheese",
+   "1 cup shredded sharp cheddar cheese",
+   "2 flatbreads",
+   "BBQ sauce",
+   "Pineapple, chopped into small pieces",
+   "Red onion, chopped",
+   "Fresh cilantro, chopped"
+  ],
+  "steps": [
+   "Preheat your Blackstone griddle to medium heat.",
+   "In a bowl, toss the chicken with the cooking oil and season generously with Blackstone Parmesan Ranch Seasoning.",
+   "Lightly oil the griddle and add the chicken. Cook for 5–7 minutes, stirring occasionally, until lightly browned and nearly cooked through.",
+   "Add the chopped garlic to the griddle and sauté for 30–60 seconds until fragrant. Mix it into the chicken and continue cooking until the chicken is fully cooked.",
+   "Place the flatbreads on the griddle and toast for 1–2 minutes until lightly browned. Flip the flatbreads and reduce the heat to low.",
+   "Spread a thin layer of BBQ sauce over each flatbread.",
+   "Top evenly with the Monterey Jack and cheddar cheeses, followed by the cooked chicken, chopped pineapple, and red onion.",
+   "Continue cooking over low heat until the cheese is completely melted and the flatbreads are crisp on the bottom.",
+   "Remove from the griddle and finish with fresh cilantro, an extra drizzle of BBQ sauce, and a light sprinkle of Blackstone Parmesan Ranch Seasoning.",
+   "Slice and serve immediately."
+  ],
+  "tip": "",
+  "src": [
+   "Blackstone Products: Easy BBQ Chicken Flatbread",
+   "https://blackstoneproducts.com/blogs/recipes/bbq-chicken-flatbread-1"
+  ],
+  "rating": {
+   "v": 4.0,
+   "n": 7
+  }
  }
 ];
