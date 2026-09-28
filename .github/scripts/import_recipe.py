@@ -444,6 +444,17 @@ def main():
         if rv and rn and 0 < rv <= 5:
             recipe["rating"] = {"v": round(rv, 1), "n": int(rn)}
     if replacing is not None:
+        # a resubmit keeps the earlier cooker/type/region unless the form sets them this time
+        old = items[replacing]
+        if not form.get("cooker"):
+            recipe["cooker"] = old.get("cooker", recipe["cooker"])
+            recipe.pop("finish", None)
+            if old.get("finish"):
+                recipe["finish"] = old["finish"]
+        if not form.get("type"):
+            recipe["type"] = old.get("type", recipe["type"])
+        if not form.get("region (optional)"):
+            recipe["region"] = old.get("region", recipe["region"])
         items[replacing] = recipe
     else:
         items.append(recipe)
@@ -456,7 +467,7 @@ def main():
             "To change it, submit the link again and pick the cooker in the form.") if guessed_cooker else ""
     verb = "Updated" if replacing is not None else "Added"
     comment = (f"{verb} **{name}**\n\n"
-               f"- Cooker: **{cookers[cooker_pick]}{(' + ' + cookers[finish_cooker]) if finish_cooker else ''}**\n- Type: **{types[type_pick]}**\n- Region: **{region}**\n"
+               f"- Cooker: **{cookers[recipe['cooker']]}{(' + ' + cookers[recipe['finish']]) if recipe.get('finish') else ''}**\n- Type: **{types[recipe['type']]}**\n- Region: **{recipe['region']}**\n"
                f"- Time: about {mins} min · {len(ings)} ingredients · {len(steps)} steps\n"
                + (f"- Macros per serving (from the site): {mac['cal']} cal · {mac['p']}g protein · {mac['c']}g carbs · {mac['f']}g fat\n" if mac else "- Macros: the site doesn't publish them\n")
                + ("- Read from the Internet Archive's copy (the site blocks automated readers)\n" if via == "archive" else "")
