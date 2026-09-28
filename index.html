@@ -218,6 +218,7 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
 .mnhead{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .mnnote{font-size:.85rem;color:var(--ink-2);flex:1;min-width:180px}
 .mnhead .lnk{background:none;border:0;color:var(--ember);font-weight:600;text-decoration:underline;cursor:pointer}
+.alsoon{margin:0 0 12px;font-size:.88rem;color:var(--ink-2)}
 .nh{margin:10px 0 4px;font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-2)}
 .opt{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;padding:4px 0;cursor:pointer}
 .opt input{accent-color:var(--ember);width:18px;height:18px;flex:none;margin:0}
@@ -1487,6 +1488,8 @@ const R = [
 if(Array.isArray(window.ADDED))window.ADDED.forEach(r=>{if(r&&r.id&&!R.some(x=>x.id===r.id))R.push({...r,added:1})});
 /* Per-serving macros: [calories, protein g, carbs g, fat g, servings, s=published by the source / e=estimate from the ingredient list, note] */
 const MACROS={
+ "easy-smoked-white-queso-dip-on-the-traeger-ironwood-885":[350,15,8,28,8,"e"],
+ "shrimp-scampi":[750,40,70,32,2,"e"],"beer-battered-fish-and-chips":[820,38,80,38,4,"e"],"hawaiian-mac-salad":[450,8,45,27,4,"e"],"marinated-lamb-chops":[480,30,3,38,4,"e"],"crispy-asian-broccoli":[90,4,10,4,4,"e"],"taco-salad":[650,32,35,42,4,"e"],"spicy-pork-noodles":[720,26,90,27,4,"e"],"chicken-katsu-curry":[850,40,100,30,4,"e"],"beef-stroganoff":[620,35,45,32,6,"e"],"salmon-patties":[300,24,12,17,4,"e"],"char-siu-pork":[420,32,28,18,4,"e"],"meatball-subs":[950,45,80,48,2,"e"],"beef-chow-fun":[600,28,75,20,6,"e"],"shrimp-fajitas":[330,20,32,13,8,"e"],"country-fried-steak":[750,38,45,45,4,"e"],"bacon-wrapped-scallops":[380,28,4,27,2,"e"],"pepper-steak":[620,45,30,34,2,"e"],"crab-rangoon-nachos":[480,12,38,31,4,"e"],"sweet-and-sour-chicken":[560,32,60,20,4,"e"],"catfish-po-boys":[850,38,80,40,2,"e"],"cajun-dirty-rice":[420,18,45,18,4,"e"],"potato-skins":[480,18,38,29,3,"e"],"cheesy-beef-tostadas":[620,32,35,38,4,"e"],"chicken-shawarma-wraps":[650,42,50,30,4,"e"],"spam-fried-rice":[620,20,70,28,4,"e"],"shrimp-chow-mein":[520,28,65,16,4,"e"],"arroz-con-pollo":[680,42,70,24,4,"e"],"griddle-chili-dogs":[520,20,35,33,8,"e"],"onion-rings":[420,7,50,21,3,"e"],"steak-frites":[680,30,45,42,4,"e"],"chicken-fettuccine":[950,50,70,52,4,"e"],"fried-green-tomatoes":[280,6,30,15,4,"e"],"corn-fritters":[300,7,35,15,4,"e"],"garlic-parmesan-zucchini":[90,4,5,6,6,"e"],"shrimp-toast":[380,18,30,21,4,"e"],"chicken-enchiladas":[680,42,45,36,4,"e"],"grilled-chicken-club":[680,45,45,34,4,"e"],"animal-style-fries":[900,22,80,55,2,"e"],"crispy-pork-cutlets":[520,36,25,30,4,"e"],"grilled-cheese-and-tomato-soup":[620,22,50,36,4,"e"],
  "chicken-and-elote-tacos":[330,20,29,16,10,"e","1 taco"],"easy-bbq-chicken-flatbread":[580,41,39,28,4,"e"],
  "firecracker-chicken":[450,32,55,10,3,"e"],"sloppy-joes":[470,24,34,24,4,"e","without cheese"],"korean-beef-bowls":[590,30,70,18,4,"e","with 1 cup rice and an egg"],
  "bang-bang-salmon":[530,34,4,42,4,"e"],"breakfast-burritos":[910,38,90,44,3,"e","1 burrito"],"pierogi-kielbasa":[760,24,50,50,6,"e"],
@@ -1681,7 +1684,7 @@ const MENUS = [
  {name:"Street Taco Night",s:"Street Tacos",why:"All griddle. Marinate the carne asada and al pastor in the morning.",ids:["carne-asada","chicken-al-pastor","elote","chorizo-fries"]},
  {name:"Taco Tuesday, Low & Slow",s:"Barbacoa Tacos",why:"Barbacoa on the barrel all afternoon. Tortillas, corn and rice on the Blackstone.",ids:["barbacoa","mexican-rice","corn-bean-salsa","taco-queso"]},
  {name:"Korean BBQ Night",s:"Korean BBQ",why:"Galbi, bulgogi or pork belly on high heat, lettuce wraps, corn cheese bubbling in the corner.",ids:["galbi","bulgogi","samgyeopsal","kimchi-fried-rice","corn-cheese"]},
- {name:"Takeout Killer (Chinese)",s:"Chinese Takeout",why:"All Blackstone, under 45 minutes. Lo mein goes last.",ids:["orange-chicken","beef-broccoli","lo-mein","lettuce-wraps"]},
+ {name:"Takeout Killer (Chinese)",s:"Chinese Takeout",why:"All Blackstone, under 45 minutes. Lo mein goes last.",ids:["orange-chicken","beef-broccoli","pepper-steak","sweet-and-sour-chicken","lo-mein","lettuce-wraps","shrimp-toast"]},
  {name:"Hawaiian Luau",s:"Luau",why:"Huli huli hangs in the barrel; fried rice and veg on the griddle.",ids:["huli-huli","pineapple-rice","hibachi-veg"]},
  {name:"Burnt Ends Sampler",s:"Burnt Ends",why:"Three kinds of burnt ends, with the beans under them catching the drippings. A full-day barrel cook.",ids:["brisket-burnt-ends","chuck-burnt-ends","pork-belly-burnt-ends","drip-beans"]},
  {name:"Low & Slow Saturday",s:"Brisket Day",why:"Brisket hangs all day with the beans under it. The mac and cream cheese go on for the last two hours.",ids:["hanging-brisket","drip-beans","popper-mac","smoked-cream-cheese"]},
@@ -1719,6 +1722,8 @@ const MENUS = [
  {name:"Rice Bowl Night",s:"Rice Bowls",why:"Korean beef, firecracker chicken or bang bang salmon over rice, all on the Blackstone in 30 minutes.",ids:["korean-beef-bowls","firecracker-chicken","bang-bang-salmon","hibachi-veg","bang-bang-shrimp"]},
  {name:"Polish Night",s:"Polish Night",why:"Pierogi, kielbasa and cabbage on one griddle. Beer optional but encouraged.",ids:["pierogi-kielbasa","beer-brats","griddle-potatoes"]},
  {name:"Breakfast for Dinner",s:"Breakfast Dinner",why:"Bacon, egg and potato burritos with crispy griddle potatoes. Nobody complains.",ids:["breakfast-burritos","griddle-potatoes","hash-browns"]},
+ {name:"Fish Fry Friday",s:"Fish Fry",why:"Beer-battered fish and chips or catfish po' boys, with onion rings and fried green tomatoes.",ids:["beer-battered-fish-and-chips","catfish-po-boys","onion-rings","fried-green-tomatoes"]},
+ {name:"Comfort Food Night",s:"Comfort Food",why:"Country fried steak, stroganoff or chicken fettuccine, the stuff you actually crave on a cold night.",ids:["country-fried-steak","beef-stroganoff","chicken-fettuccine","garlic-parmesan-zucchini","corn-fritters"],pair:{"country-fried-steak":["corn-fritters","garlic-parmesan-zucchini"],"beef-stroganoff":["garlic-parmesan-zucchini"],"chicken-fettuccine":["garlic-parmesan-zucchini"]}},
  {name:"Mediterranean Night",s:"Mediterranean",why:"One batch of tzatziki covers both dishes.",ids:["greek-gyros","veg-kebabs","greek-meatballs"]}
 ];
 
@@ -2160,6 +2165,11 @@ function ingHTML(r,n){
   const nat=nativeServes(r),f=n/nat;
   return `<ul>${r.ing.map(i=>`<li>${esc(scaleLine(i,f))}</li>`).join("")}</ul>${Math.abs(f-1)>.01?`<p class="macnote">Scaled from ${nat} servings to ${n}. Steps still say the original amounts, and smaller cuts finish sooner, so go by temp.</p>`:""}`;
 }
+// the same dish on another cooker (mirrors norm_name in the importer)
+const DSTOP=new Set("the best easy recipe homemade perfect simple ultimate authentic quick classic my a an and with on for of how to make copycat blackstone griddle grilled smoked pit barrel style".split(" "));
+const dishKey=n=>n.toLowerCase().replace(/\b(air[- ]?fr(y|yer|ied|ying)|sous[- ]?vide|slow[- ]?cooker|crock[- ]?pot|crockpot|instant[- ]?pot|pressure[- ]?cooker|flat[- ]?top|on the (grill|griddle|smoker)|pellet grill|traeger)\b/g," ").replace(/\([^)]*\)/g," ").match(/[a-z0-9]+/g)?.filter(w=>!DSTOP.has(w)).map(w=>w.length>3&&w.endsWith("s")&&!w.endsWith("ss")?w.slice(0,-1):w).join(" ")||"";
+function alsoOnHTML(r){const k=dishKey(r.name);const o=k?R.filter(x=>x.id!==r.id&&x.cooker!==r.cooker&&dishKey(x.name)===k):[];
+  return o.length?`<p class="alsoon">Also on: ${o.map(x=>`<button type="button" class="chip" data-also="${x.id}">${COOKERS[x.cooker]}</button>`).join(" ")}</p>`:""}
 function macHTML(r){
   const m=r.mac;if(!m)return "";
   const from=m.from==="s"?`from ${esc(siteOf(r))}`:"Estimate from the ingredient list";
@@ -2186,7 +2196,7 @@ function openRecipe(id){
   $("#dlgTags").innerHTML=`<span class="tag ${r.cooker.toLowerCase()}">${cookerLabel(r)}</span><span class="tag">${TYPE_LABEL[r.type]}</span><span class="tag">${esc(r.region)}</span><span class="tag">⏱ ${fmtTime(r.mins)}</span>`+
     `${ratingLineHTML(r)}${rateMeHTML(r)}`;
   const isFav=favs.has(r.id);
-  $("#dlgBody").innerHTML=`${macHTML(r)}${smokerHTML(r)}<div class="inghead"><h3${r.mac?"":' style="margin-top:0"'}>Ingredients</h3>${servesSelect(servesFor(r.id),nativeServes(r),'id="dlgServes"')}</div><div id="dlgIng">${ingHTML(r,servesFor(r.id))}</div>
+  $("#dlgBody").innerHTML=`${alsoOnHTML(r)}${macHTML(r)}${smokerHTML(r)}<div class="inghead"><h3${r.mac?"":' style="margin-top:0"'}>Ingredients</h3>${servesSelect(servesFor(r.id),nativeServes(r),'id="dlgServes"')}</div><div id="dlgIng">${ingHTML(r,servesFor(r.id))}</div>
     <h3>Steps</h3><ol>${r.steps.map(s=>`<li>${esc(s)}</li>`).join("")}</ol>
     ${r.tip?`<div class="tip"><b>Tip:</b> ${esc(r.tip)}</div>`:""}
     <details class="pairs-wrap fold"><summary><h3>Pairs with</h3><span class="chev">▾</span></summary><div class="pairs">${pairsFor(r).map(p=>`<button type="button" data-id="${p.id}">${esc(p.name)}<small>${COOKERS[p.cooker]} · ${TYPE_LABEL[p.type]} · ${esc(p.region)}</small></button>`).join("")}</div></details>
@@ -2194,6 +2204,7 @@ function openRecipe(id){
     <div class="dlg-actions"><select id="dayPick" aria-label="Which day">${dayOpts(inPlan(r.id)?inPlan(r.id).day:"Tonight")}</select><button class="btn primary" id="listBtn" type="button">${inPlan(r.id)?'✓ On list (remove)':'＋ Add to list'}</button><button class="btn ${isFav?'primary':''}" id="favBtn" type="button">${isFav?'♥ Saved':'♡ Save to favorites'}</button><button class="btn" type="button" onclick="window.print()">Print</button><button class="btn" id="shareBtn" type="button">Copy link</button></div>
     <div class="dlg-actions"><label class="rb">Ready by <input type="time" value="17:00" id="dlgReady"></label><button class="btn" type="button" id="dlgTime">⏰ Plan my timing</button></div><div id="dlgTimeline"></div>`;
   $("#dlgBody").querySelectorAll(".pairs button").forEach(b=>b.onclick=()=>openRecipe(b.dataset.id));
+  $("#dlgBody").querySelectorAll("[data-also]").forEach(b=>b.onclick=()=>openRecipe(b.dataset.also));
   $("#listBtn").onclick=()=>{inPlan(r.id)?removeFromPlan(r.id):addToPlan(r.id,$("#dayPick").value,+$("#dlgServes").value);openRecipe(r.id);render()};
   $("#dlgServes").onchange=e=>{const n=+e.target.value;setHousehold(n);const p=inPlan(r.id);if(p){p.serves=n;savePlan()}$("#dlgIng").innerHTML=ingHTML(r,n)};
   $("#dayPick").onchange=()=>{if(inPlan(r.id)){addToPlan(r.id,$("#dayPick").value);render()}};

@@ -398,8 +398,12 @@ STOP = {"the", "best", "easy", "recipe", "homemade", "perfect", "simple", "ultim
         "blackstone", "griddle", "grilled", "smoked", "pit", "barrel", "style"}
 
 
+COOKER_WORDS = re.compile(r"\b(air[- ]?fr(y|yer|ied|ying)|sous[- ]?vide|slow[- ]?cooker|crock[- ]?pot|crockpot|instant[- ]?pot|pressure[- ]?cooker|flat[- ]?top|on the (grill|griddle|smoker)|pellet grill|traeger)\b")
+
+
 def norm_name(n):
-    words = re.findall(r"[a-z0-9]+", re.sub(r"\([^)]*\)", " ", n.lower()))
+    n = COOKER_WORDS.sub(" ", n.lower())
+    words = re.findall(r"[a-z0-9]+", re.sub(r"\([^)]*\)", " ", n))
     return " ".join((w[:-1] if len(w) > 3 and w.endswith("s") and not w.endswith("ss") else w) for w in words if w not in STOP)
 
 
@@ -457,17 +461,18 @@ def main():
 
     items = load_added()
     idx = open(INDEX, encoding="utf-8").read()
-    builtin_names = re.findall(r'\{id:"[^"]+",name:"([^"]+)"', idx)
+    builtin_names = re.findall(r'\{id:"[^"]+",name:"([^"]+)",cooker:"(\w+)"', idx)
     builtin_ids = set(re.findall(r'\{id:"([^"]+)"', idx))
 
     replacing = next((i for i, r in enumerate(items) if r.get("src", ["", ""])[1] == url), None)
     nn = norm_name(name)
-    for bn in builtin_names:
-        if norm_name(bn) == nn:
+    # same dish on the same cooker is a duplicate; the same dish on a different cooker is allowed (the site links them)
+    for bn, bc in builtin_names:
+        if norm_name(bn) == nn and bc == cooker_pick:
             fail(f"**{name}** looks like a dish that's already on the site (**{bn}**)."
                  + ("" if name_in else " If it's a different take, submit it again with your own **Name** (e.g. with the main ingredient in it)."))
     for i, r in enumerate(items):
-        if i != replacing and norm_name(r["name"]) == nn:
+        if i != replacing and norm_name(r["name"]) == nn and r.get("cooker") == cooker_pick:
             fail(f"**{name}** is already on the site (added earlier from {r['src'][1]})."
                  + ("" if name_in else " If it's a different dish, submit it again with your own **Name**."))
 
