@@ -205,6 +205,10 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
 .smk{font-size:.88rem;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin:0 0 12px}
 .inghead{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
 .serves select{border:1px solid var(--line);background:var(--surface-2);color:var(--ink);border-radius:8px;padding:4px 6px}
+.mnf{margin-bottom:14px}
+.mnhead{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.mnnote{font-size:.85rem;color:var(--ink-2);flex:1;min-width:180px}
+.mnhead .lnk{background:none;border:0;color:var(--ember);font-weight:600;text-decoration:underline;cursor:pointer}
 .nh{margin:10px 0 4px;font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-2)}
 .opt{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;padding:4px 0;cursor:pointer}
 .opt input{accent-color:var(--ember);width:18px;height:18px;flex:none;margin:0}
@@ -289,6 +293,16 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
   </section>
 
   <section class="panel" id="tab-menus" hidden>
+    <div class="filters mnf">
+      <div class="mnhead"><button class="btn" id="mnToggle" type="button" aria-expanded="false" aria-controls="mnBody">Filters<span class="badge" id="mnBadge"></span> <span aria-hidden="true" id="mnArrow">▾</span></button>
+        <span class="mnnote">Pick as many as you like. The wheel, Build me a cook and the meal nights below all follow them.</span><button class="lnk" id="mnClear" type="button" hidden>Clear all</button></div>
+      <div id="mnBody" class="fbody" hidden>
+        <div class="frow"><span class="lbl">Cookers</span><div class="chips" id="mn-cooker"></div></div>
+        <div class="frow"><span class="lbl">Region</span><div class="chips" id="mn-region"></div></div>
+        <div class="frow"><span class="lbl">Protein</span><div class="chips" id="mn-protein"></div></div>
+        <div class="frow"><span class="lbl">Time</span><div class="chips" id="mn-time"></div></div>
+      </div>
+    </div>
     <div class="builder wheelbox">
       <h2>I don't know</h2>
       <div class="wheel-wrap"><div class="pointer"></div><svg id="wheel" viewBox="-100 -100 200 200" role="img" aria-label="Meal night wheel"></svg><button class="spin-btn" id="spin" type="button">SPIN</button></div>
@@ -296,18 +310,11 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
     </div>
     <div class="builder">
       <h2>Build me a cook</h2>
-      <div class="frow"><span class="lbl">Region</span><div class="chips" id="b-region"></div></div>
-      <div class="frow" style="margin-top:8px"><span class="lbl">Setup</span><div class="chips" id="b-setup"></div></div>
-      <div class="frow" style="margin-top:8px"><span class="lbl">Protein</span><div class="chips" id="b-protein"></div></div>
-      <div style="margin-top:12px"><button class="btn primary" id="build" type="button">Build the menu</button></div>
+      <p class="section-intro" style="margin:4px 0 0">A main, a side and an appetizer that go together and fit your filters.</p>
+      <div style="margin-top:12px"><button class="btn primary" id="build" type="button">🎲 Build the menu</button></div>
       <div class="out" id="buildOut"></div>
     </div>
     <h2 style="margin-bottom:10px">Meal nights</h2>
-    <div class="filters" style="margin-bottom:12px">
-      <div class="frow"><span class="lbl">Cooker</span><div class="chips" id="mn-cooker"></div></div>
-      <div class="frow"><span class="lbl">Region</span><div class="chips" id="mn-region"></div></div>
-      <div class="frow"><span class="lbl">Time</span><div class="chips" id="mn-time"></div></div>
-    </div>
     <div class="count" id="mnCount"></div>
     <div class="menus" id="menus"></div>
   </section>
@@ -2074,6 +2081,7 @@ dlg.addEventListener("close",()=>history.replaceState(null,"",location.pathname+
 
 /* ---------- meal nights ---------- */
 const isMain=id=>MAIN_T.has(byId[id].type);
+function setNightFilters(open){$("#mnBody").hidden=!open;$("#mnToggle").setAttribute("aria-expanded",open);$("#mnArrow").textContent=open?"▴":"▾";store.set("ftb-mnopen",open)}
 // Sides that go with the chosen main: a night's pair map when it has one (so Kalua pork doesn't get mashed potatoes), else all its sides.
 const withFor=(m,main)=>(m.pair&&m.pair[main])||m.ids.filter(id=>!isMain(id));
 function optRow(id,input){const r=byId[id];return `<label class="opt">${input}<button type="button" class="lnk" data-id="${id}">${esc(r.name)}</button><small>${COOKERS[r.cooker]} · ${fmtTime(r.mins)}</small></label>`}
@@ -2099,22 +2107,32 @@ $("#menus").innerHTML=MENUS.map((m,i)=>nightCard(m,i,"n")).join("");
 function setMain(c,id,already){
   const m=MENUS[+c.dataset.mi];
   if(!already){const r=c.querySelector(`input[type=radio][value="${id}"]`);if(!r||r.checked)return;r.checked=true}
-  if(m.pair){c.querySelector("[data-with]").innerHTML=withHTML(withFor(m,id));c.querySelector("[data-timeline]").innerHTML=""}
+  if(m.pair){c.querySelector("[data-with]").innerHTML=withHTML(withFor(m,id));c.querySelector("[data-timeline]").innerHTML="";applySides(c)}
   c.querySelector("[data-ntime]").innerHTML=ntimeHTML(m,id);updatePlate(c);
 }
-const mnState={cooker:new Set(),region:new Set(),time:new Set()};
-// mains in a night that fit the chosen time chips (any chip)
-const fitMains=m=>m.ids.filter(isMain).filter(x=>!mnState.time.size||NTIMES.some(t=>mnState.time.has(t[0])&&t[2](m,x)));
+const mnState={cooker:new Set(),region:new Set(),protein:new Set(),time:new Set()};
+// "Cookers" means the ones you've got: a dish fits when its cooker (and its finishing cooker) are picked
+const cookerOK=r=>!mnState.cooker.size||(mnState.cooker.has(r.cooker)&&(!r.finish||mnState.cooker.has(r.finish)));
+const mainOK=r=>cookerOK(r)&&(!mnState.region.size||mnState.region.has(r.region))&&(!mnState.protein.size||mnState.protein.has(r.type));
+// the time chips for a single recipe (Build me a cook)
+const RTIME={"30":r=>r.mins<=30,"60":r=>r.mins<=60,"120":r=>r.mins<=120,"r5":ready5};
+const timeOK=(r,side)=>!mnState.time.size||[...mnState.time].some(k=>side&&k==="r5"?true:RTIME[k](r));
+// mains in a night that fit every filter row (any chip within a row)
+const fitMains=m=>m.ids.filter(isMain).filter(x=>mainOK(byId[x])&&(!mnState.time.size||NTIMES.some(t=>mnState.time.has(t[0])&&t[2](m,x))));
+// with a cooker filter on, untick sides that need a cooker you don't have
+function applySides(c){c.querySelectorAll("input[data-x]").forEach(x=>{x.checked=cookerOK(byId[x.dataset.x])});updatePlate(c)}
 function filterNights(){
   let shown=0;
   document.querySelectorAll("#menus [data-card]").forEach(c=>{
-    const cks=c.dataset.cookers.split(" "),rgs=c.dataset.regions.split("|");
     const fit=fitMains(MENUS[+c.dataset.mi]);
-    const ok=(!mnState.cooker.size||cks.some(x=>mnState.cooker.has(x)))&&(!mnState.region.size||rgs.some(x=>mnState.region.has(x)))&&fit.length>0;
+    const ok=fit.length>0;
     c.hidden=!ok;if(ok)shown++;
-    // pick a main you have time for
+    // pick a main that fits, and the sides you can cook
     const cur=c.querySelector("input[type=radio]:checked");if(ok&&cur&&!fit.includes(cur.value))setMain(c,fit[0]);
+    if(ok)applySides(c);
   });
+  const n=Object.values(mnState).reduce((a,x)=>a+x.size,0);
+  $("#mnBadge").textContent=n||"";$("#mnClear").hidden=!n;
   drawWheel();
   $("#mnCount").textContent=`${shown} of ${MENUS.length} meal nights`;
 }
@@ -2122,8 +2140,12 @@ function filterNights(){
   const rgs=[...new Set(MENUS.flatMap(m=>m.ids.filter(isMain).map(id=>byId[id].region)))].sort();
   const mk=(el,items,key)=>{el.innerHTML=items.map(([v,l])=>`<button class="chip" type="button" aria-pressed="false" data-v="${esc(v)}">${esc(l)}</button>`).join("");
     el.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{const v=c.dataset.v;mnState[key].has(v)?mnState[key].delete(v):mnState[key].add(v);c.setAttribute("aria-pressed",mnState[key].has(v));filterNights()})};
-  mk($("#mn-cooker"),Object.entries(COOKERS),"cooker");mk($("#mn-region"),rgs.map(r=>[r,r]),"region");mk($("#mn-time"),NTIMES.map(t=>[t[0],t[1]]),"time");
+  mk($("#mn-cooker"),Object.entries(COOKERS),"cooker");mk($("#mn-region"),rgs.map(r=>[r,r]),"region");
+  mk($("#mn-protein"),[...MAIN_T].filter(t=>R.some(r=>r.type===t)).map(t=>[t,t]),"protein");mk($("#mn-time"),NTIMES.map(t=>[t[0],t[1]]),"time");
 })();
+setNightFilters(store.get("ftb-mnopen",false));
+$("#mnToggle").onclick=()=>setNightFilters($("#mnBody").hidden);
+$("#mnClear").onclick=()=>{Object.values(mnState).forEach(x=>x.clear());document.querySelectorAll("#mnBody .chip").forEach(c=>c.setAttribute("aria-pressed","false"));filterNights()};
 function nightClick(e){
   const b=e.target.closest("button[data-id]");if(b){e.preventDefault();return openRecipe(b.dataset.id)}
   if(e.target.closest("[data-respin]"))return spin();
@@ -2182,37 +2204,33 @@ function spin(){
   w.style.transform=`rotate(${wheelRot}deg)`;
   const done=()=>{w.removeEventListener("transitionend",done);spinning=false;$("#spin").disabled=false;
     const m=MENUS[i],mains=fitMains(m).length?fitMains(m):m.ids.filter(isMain);
-    $("#wheelOut").innerHTML=nightCard(m,i,"w",mains[Math.floor(Math.random()*mains.length)]);
+    $("#wheelOut").innerHTML=nightCard(m,i,"w",mains[Math.floor(Math.random()*mains.length)]);applySides($("#wheelOut [data-card]"));
     $("#wheelOut").scrollIntoView({behavior:"smooth",block:"nearest"});};
   w.addEventListener("transitionend",done);
 }
 $("#spin").onclick=spin;
 $("#spinCta").onclick=()=>{document.querySelector('nav.tabs [data-tab="menus"]').click();setTimeout(()=>{$(".wheelbox").scrollIntoView({behavior:"smooth",block:"start"});setTimeout(spin,500)},50)};
 
-const bState={region:"Any",setup:"Any",protein:"Any"};
-function single(el,opts,key){el.innerHTML=opts.map(o=>`<button class="chip" type="button" aria-pressed="${o===bState[key]}" data-v="${esc(o)}">${esc(o)}</button>`).join("");
-  el.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{bState[key]=c.dataset.v;el.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",x===c))});}
-single($("#b-region"),["Any",...REGIONS],"region");
-single($("#b-setup"),["Any","Blackstone only","Pit Barrel only","Grill only","Sous Vide only","Slow Cooker only"],"setup");
-single($("#b-protein"),["Any","Beef","Chicken","Pork","Seafood"],"protein");
 const rnd=a=>a[Math.floor(Math.random()*a.length)];
 $("#build").onclick=()=>{
-  const okCooker=r=>bState.setup==="Any"||r.cooker==={"Blackstone only":"BS","Pit Barrel only":"PBC","Grill only":"GR","Sous Vide only":"SV","Slow Cooker only":"SC"}[bState.setup];
-  let mains=R.filter(r=>MAIN_T.has(r.type)&&okCooker(r)&&(bState.protein==="Any"||r.type===bState.protein));
-  const inRegion=mains.filter(r=>bState.region==="Any"||r.region===bState.region);
+  const okCooker=cookerOK;
+  const mains=R.filter(r=>MAIN_T.has(r.type)&&cookerOK(r)&&(!mnState.protein.size||mnState.protein.has(r.type))&&timeOK(r));
+  const inRegion=mains.filter(r=>!mnState.region.size||mnState.region.has(r.region));
   let note="";
-  if(bState.region!=="Any"&&!inRegion.length)note=`No ${bState.region} main fits that setup, so here's the closest match.`;
+  if(mnState.region.size&&!inRegion.length)note=`No ${[...mnState.region].join(" or ")} main fits the other filters, so here's the closest match.`;
   const pool=inRegion.length?inRegion:mains;
-  if(!pool.length){$("#buildOut").innerHTML="<p>Nothing fits that setup. Loosen a filter.</p>";return}
+  if(!pool.length){$("#buildOut").innerHTML="<p>Nothing fits those filters. Loosen one up.</p>";return}
   const main=rnd(pool);
-  const pick=t=>{const c=R.filter(r=>r.type===t&&okCooker(r)).map(x=>[x,score(main,x)+Math.random()*2]).sort((a,b)=>b[1]-a[1]);return c.length?c[0][0]:null};
+  const pick=t=>{const c=R.filter(r=>r.type===t&&okCooker(r)&&timeOK(r,true)).map(x=>[x,score(main,x)+Math.random()*2]).sort((a,b)=>b[1]-a[1]);return c.length?c[0][0]:null};
   const items=[main,pick("Side"),pick("Appetizer")].filter(Boolean);
   const mixed=new Set(items.map(i=>i.cooker)).size>1;
   $("#buildOut").innerHTML=`${note?`<p class="section-intro">${esc(note)}</p>`:""}<div class="menu"><h3>Tonight's cook</h3><ol>${items.map(r=>`<li><button type="button" data-id="${r.id}">${esc(r.name)}</button> <small>${COOKERS[r.cooker]} · ${TYPE_LABEL[r.type]} · ${fmtTime(r.mins)}</small></li>`).join("")}</ol>
    <p class="plate">${plateText(items.map(r=>r.id))}</p>
    <p style="margin-top:10px">${!mixed?"Game plan: start the longest item first and work down the list so it all lands hot together.":items.some(r=>r.cooker==="PBC")?"Game plan: light the Pit Barrel first. Its items take longest. Fire the other cooker about 30 minutes before the barrel stuff comes off.":"Game plan: light the grill first and start the longest item. The Blackstone only needs 10 to 15 minutes to heat, so fire it last."}</p>
-   <div class="night-actions"><select id="bDay" aria-label="Which day">${dayOpts("Tonight")}</select><button class="btn primary" type="button" id="bAdd">＋ Add to list</button><button class="btn" type="button" id="again">Reroll</button></div></div>`;
-  $("#bAdd").onclick=e=>{items.forEach(r=>addToPlan(r.id,$("#bDay").value));render();e.target.textContent="✓ Added to list"};
+   <div class="night-actions">${servesSelect(household||4,0,'id="bServes" data-serves')}<select id="bDay" aria-label="Which day">${dayOpts("Tonight")}</select><button class="btn primary" type="button" id="bAdd">＋ Add to list</button><button class="btn" type="button" id="bCook">👨‍🍳 Cook it all</button><button class="btn" type="button" id="again">Reroll</button></div></div>`;
+  $("#bAdd").onclick=e=>{items.forEach(r=>addToPlan(r.id,$("#bDay").value,+$("#bServes").value));render();e.target.textContent="✓ Added to list"};
+  $("#bServes").onchange=e=>setHousehold(+e.target.value);
+  $("#bCook").onclick=()=>openCookAll("Tonight's cook",items.map(r=>r.id),"17:00",$("#bDay").value,+$("#bServes").value);
   $("#buildOut").querySelectorAll("button[data-id]").forEach(b=>b.onclick=()=>openRecipe(b.dataset.id));
   $("#again").onclick=()=>$("#build").click();
 };
