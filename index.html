@@ -2372,7 +2372,8 @@ $("#build").onclick=()=>{
   if(mnState.region.size&&!inRegion.length)note=`No ${[...mnState.region].join(" or ")} main fits the other filters, so here's the closest match.`;
   const pool=inRegion.length?inRegion:mains;
   if(!pool.length){$("#buildOut").innerHTML="<p>Nothing fits those filters. Loosen one up.</p>";return}
-  const main=rnd(pool);
+  // pick the cooker first (evenly across the ones you picked), then the dish, so 12 air fryer mains aren't drowned out by 100 Blackstone ones
+  const ck=rnd([...new Set(pool.map(r=>r.cooker))]),main=rnd(pool.filter(r=>r.cooker===ck));
   const pick=t=>{const c=R.filter(r=>r.type===t&&okCooker(r)&&timeOK(r,true)).map(x=>[x,score(main,x)+Math.random()*2]).sort((a,b)=>b[1]-a[1]);return c.length?c[0][0]:null};
   const items=[main,pick("Side"),pick("Appetizer")].filter(Boolean);
   const mixed=new Set(items.map(i=>i.cooker)).size>1;
