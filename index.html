@@ -2337,7 +2337,12 @@ function openRecipe(id){
   // the picked sides/apps ride along with this recipe
   const picks=()=>[...$("#dlgBody").querySelectorAll("[data-pair]:checked")].map(x=>x.dataset.pair);
   $("#dlgBody").querySelectorAll(".pairpick [data-id]").forEach(b=>b.onclick=e=>{e.preventDefault();openRecipe(b.dataset.id)});
-  $("#dlgBody").querySelectorAll("[data-pair]").forEach(x=>x.onchange=()=>{const n=picks().length;if(!inPlan(r.id))$("#listBtn").textContent=n?`＋ Add meal to list (${n+1})`:"＋ Add to list";$("#dlgTimeline").innerHTML=""});
+  // the list button follows what's ticked: sides ticked -> add them (and the main if it isn't on yet); nothing ticked -> add/remove the main
+  const newPicks=()=>picks().filter(id=>!inPlan(id));
+  const listLabel=()=>{const n=newPicks().length,on=!!inPlan(r.id);
+    $("#listBtn").textContent=n?(on?`＋ Add ${n} side${n>1?"s":""} to list`:`＋ Add meal to list (${n+1})`):(on?"✓ On list (remove)":"＋ Add to list")};
+  $("#dlgBody").querySelectorAll("[data-pair]").forEach(x=>{if(inPlan(x.dataset.pair))x.checked=true;x.onchange=()=>{listLabel();$("#dlgTimeline").innerHTML=""}});
+  listLabel();
   if(RELAY&&MAIN_T.has(r.type)){const sb=document.createElement("button");sb.className="btn";sb.type="button";sb.textContent="⭐ Save as a meal night";$("#dlgCook").parentNode.appendChild(sb);
     sb.onclick=()=>{if(!picks().length){alert("Tick at least one side under Make it a meal first.");return}saveNight([r.id,...picks()],r.name+" Night",sb)}}
   $("#dlgCook").onclick=()=>openCookAll(r.name+(picks().length?" + sides":""),[r.id,...picks()],$("#dlgReady").value,$("#dayPick").value,+$("#dlgServes").value);
@@ -2349,7 +2354,10 @@ function openRecipe(id){
     const boxes=[...w.querySelectorAll("[data-pair]")],side=boxes.find(x=>byId[x.dataset.pair].type==="Side"),app=boxes.find(x=>byId[x.dataset.pair].type==="Appetizer");
     boxes.forEach(x=>x.checked=false);[side,app].forEach(x=>{if(x){x.checked=true;x.dispatchEvent(new Event("change"))}});
     w.scrollIntoView({behavior:"smooth",block:"start"})};
-  $("#listBtn").onclick=()=>{if(inPlan(r.id))removeFromPlan(r.id);else [r.id,...picks()].forEach(id=>addToPlan(id,$("#dayPick").value,+$("#dlgServes").value));openRecipe(r.id);render()};
+  $("#listBtn").onclick=()=>{const add=newPicks(),day=$("#dayPick").value,sv=+$("#dlgServes").value;
+    if(add.length){if(!inPlan(r.id))addToPlan(r.id,day,sv);add.forEach(id=>addToPlan(id,day,sv))}
+    else if(inPlan(r.id))removeFromPlan(r.id);else addToPlan(r.id,day,sv);
+    openRecipe(r.id);render()};
   $("#dlgServes").onchange=e=>{const n=+e.target.value;setHousehold(n);const p=inPlan(r.id);if(p){p.serves=n;savePlan()}$("#dlgIng").innerHTML=ingHTML(r,n)};
   $("#dayPick").onchange=()=>{if(inPlan(r.id)){addToPlan(r.id,$("#dayPick").value);render()}};
   $("#dlgTime").onclick=()=>{$("#dlgTimeline").innerHTML=timelineHTML([r.id,...picks()],$("#dlgReady").value,$("#dayPick").value)};
