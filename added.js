@@ -1980,5 +1980,926 @@ window.ADDED = [
    "v": 5.0,
    "n": 2
   }
+ },
+ {
+  "id": "air-fryer-whole-chicken",
+  "name": "Air Fryer Whole Chicken",
+  "cooker": "AF",
+  "type": "Chicken",
+  "region": "American",
+  "mins": 70,
+  "serves": 4,
+  "desc": "The air fryer is the best way to cook a whole roasted chicken for dinner. With crispy skin, this chicken is perfectly juicy every time.",
+  "ing": [
+   "1 whole chicken (3 ½ to 4 pounds)",
+   "1 tablespoon olive oil",
+   "1 teaspoon kosher salt (or to taste)",
+   "½ teaspoon paprika",
+   "½ teaspoon garlic powder",
+   "¼ teaspoon black pepper",
+   "⅙ teaspoon dried thyme leaves"
+  ],
+  "steps": [
+   "Ensure the cavity of the chicken is empty and dab the skin dry.",
+   "Rub the skin with olive oil and sprinkle with seasoning.",
+   "Place the chicken breast-side down into the air fryer basket. Turn the air fryer on to 350°F.",
+   "Cook for 30 minutes, flip the chicken over and cook for 20-30 minutes or until an instant read thermometer reaches 165°F.",
+   "Remove from the air fryer and rest 10 minutes before cutting."
+  ],
+  "tip": "",
+  "src": [
+   "Spend With Pennies: Air Fryer Whole Chicken",
+   "https://www.spendwithpennies.com/air-fryer-whole-chicken/"
+  ],
+  "mac": {
+   "cal": 444,
+   "p": 36,
+   "c": 1,
+   "f": 32,
+   "s": 4,
+   "from": "s",
+   "note": "0.25 of a whole chicken"
+  },
+  "rating": {
+   "v": 5.0,
+   "n": 416
+  }
+ },
+ {
+  "id": "air-fryer-pork-tenderloin",
+  "name": "Air Fryer Pork Tenderloin",
+  "cooker": "AF",
+  "type": "Pork",
+  "region": "American",
+  "mins": 24,
+  "serves": 4,
+  "desc": "Air Fryer Pork tenderloin cooks up juicy and tender every time.",
+  "ing": [
+   "1 pork tenderloin (about 1 ¼ to 1 ½ pounds)",
+   "½ teaspoon kosher salt",
+   "¼ teaspoon black pepper",
+   "1 teaspoon Dijon mustard",
+   "1 tablespoon balsamic vinegar",
+   "1 teaspoon olive oil",
+   "½ teaspoon Italian seasoning"
+  ],
+  "steps": [
+   "Preheat the air fryer to 400°F.",
+   "Remove the silver skin from the pork tenderloin by slipping a knife under it. Gently pull the silver area off while cutting with the knife.",
+   "Combine the seasoning mix in a small bowl and brush over the tenderloin on all sides. Season with salt and pepper.",
+   "Place the pork tenderloin in the air fryer basket (cut it in half to fit if needed) and cook for 16-17 minutes or until pork reaches 145°F. (I remove the pork from the air fryer a few degrees before as it will continue to rise while resting).",
+   "Let pork rest at least 5 minutes before serving."
+  ],
+  "tip": "",
+  "src": [
+   "Spend With Pennies: Air Fryer Pork Tenderloin",
+   "https://www.spendwithpennies.com/air-fryer-pork-tenderloin/"
+  ],
+  "mac": {
+   "cal": 184,
+   "p": 29,
+   "c": 1,
+   "f": 6,
+   "s": 4,
+   "from": "s",
+   "note": ""
+  },
+  "rating": {
+   "v": 5.0,
+   "n": 103
+  }
+ },
+ {
+  "id": "air-fryer-sweet-potato-fries",
+  "name": "Air Fryer Sweet Potato Fries",
+  "cooker": "AF",
+  "type": "Side",
+  "region": "American",
+  "mins": 17,
+  "serves": 4,
+  "desc": "This simple Air Fryer Sweet Potato Fries recipe makes delicious fries that are crispy on the outside with a tender center. They taste just as good as fast food fries but without…",
+  "ing": [
+   "1 lb sweet potatoes",
+   "1 ½ Tbsp olive oil",
+   "½ tsp fine sea salt ( or to taste)",
+   "¼ tsp ground black pepper ( or to taste)",
+   "¼ tsp garlic powder",
+   "¼ tsp ground paprika"
+  ],
+  "steps": [
+   "Prep the Potatoes - the sweet potatoes into ¼-inch-thick slices, making sure they are all uniform in size for even cooking.",
+   "Drizzle Oil - Add the fries to a large mixing bowl, drizzle with olive oil, and toss to combine.",
+   "Season - In a separate dish, combine the salt, pepper, garlic, and paprika. Sprinkle the seasoning mix over the potatoes and toss to combine.",
+   "Air Fry - Transfer the fries to an air fryer basket and cook in a basket-style air fryer at 375°F for about 12-14 minutes or a toaster-style air fryer at 350°F for 8-10 minutes, shaking the basket halfway. Air fry until golden brown and crisp on the outside. Timing may vary depending on the air fryer style you have.",
+   "Serve - Garnish with cilantro or grated parmesan if desired and serve immediately with your favorite dipping sauce."
+  ],
+  "tip": "",
+  "src": [
+   "NatashasKitchen.com: Air Fryer Sweet Potato Fries",
+   "https://natashaskitchen.com/air-fryer-sweet-potato-fries/"
+  ],
+  "mac": {
+   "cal": 145,
+   "p": 2,
+   "c": 23,
+   "f": 5,
+   "s": 4,
+   "from": "s",
+   "note": ""
+  },
+  "rating": {
+   "v": 5.0,
+   "n": 66
+  }
+ },
+ {
+  "id": "air-fryer-mozzarella-sticks",
+  "name": "Air Fryer Mozzarella Sticks",
+  "cooker": "AF",
+  "type": "Appetizer",
+  "region": "American",
+  "mins": 60,
+  "serves": 4,
+  "desc": "String cheese is coated in seasoned breadcrumbs and air fried until golden, crunchy, and gooey. This easy appetizer has all the flavor of fried mozzarella sticks without deep…",
+  "ing": [
+   "8 mozzarella cheese strings",
+   "2 eggs",
+   "½ cup seasoned bread crumbs",
+   "½ cup Panko bread crumbs",
+   "1 tablespoon vegetable oil",
+   "½ teaspoon garlic powder",
+   "⅓ cup all-purpose flour",
+   "salt and black pepper (to taste)"
+  ],
+  "steps": [
+   "Cut mozzarella sticks in half.",
+   "Whisk eggs with 1 tablespoon water. In a separate bowl combine bread crumbs, Panko bread crumbs, vegetable oil, and garlic powder. Place flour in a 3rd bowl and season with salt & pepper.",
+   "Dip each mozzarella stick into the eggs and then into the flour mixture. Dip back into the eggs and finally into the bread crumb mixture.",
+   "Place on a baking sheet and freeze at least 30 minutes (or up to 6 months).",
+   "Preheat air fryer to 390°F.",
+   "Generously spray mozzarella sticks with oil or cooking spray. Place in the air fryer basket in a single layer and cook for 5 to 7 minutes or until crisp.",
+   "Serve immediately."
+  ],
+  "tip": "",
+  "src": [
+   "Spend With Pennies: Air Fryer Mozzarella Sticks",
+   "https://www.spendwithpennies.com/air-fryer-mozzarella-sticks/"
+  ],
+  "mac": {
+   "cal": 348,
+   "p": 20,
+   "c": 28,
+   "f": 20,
+   "s": 4,
+   "from": "s",
+   "note": "4 pieces"
+  },
+  "rating": {
+   "v": 5.0,
+   "n": 79
+  }
+ },
+ {
+  "id": "air-fryer-shrimp",
+  "name": "Air Fryer Shrimp",
+  "cooker": "AF",
+  "type": "Seafood",
+  "region": "American",
+  "mins": 30,
+  "serves": 4,
+  "desc": "The crispiest and juiciest Air Fryer Shrimp recipe! This air fryer fried shrimp is fast, healthy, and a guaranteed crowd-pleaser.",
+  "ing": [
+   "1 pound jumbo (21 to 25-count) shrimp (peeled and deveined (tails on or off))",
+   "1 tablespoon extra virgin olive oil",
+   "1 small lemon (zest and juice, plus additional for serving)",
+   "1 teaspoon garlic powder",
+   "1 teaspoon dried parsley",
+   "1/2 teaspoon dried oregano",
+   "1/4 teaspoon kosher salt",
+   "1/4 teaspoon ground black pepper",
+   "1/3 cup Italian seasoned whole wheat breadcrumbs",
+   "1/4 cup grated Parmesan cheese",
+   "1 large egg",
+   "Nonstick cooking spray",
+   "Chopped fresh parsley or chives (optional for serving)"
+  ],
+  "steps": [
+   "Pat the shrimp dry and place in a large bowl. Top with the oil, lemon zest and juice, garlic powder, parsley, oregano, salt, and pepper. Toss to combine evenly, then cover and set aside at room temperature for 15 minutes or refrigerate for 1 hour (if you leave the shrimp for longer, the citrus juice will start to break them down).",
+   "Stir the breadcrumbs and Parmesan together in a shallow baking dish (a pie plate works well). In a separate dish, beat the egg. Keep a baking sheet handy and line with parchment paper for easy cleanup.",
+   "Remove the shrimp from marinade and shake off any excess. Dip in the beaten egg, shake off excess, then dip in the breadcrumb mixture to coat both sides. Place on the prepared baking sheet.",
+   "Preheat the air fryer to 390 degrees F. Coat the basket with non-stick spray, then place the shrimp in the basket in a single layer, ensuring that they do not overlap (you’ll likely need to cook the shrimp in batches). Coat the top of the shrimp with nonstick spray, then slide the basket into place.",
+   "Air fry the shrimp for 2 minutes, remove the basket, then with tongs, carefully flip the shrimp. Return to the air fryer and continue cooking until the shrimp look light golden brown and are opaque and cooked through, about 2 minutes more (shrimp cook fast!). Repeat with remaining shrimp (if you like, you can keep the first batch warm in a 200 degree F oven while you finish the rest). Enjoy hot, sprinkled with parsley, chives, and a squeeze of fresh lemon juice as desired."
+  ],
+  "tip": "",
+  "src": [
+   "Well Plated by Erin Clarke: Air Fryer Shrimp",
+   "https://www.wellplated.com/air-fryer-shrimp/"
+  ],
+  "mac": {
+   "cal": 160,
+   "p": 18,
+   "c": 10,
+   "f": 6,
+   "s": 4,
+   "from": "s",
+   "note": "1 (of 4)"
+  },
+  "rating": {
+   "v": 4.9,
+   "n": 40
+  }
+ },
+ {
+  "id": "easy-air-fryer-crab-cakes",
+  "name": "Air Fryer Crab Cakes",
+  "cooker": "AF",
+  "type": "Seafood",
+  "region": "American",
+  "mins": 15,
+  "serves": 4,
+  "desc": "Air fryer crab cakes are made with lump crab meat and Old Bay Seasoning for a flavorful, juicy crab patty!",
+  "ing": [
+   "8 ounces lump crab meat",
+   "1 red bell pepper (de-seeded and chopped)",
+   "3 green onions (chopped)",
+   "3 tablespoons mayonnaise",
+   "3 tablespoons breadcrumbs",
+   "2 teaspoons Old Bay Seasoning",
+   "1 teaspoon lemon juice",
+   "Lemon wedges (for serving)"
+  ],
+  "steps": [
+   "Preheat the air fryer to 370 degrees.",
+   "In a large bowl, add the lump crab meat, pepper, green onions, mayonnaise, breadcrumbs, Old Bay Seasoning, and lemon juice and mix until just combined.",
+   "Gently form four evenly sized crab patties. Lump crab meat has a lot of juices inside and you want to keep as much in as possible.",
+   "Place a piece of parchment paper or a silicone liner down inside the hot air fryer then carefully place each crab cake in the air fryer.",
+   "Air fry them in the air fryer for 8-10 minutes until the crust turns golden brown. Do not flip while cooking.",
+   "Remove the crab cakes from your air fryer and enjoy with your favorite sauce and extra lemon on top, if desired!"
+  ],
+  "tip": "",
+  "src": [
+   "Everyday Family Cooking: Easy Air Fryer Crab Cakes",
+   "https://www.everydayfamilycooking.com/air-fryer-crab-cakes/"
+  ],
+  "mac": {
+   "cal": 158,
+   "p": 12,
+   "c": 8,
+   "f": 9,
+   "s": 4,
+   "from": "s",
+   "note": ""
+  },
+  "rating": {
+   "v": 4.6,
+   "n": 23
+  }
+ },
+ {
+  "id": "air-fryer-chicken-parmesan",
+  "name": "Air Fryer Chicken Parmesan",
+  "cooker": "AF",
+  "type": "Chicken",
+  "region": "European",
+  "mins": 58,
+  "serves": 2,
+  "desc": "Crisp and gooey when done right, but too often oily and soggy, chicken Parmesan seemed an ideal candidate for the air fryer.",
+  "ing": [
+   "¾ cup panko bread crumbs",
+   "2 tablespoons extra-virgin olive oil",
+   "¼ cup grated Parmesan cheese",
+   "1 large egg",
+   "1 tablespoon all-purpose flour",
+   "¾ teaspoon garlic powder",
+   "½ teaspoon dried oregano",
+   "Salt and pepper",
+   "2 (8-ounce) boneless, skinless chicken breasts, trimmed",
+   "2 ounces whole-milk mozzarella cheese, shredded (½ cup)",
+   "¼ cup jarred marinara sauce, warmed",
+   "2 tablespoons chopped fresh basil"
+  ],
+  "steps": [
+   "Toss panko with oil in bowl until evenly coated. Microwave, stirring frequently, until light golden brown, 1 to 3 minutes. Transfer to shallow dish, let cool slightly, then stir in Parmesan. Whisk egg, flour, garlic powder, oregano, ⅛ teaspoon salt, and ⅛ teaspoon pepper together in second shallow dish.",
+   "Pound chicken to uniform thickness as needed. Pat dry with paper towels and season with salt and pepper. Working with 1 breast at a time, dredge in egg mixture, letting excess drip off, then coat with panko mixture, pressing gently to adhere.",
+   "Lightly spray base of air-fryer basket with vegetable oil spray. Arrange breasts in prepared basket, spaced evenly apart, alternating ends. Place basket in air fryer and set temperature to 400 degrees. Cook until chicken is crisp and registers 160 degrees, 12 to 16 minutes, flipping and rotating breasts halfway through cooking.",
+   "Sprinkle chicken with mozzarella. Return basket to air fryer and cook until cheese is melted, about 1 minute. Transfer chicken to individual serving plates. Top each breast with 2 tablespoons warm marinara sauce and sprinkle with basil. Serve."
+  ],
+  "tip": "",
+  "src": [
+   "America's Test Kitchen: Air Fryer Chicken Parmesan",
+   "https://www.americastestkitchen.com/recipes/12360-air-fryer-chicken-parmesan"
+  ],
+  "rating": {
+   "v": 4.3,
+   "n": 223
+  }
+ },
+ {
+  "id": "air-fryer-spicy-fried-chicken-sandwich",
+  "name": "Air Fryer Spicy Fried-Chicken Sandwich",
+  "cooker": "AF",
+  "type": "Chicken",
+  "region": "American",
+  "mins": 52,
+  "serves": 4,
+  "desc": "Crunchy, juicy, and slicked with mayo, a spicy fried chicken sandwich is a lunchtime favorite, but we aren't about to heat up a skillet of frying oil whenever the craving strikes.",
+  "ing": [
+   "1 cup panko bread crumbs",
+   "2 tablespoons extra-virgin olive oil",
+   "1 large egg",
+   "3 tablespoons hot sauce",
+   "1 tablespoon all-purpose flour",
+   "½ teaspoon garlic powder",
+   "Salt and pepper",
+   "2 (8-ounce) boneless, skinless chicken breasts, trimmed",
+   "¼ cup mayonnaise",
+   "4 hamburger buns, toasted if desired",
+   "2 cups shredded iceberg lettuce",
+   "¼ cup jarred sliced jalapeños"
+  ],
+  "steps": [
+   "Toss panko with oil in bowl until evenly coated. Microwave, stirring frequently, until light golden brown, 1 to 3 minutes. Transfer to shallow dish and set aside to cool slightly. Whisk egg, 2 tablespoons hot sauce, flour, garlic powder, ⅛ teaspoon salt, and ⅛ teaspoon pepper together in second shallow dish.",
+   "Pound chicken to uniform thickness as needed. Halve each breast crosswise, pat dry with paper towels, and season with salt and pepper. Working with 1 piece of chicken at a time, dredge in egg mixture, letting excess drip off, then coat with panko mixture, pressing gently to adhere.",
+   "Lightly spray base of air-fryer basket with vegetable oil spray. Arrange chicken pieces in prepared basket, spaced evenly apart. Place basket in air fryer and set temperature to 400 degrees. Cook until chicken is crisp and registers 160 degrees, 12 to 16 minutes, flipping and rotating chicken pieces halfway through cooking.",
+   "Combine mayonnaise and remaining 1 tablespoon hot sauce in small bowl. Spread mayonnaise mixture evenly over bun bottoms, then top with 1 piece chicken, lettuce, jalapeños, and bun tops. Serve."
+  ],
+  "tip": "",
+  "src": [
+   "America's Test Kitchen: Air Fryer Spicy Fried-Chicken Sandwich",
+   "https://www.americastestkitchen.com/recipes/12362-air-fryer-spicy-fried-chicken-sandwich"
+  ],
+  "rating": {
+   "v": 4.0,
+   "n": 704
+  }
+ },
+ {
+  "id": "air-fryer-chicken-nuggets",
+  "name": "Air Fryer Chicken Nuggets",
+  "cooker": "AF",
+  "type": "Chicken",
+  "region": "American",
+  "mins": 72,
+  "serves": 4,
+  "desc": "Want a healthy, easy meal that will please kids and adults alike? These make-ahead chicken nuggets stay tender and juicy from freezer to air fryer.",
+  "ing": [
+   "4 (8-ounce) boneless, skinless chicken breasts, trimmed",
+   "Salt and pepper",
+   "3 tablespoons sugar",
+   "3 cups panko bread crumbs",
+   "¼ cup extra-virgin olive oil",
+   "3 large eggs",
+   "3 tablespoons all-purpose flour",
+   "1 tablespoon onion powder",
+   "¾ teaspoon garlic powder"
+  ],
+  "steps": [
+   "Pound chicken to uniform thickness as needed. Cut each breast diagonally into thirds, then cut each piece into thirds. Dissolve 3 tablespoons salt and sugar in 2 quarts cold water in large container. Add chicken, cover, and let sit for 15 minutes.",
+   "Meanwhile, toss panko with oil in bowl until evenly coated. Microwave, stirring frequently, until light golden brown, about 5 minutes. Transfer to shallow dish and let cool slightly. Whisk eggs, flour, onion powder, garlic -powder, 1 teaspoon salt, and 1/4 teaspoon pepper together in second shallow dish.",
+   "Set wire rack in rimmed baking sheet. Remove chicken from brine and pat dry with paper towels. Working with several chicken pieces at a time, dredge in egg mixture, letting excess drip off, then coat with panko mixture, pressing gently to adhere; transfer to prepared rack. Freeze until firm, about 4 hours. (Frozen nuggets can be transferred to zipper-lock bag and stored in freezer for up to 1 month.)",
+   "To Cook Nuggets: Lightly spray base of air-fryer basket with vegetable oil spray. Place up to 18 nuggets in prepared basket. Place basket in air fryer, set temperature to 400 degrees, and cook for 6 minutes. Transfer nuggets to clean bowl and gently toss to redistribute. Return nuggets to air fryer and cook until chicken is crisp and registers 160 degrees, 6 to 10 minutes. Serve."
+  ],
+  "tip": "",
+  "src": [
+   "America's Test Kitchen: Air Fryer Chicken Nuggets",
+   "https://www.americastestkitchen.com/recipes/11345-air-fryer-chicken-nuggets"
+  ],
+  "rating": {
+   "v": 4.3,
+   "n": 151
+  }
+ },
+ {
+  "id": "air-fryer-buffalo-chicken-drumsticks",
+  "name": "Air Fryer Buffalo Chicken Drumsticks",
+  "cooker": "AF",
+  "type": "Chicken",
+  "region": "American",
+  "mins": 67,
+  "serves": 2,
+  "desc": "An air fryer produces great Buffalo chicken with the crunch that typically comes from deep frying.",
+  "ing": [
+   "1½ teaspoons paprika",
+   "½ teaspoon cayenne pepper",
+   "¼ teaspoon salt",
+   "¼ teaspoon pepper",
+   "4 (5-ounce) chicken drumsticks, trimmed",
+   "1 teaspoon vegetable oil",
+   "3 tablespoons hot sauce",
+   "2 tablespoons unsalted butter",
+   "2 teaspoons molasses",
+   "¼ teaspoon cornstarch",
+   "2 tablespoons crumbled blue cheese"
+  ],
+  "steps": [
+   "Combine paprika, cayenne, salt, and pepper in bowl. Pat drumsticks dry with paper towels. Using metal skewer, poke 10 to 15 holes in skin of each drumstick. Rub with oil and sprinkle evenly with spice mixture.",
+   "Arrange drumsticks in air-fryer basket, spaced evenly apart, alternating ends. Place basket in air fryer and set temperature to 400 degrees. Cook until chicken is crisp and registers 195 degrees, 22 to 25 minutes, flipping and rotating chicken halfway through cooking. Transfer chicken to large plate, tent loosely with aluminum foil, and let rest for 5 minutes.",
+   "Meanwhile, microwave hot sauce, butter, molasses, and cornstarch in large bowl, stirring occasionally, until hot, about 1 minute. Add chicken and toss to coat. Transfer to serving platter and sprinkle with blue cheese. Serve."
+  ],
+  "tip": "",
+  "src": [
+   "America's Test Kitchen: Air Fryer Buffalo Chicken Drumsticks",
+   "https://www.americastestkitchen.com/recipes/12426-air-fryer-buffalo-chicken-drumsticks"
+  ],
+  "rating": {
+   "v": 4.4,
+   "n": 46
+  }
+ },
+ {
+  "id": "air-fryer-better-than-boxed-fish-sticks",
+  "name": "Air Fryer Better-Than-Boxed Fish Sticks",
+  "cooker": "AF",
+  "type": "Seafood",
+  "region": "American",
+  "mins": 70,
+  "serves": 4,
+  "desc": "Making your own fish sticks guarantees fresh fish and a flavorful coating anytime, and the air fryer can cook a serving faster than it takes the oven to preheat.",
+  "ing": [
+   "Salt and pepper",
+   "1½ pounds skinless haddock fillets, ¾ inch thick, sliced into 4-inch strips",
+   "2 cups panko bread crumbs",
+   "1 tablespoon vegetable oil",
+   "¼ cup all-purpose flour",
+   "¼ cup mayonnaise",
+   "2 large eggs",
+   "2 tablespoons Dijon mustard",
+   "1 tablespoon Old Bay seasoning"
+  ],
+  "steps": [
+   "Dissolve ¼ cup salt in 2 quarts cold water in large container. Add haddock, cover, and let sit for 15 minutes.",
+   "Toss panko with oil in bowl until evenly coated. Microwave, stirring frequently, until light golden brown, 2 to 4 minutes; transfer to shallow dish. Whisk flour, mayonnaise, eggs, mustard, Old Bay, ⅛ teaspoon salt, and ⅛ teaspoon pepper together in second shallow dish.",
+   "Set wire rack in rimmed baking sheet and spray with vegetable oil spray. Remove haddock from brine and thoroughly pat dry with paper towels. Working with 1 piece at a time, dredge haddock in egg mixture, letting excess drip off, then coat with panko mixture, pressing gently to adhere. Transfer fish sticks to prepared rack and freeze until firm, about 1 hour. (Frozen fish sticks can be transferred to zipper- lock bag and stored in freezer for up to 1 month; do not thaw before cooking.)",
+   "To cook fish sticks Lightly spray base of air-fryer basket with vegetable oil spray. Arrange up to 5 fish sticks in prepared basket, spaced evenly apart. Place basket in air fryer and set temperature to 400 degrees. Cook until fish sticks are golden and register 140 degrees, 10 to 12 minutes, flipping and rotating fish sticks halfway through cooking. Serve."
+  ],
+  "tip": "",
+  "src": [
+   "America's Test Kitchen: Air Fryer Better-Than-Boxed Fish Sticks",
+   "https://www.americastestkitchen.com/recipes/12452-air-fryer-better-than-boxed-fish-sticks"
+  ],
+  "rating": {
+   "v": 4.0,
+   "n": 36
+  }
+ },
+ {
+  "id": "air-fryer-turkey-burgers",
+  "name": "Air Fryer Turkey Burgers",
+  "cooker": "AF",
+  "type": "Other",
+  "region": "American",
+  "mins": 47,
+  "serves": 2,
+  "desc": "Air Fryer Turkey Burgers offer a juicy, flavorful option with a mix of ground turkey, spices, and a hint of garlic, making for a satisfying, lean meal.",
+  "ing": [
+   "½ slice hearty white sandwich bread, crust removed, torn into ½-inch pieces",
+   "2 tablespoons plain yogurt",
+   "Salt and pepper",
+   "8 ounces ground turkey",
+   "1 ounce Monterey Jack cheese, shredded (¼ cup)",
+   "2 hamburger buns, toasted if desired",
+   "½ tomato, sliced thin",
+   "1 cup baby arugula"
+  ],
+  "steps": [
+   "Mash bread, yogurt, ¼ teaspoon salt, and ¼ teaspoon pepper to paste in medium bowl using fork. Break up ground turkey into small pieces over bread mixture in bowl, add Monterey Jack, and lightly knead with hands until mixture forms cohesive mass.",
+   "Divide turkey mixture into 2 lightly packed balls, then gently flatten each into 1-inch-thick patty. Press center of each patty with your fingertips to create ¼-inch-deep depression. Season with salt and pepper.",
+   "Arrange patties in air-fryer basket, spaced evenly apart. Place basket in air fryer and set temperature to 350 degrees. Cook until burgers are browned and register 160 degrees, 12 to 16 minutes, flipping and rotating burgers halfway through cooking.",
+   "Transfer burgers to large plate, tent loosely with aluminum foil, and let rest for 5 minutes. Serve burgers on buns, topped with tomato and arugula."
+  ],
+  "tip": "",
+  "src": [
+   "America's Test Kitchen: Air Fryer Turkey Burgers",
+   "https://www.americastestkitchen.com/recipes/12427-air-fryer-turkey-burgers"
+  ],
+  "rating": {
+   "v": 4.5,
+   "n": 47
+  }
+ },
+ {
+  "id": "air-fryer-juicy-well-done-cheeseburgers",
+  "name": "Air Fryer Juicy Well-Done Cheeseburgers",
+  "cooker": "AF",
+  "type": "Beef",
+  "region": "American",
+  "mins": 49,
+  "serves": 2,
+  "desc": "Air Fryer Juicy Well-Done Cheeseburgers recipe delivers a succulent, tender bite with every mouthful, featuring key ingredients for flavor-packed enjoyment.",
+  "ing": [
+   "½ slice hearty white sandwich bread, crust removed, torn into ¼-inch pieces",
+   "1 tablespoon milk",
+   "½ teaspoon garlic powder",
+   "½ teaspoon onion powder",
+   "12 ounces 85 percent lean ground beef",
+   "Salt and pepper",
+   "2 slices American cheese (2 ounces)",
+   "2 hamburger buns, toasted if desired"
+  ],
+  "steps": [
+   "Mash bread, milk, garlic powder, and onion powder into paste in medium bowl using fork. Break up ground beef into small pieces over bread mixture in bowl and lightly knead with hands until well combined. Divide mixture into 2 lightly packed balls, then gently flatten each into 1-inch-thick patty. Press center of each patty with fingertips to create ¼-inch-deep depression. Season with salt and pepper.",
+   "Arrange patties in air-fryer basket, spaced evenly apart. Place basket in air fryer and set temperature to 350 degrees. Cook until burgers are lightly browned and register 140 to 145 degrees (for medium-well) or 150 to 155 degrees (for well-done), 18 to 21 minutes, flipping and rotating burgers halfway through cooking.",
+   "Top each burger with 1 slice cheese. Return basket to air fryer and cook until cheese is melted, about 30 seconds. Serve burgers on buns."
+  ],
+  "tip": "",
+  "src": [
+   "America's Test Kitchen: Air Fryer Juicy Well-Done Cheeseburgers",
+   "https://www.americastestkitchen.com/recipes/12438-air-fryer-juicy-well-done-cheeseburgers"
+  ],
+  "rating": {
+   "v": 4.1,
+   "n": 54
+  }
+ },
+ {
+  "id": "air-fryer-fried-chicken",
+  "name": "Air Fryer Fried Chicken",
+  "cooker": "AF",
+  "type": "Chicken",
+  "region": "Southern",
+  "mins": 66,
+  "serves": 2,
+  "desc": "A healthier, easier version of your favorite comfort food, with a golden, crisp outside, and moist, juicy inside—and it only requires a spritz of oil.",
+  "ing": [
+   "Vegetable oil spray",
+   "2 (12-ounce) bone-in split chicken breasts, trimmed",
+   "Salt and pepper",
+   "1/3 cup buttermilk",
+   "½ teaspoon dry mustard",
+   "½ teaspoon garlic powder",
+   "¼ cup all-purpose flour",
+   "2 cups (2 ounces) cornflakes, finely crushed",
+   "1½ teaspoons poultry seasoning",
+   "½ teaspoon paprika",
+   "1/8 teaspoon cayenne pepper"
+  ],
+  "steps": [
+   "Lightly spray base of air-fryer basket with oil spray. Remove skin from chicken and trim any excess fat. Halve each breast crosswise, pat dry with paper towels, and season with salt and pepper. Whisk buttermilk, mustard, garlic powder, 1/2 teaspoon salt, and 1/4 teaspoon pepper together in medium bowl. Spread flour in shallow dish. Combine cornflakes, poultry seasoning, paprika, 1/4 teaspoon salt, and cayenne in second shallow dish.",
+   "Working with 1 piece of chicken at a time, dredge in flour, dip in buttermilk mixture, letting excess drip off, then coat with cornflake mixture, pressing gently to adhere; transfer to large plate. Lightly spray chicken with oil spray.",
+   "Arrange chicken pieces in prepared basket, spaced evenly apart. Place basket in air fryer and set temperature to 400 degrees. Cook until chicken is crisp and registers 160 degrees, 16 to 24 minutes, flipping and rotating pieces halfway through cooking. Serve."
+  ],
+  "tip": "",
+  "src": [
+   "America's Test Kitchen: Air Fryer Fried Chicken",
+   "https://www.americastestkitchen.com/recipes/11346-air-fryer-fried-chicken"
+  ],
+  "rating": {
+   "v": 4.0,
+   "n": 65
+  }
+ },
+ {
+  "id": "air-fryer-potatoes",
+  "name": "Air Fryer Potatoes",
+  "cooker": "AF",
+  "type": "Side",
+  "region": "American",
+  "mins": 25,
+  "serves": 4,
+  "desc": "Skip roasting—air fryer potatoes are not only perfectly crispy, but they're also done faster than your oven can preheat.",
+  "ing": [
+   "1 lb. baby potatoes, halved",
+   "1 tbsp. extra-virgin olive oil",
+   "1 tsp. garlic powder",
+   "1 tsp. Italian seasoning",
+   "1 tsp. Cajun seasoning (optional)",
+   "Kosher salt",
+   "Freshly ground black pepper",
+   "Lemon wedge, for serving",
+   "Freshly chopped parsley, for garnish"
+  ],
+  "steps": [
+   "In a large bowl, toss potatoes with oil, garlic powder, Italian seasoning, and Cajun seasoning, if using. Season with salt and pepper.",
+   "Place potatoes in basket of air fryer and cook at 400° for 10 minutes. Shake basket and stir potatoes and cook until potatoes are golden and tender, 8 to 10 minutes more.",
+   "Squeeze lemon juice over cooked potatoes and garnish with parsley before serving."
+  ],
+  "tip": "",
+  "src": [
+   "Delish: Air Fryer Potatoes",
+   "https://www.delish.com/cooking/recipe-ideas/a28414561/air-fryer-potatoes-recipe"
+  ],
+  "mac": {
+   "cal": 123,
+   "p": 3,
+   "c": 18,
+   "f": 4,
+   "s": 4,
+   "from": "s",
+   "note": ""
+  },
+  "rating": {
+   "v": 4.8,
+   "n": 39
+  }
+ },
+ {
+  "id": "air-fryer-corn-on-the-cob",
+  "name": "Air Fryer Corn on the Cob",
+  "cooker": "AF",
+  "type": "Side",
+  "region": "American",
+  "mins": 15,
+  "serves": 4,
+  "desc": "Corn on the cob in the air fryer turns out perfectly tender, juicy, & flavorful every time!",
+  "ing": [
+   "4 ears corn on the cob",
+   "1 tablespoon olive oil",
+   "4 tablespoons butter (for serving, optional)",
+   "salt and black pepper (optional)"
+  ],
+  "steps": [
+   "Preheat the air fryer to 400°F.",
+   "Brush the corn with olive oil and place in a single layer in the air fryer basket.",
+   "Cook the corn for 10-12 minutes, turning occasionally.",
+   "While corn is cooking, melt butter. Brush butter over the corn and season with salt & pepper to taste."
+  ],
+  "tip": "",
+  "src": [
+   "Spend With Pennies: Air Fryer Corn on the Cob",
+   "https://www.spendwithpennies.com/air-fryer-corn-on-the-cob/"
+  ],
+  "mac": {
+   "cal": 108,
+   "p": 3,
+   "c": 17,
+   "f": 5,
+   "s": 4,
+   "from": "s",
+   "note": ""
+  },
+  "rating": {
+   "v": 5.0,
+   "n": 31
+  }
+ },
+ {
+  "id": "air-fryer-stuffed-peppers",
+  "name": "Air Fryer Stuffed Peppers",
+  "cooker": "AF",
+  "type": "Beef",
+  "region": "American",
+  "mins": 40,
+  "serves": 4,
+  "desc": "These Air Fryer Stuffed Peppers are loaded with simple, flavorful ingredients and come together so quickly!",
+  "ing": [
+   "2 large bell peppers (or 4 small bell peppers)",
+   "1 pound lean ground beef",
+   "½ onion (diced)",
+   "2 cloves garlic (minced)",
+   "½ cup instant rice (or minute rice)",
+   "½ teaspoon Italian seasoning",
+   "½ cup water",
+   "2 cups pasta sauce (divided)",
+   "½ cup shredded mozzarella cheese"
+  ],
+  "steps": [
+   "Preheat air fryer to 320°F.",
+   "Cut bell peppers in half lengthwise and scrape out seeds (if using small peppers, cut off tops instead).",
+   "Brush peppers with olive oil and place in the air fryer basket. Cook 5-6 minutes.",
+   "While peppers are cooking, brown beef, onion, and garlic in a medium saucepan until no pink remains. Drain fat.",
+   "Add instant rice, Italian seasoning, water, and 1 cup pasta sauce. Bring to a boil, reduce heat, and simmer 3-4 minutes.",
+   "Scoop the mixture into the peppers and top with remaining sauce. Turn air fryer up to 350°F and cook 8-10 minutes or until heated through and peppers are soft. Top with cheese and cook an additional 1-2 minutes."
+  ],
+  "tip": "",
+  "src": [
+   "Spend With Pennies: Air Fryer Stuffed Peppers",
+   "https://www.spendwithpennies.com/air-fryer-stuffed-peppers/"
+  ],
+  "mac": {
+   "cal": 390,
+   "p": 28,
+   "c": 23,
+   "f": 21,
+   "s": 4,
+   "from": "s",
+   "note": ""
+  },
+  "rating": {
+   "v": 5.0,
+   "n": 22
+  }
+ },
+ {
+  "id": "air-fryer-asparagus",
+  "name": "Air Fryer Asparagus",
+  "cooker": "AF",
+  "type": "Side",
+  "region": "European",
+  "mins": 12,
+  "serves": 2,
+  "desc": "Crispy air fryer asparagus is a fast, healthy side dish that requires just 7 minutes of cooking and 5 ingredients. Don't skip the Parmesan!",
+  "ing": [
+   "1 pound asparagus ((I prefer the thickest stalk I can find))",
+   "1 teaspoon extra-virgin olive oil",
+   "1/4 teaspoon kosher salt",
+   "1/8 teaspoon ground black pepper",
+   "1/4 teaspoon dried thyme",
+   "1 tablespoon freshly grated Parmesan cheese (optional)",
+   "Squeeze fresh lemon juice (optional)",
+   "Pinch red pepper flakes (optional)"
+  ],
+  "steps": [
+   "Snap off the hard, woody ends of the asparagus by gently bending it a few inches from the stem end. The asparagus will naturally snap at the proper place. Discard the stems and place the stalks in a large mixing bowl.",
+   "Drizzle the asparagus with olive oil, then sprinkle with the salt, pepper, and thyme. Toss to coat.",
+   "Preheat your air fryer to 400°F. Arrange half of the asparagus in the air fryer basket in an even layer.",
+   "Air fry for 6 to 8 minutes, tossing once halfway through. If your spears are super thin, start checking at 4 minutes to make sure they don't burn. Repeat with remaining asparagus (if you like, you can keep batches warm in the oven). Sprinkle the Parmesan over the top and toss to coat once more. Serve hot, with a squeeze of lemon juice and pinch of red pepper flakes as desired."
+  ],
+  "tip": "",
+  "src": [
+   "Well Plated by Erin Clarke: Air Fryer Asparagus",
+   "https://www.wellplated.com/air-fryer-asparagus/"
+  ],
+  "mac": {
+   "cal": 64,
+   "p": 5,
+   "c": 9,
+   "f": 2,
+   "s": 2,
+   "from": "s",
+   "note": "1 (of 2); without optional toppings"
+  },
+  "rating": {
+   "v": 5.0,
+   "n": 58
+  }
+ },
+ {
+  "id": "air-fryer-egg-rolls",
+  "name": "Air Fryer Egg Rolls",
+  "cooker": "AF",
+  "type": "Appetizer",
+  "region": "Chinese",
+  "mins": 30,
+  "serves": 5,
+  "desc": "Homemade air fryer egg rolls are crispy on the outside, with a meaty, veggie-packed filling on the inside. A lighter way to enjoy egg rolls!",
+  "ing": [
+   "1 tablespoon low-sodium soy sauce",
+   "1 teaspoon ground ginger",
+   "1 teaspoon cornstarch",
+   "1 pound 90% or 93% lean ground chicken or turkey (to make vegetarian, swap crumbled extra-firm tofu; press it dry first)",
+   "1 tablespoon canola oil, grapeseed oil, or similar neutrally flavored high-temperature cooking oil",
+   "8 ounces cremini mushrooms",
+   "3 cloves garlic",
+   "1 8-ounce bag coleslaw mix",
+   "1/4 teaspoon kosher salt",
+   "1/4 teaspoon ground black pepper",
+   "2 teaspoons sesame oil",
+   "Pinch red pepper flakes (optional)",
+   "18-20 6-inch square egg roll or spring roll wrappers, about 1 1-pound pack",
+   "Sweet chili sauce (optional for serving)"
+  ],
+  "steps": [
+   "In a medium mixing bowl, whisk together the soy sauce, ginger, and cornstarch with a fork. Add the chicken, breaking apart the meat and stirring to coat with the sauce. Let marinate for 10 minutes.",
+   "While you wait, chop the mushrooms super small and mince the garlic.",
+   "Heat a wok or large, deep sauté pan over high heat. Once the oil is hot, add the marinated chicken and cook, breaking the meat into small bits, until it's no longer pink and fully cooked through, about 5 minutes.",
+   "Add the mushrooms and cook until they soften, about 2 minutes.",
+   "Reduce the heat to medium. Add the coleslaw, salt, pepper, and minced garlic. Stir-fry until the coleslaw softens, 3 to 4 minutes. Stir in the sesame oil and red pepper flakes (if using), then remove from the heat and let cool. Taste and adjust the seasoning as you like.",
+   "Assemble the egg rolls: On a work surface, position an egg roll wrapper so that it’s arranged like a diamond with a corner pointing down towards you. Mound 3 tablespoons of the filling in the middle, shaping it like a torpedo so it runs horizontally across the center. Fold the right and left points of the diamond towards the middle over the filling, then roll up the egg roll away from you, as if you were rolling a mini burrito; see your package for more rolling tips. Brush the edges of the wrapper with water to seal, then press gently to adhere. If you have all of the wrappers out on your counter in a stack, to keep them from drying out placed a damp paper towel on top. Repeat with the remaining filling and wrappers.",
+   "To air fry, preheat your air fryer to 390°F. Coat the basket with nonstick spray, then arrange the first batch of egg rolls in a single layer in the basket, placing them seam-side down. Mist the top with more nonstick spray. Make sure the eggs rolls are not touching one another.",
+   "Air fry egg rolls for 9 to 11 minutes, flipping them over halfway through. Repeat with remaining batches (if you’d like to keep the egg rolls warm between batches, place them on a baking sheet in a 225°F oven). Let cool a few minutes, then enjoy hot with sweet chili sauce as desired."
+  ],
+  "tip": "",
+  "src": [
+   "Well Plated by Erin Clarke: Air Fryer Egg Rolls",
+   "https://www.wellplated.com/air-fryer-egg-rolls/"
+  ],
+  "mac": {
+   "cal": 332,
+   "p": 24,
+   "c": 32,
+   "f": 12,
+   "s": 5,
+   "from": "s",
+   "note": "4 pieces"
+  },
+  "rating": {
+   "v": 4.6,
+   "n": 21
+  }
+ },
+ {
+  "id": "air-fryer-zucchini",
+  "name": "Air Fryer Zucchini",
+  "cooker": "AF",
+  "type": "Side",
+  "region": "American",
+  "mins": 15,
+  "serves": 4,
+  "desc": "Crispy air fryer zucchini with a golden Parmesan panko topping is a light, fast, and healthy side and a great way to use up extra zucchini.",
+  "ing": [
+   "3 small/medium zucchini (about 1 1/4 pounds)",
+   "1 1/2 tablespoons extra-virgin olive oil",
+   "2 tablespoons panko breadcrumbs",
+   "2 tablespoons finely grated Parmesan cheese (for a vegan version, use nutritional yeast)",
+   "1 tablespoon white whole wheat flour or all-purpose flour",
+   "1/2 teaspoon kosher salt",
+   "1/4 teaspoon onion powder",
+   "1/4 teaspoon ground black pepper"
+  ],
+  "steps": [
+   "If you’d like to keep the zucchini warm between batches, preheat the oven to 200°F. Trim off the ends of the zucchini and cut into quarters length-wise. Place each quarter against the cutting board, flat side down, then cut crosswise into 3/4-inch thick half-moons so that you have chunks that are about 3/4 inch in size each. Place in a large mixing bowl.",
+   "Drizzle the zucchini with the oil. Toss to coat.",
+   "In a separate bowl, stir together the panko, Parmesan, flour, salt, onion powder, and pepper. Sprinkle over the zucchini, then toss to coat the zucchini as evenly as possible.",
+   "Preheat the air fryer to 400°F. Place half of the zucchini in the air fryer basket in an even layer (no need to coat it with nonstick cooking spray).",
+   "Air fry zucchini for 7 to 9 minutes, shaking a few times throughout, until the breadcrumbs are golden and the zucchini is tender but not mushy. Transfer to a serving plate or a parchment-lined baking sheet if keeping warm in the oven. Repeat with remaining zucchini."
+  ],
+  "tip": "",
+  "src": [
+   "Well Plated by Erin Clarke: Air Fryer Zucchini",
+   "https://www.wellplated.com/air-fryer-zucchini/"
+  ],
+  "mac": {
+   "cal": 99,
+   "p": 3,
+   "c": 8,
+   "f": 7,
+   "s": 4,
+   "from": "s",
+   "note": "1 (of 4)"
+  },
+  "rating": {
+   "v": 4.5,
+   "n": 137
+  }
+ },
+ {
+  "id": "air-fryer-green-beans",
+  "name": "Air Fryer Green Beans",
+  "cooker": "AF",
+  "type": "Side",
+  "region": "American",
+  "mins": 15,
+  "serves": 4,
+  "desc": "Crispy and seasoned, these Air Fryer Green Beans are the perfect side dish!",
+  "ing": [
+   "1 pound green beans",
+   "1 tablespoon olive oil",
+   "salt and black pepper (to taste)"
+  ],
+  "steps": [
+   "Wash and trim green beans. Dab dry.",
+   "Toss green beans with olive oil and season with salt & pepper.",
+   "Preheat air fryer to 390°F and cook green beans 9-11 minutes, shaking the basket after 6 minutes."
+  ],
+  "tip": "",
+  "src": [
+   "Spend With Pennies: Air Fryer Green Beans",
+   "https://www.spendwithpennies.com/air-fryer-green-beans/"
+  ],
+  "mac": {
+   "cal": 66,
+   "p": 2,
+   "c": 8,
+   "f": 4,
+   "s": 4,
+   "from": "s",
+   "note": ""
+  },
+  "rating": {
+   "v": 5.0,
+   "n": 32
+  }
+ },
+ {
+  "id": "air-fryer-cauliflower",
+  "name": "Air Fryer Cauliflower",
+  "cooker": "AF",
+  "type": "Side",
+  "region": "American",
+  "mins": 19,
+  "serves": 4,
+  "desc": "Seasoned Air Fryer Cauliflower is ready in less than 20 minutes, making it the perfect side dish!",
+  "ing": [
+   "1 head cauliflower (cut into florets)",
+   "2 tablespoons olive oil",
+   "½ teaspoon garlic powder",
+   "salt and black pepper (to taste)",
+   "⅓ cup shredded Parmesan cheese"
+  ],
+  "steps": [
+   "Cut cauliflower into florets. Wash and drain very well.",
+   "Combine olive oil, garlic powder, salt, and pepper in a small bowl. Toss with cauliflower.",
+   "Preheat air fryer to 390°F.",
+   "Place cauliflower in the air fryer basket and cook 12 minutes.",
+   "Sprinkle with parmesan and cook an additional 2-3 minutes or until florets reach desired doneness."
+  ],
+  "tip": "",
+  "src": [
+   "Spend With Pennies: Air Fryer Cauliflower",
+   "https://www.spendwithpennies.com/air-fryer-cauliflower/"
+  ],
+  "mac": {
+   "cal": 132,
+   "p": 6,
+   "c": 8,
+   "f": 10,
+   "s": 4,
+   "from": "s",
+   "note": ""
+  },
+  "rating": {
+   "v": 5.0,
+   "n": 22
+  }
  }
 ];
