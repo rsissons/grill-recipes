@@ -18,7 +18,7 @@ const REPO = "rsissons/grill-recipes";
 const ALLOWED_ORIGINS = ["https://rsissons.github.io", "http://localhost:8788", "http://127.0.0.1:8788"];
 const UA = "Mozilla/5.0";
 
-const COOKERS = ["Auto-detect", "Blackstone", "Pit Barrel", "Grill", "Sous Vide", "Slow Cooker", "Air Fryer"];
+const COOKERS = ["Auto-detect", "Blackstone", "Pit Barrel", "Pit Barrel / Smoker", "Grill", "Sous Vide", "Slow Cooker", "Air Fryer"];
 const TYPES = ["Auto-detect", "Beef main", "Chicken main", "Pork main", "Seafood main", "Other main (lamb, duck, tofu)", "Side dish", "Appetizer"];
 
 function cors(origin) {

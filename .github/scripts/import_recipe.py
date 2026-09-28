@@ -439,7 +439,7 @@ def main():
     title = name.lower()
     text = " ".join([title, desc.lower(), kw.lower(), cat, cuisine.lower(), " ".join(steps).lower(), " ".join(ings).lower()])
 
-    cooker_pick = {"blackstone": "BS", "pit barrel": "PBC", "grill": "GR", "sous vide": "SV", "slow cooker": "SC", "air fryer": "AF"}.get(form.get("cooker", "").lower())
+    cooker_pick = {"blackstone": "BS", "pit barrel": "PBC", "pit barrel / smoker": "PBC", "grill": "GR", "sous vide": "SV", "slow cooker": "SC", "air fryer": "AF"}.get(form.get("cooker", "").lower())
     guessed_cooker = False
     if not cooker_pick:
         cooker_pick, guessed_cooker = pick_cooker(title, text)
@@ -518,7 +518,7 @@ def main():
         items.append(recipe)
     save_added(items)
 
-    cookers = {"BS": "Blackstone", "PBC": "Pit Barrel", "GR": "Grill", "SV": "Sous Vide", "SC": "Slow Cooker", "AF": "Air Fryer"}
+    cookers = {"BS": "Blackstone", "PBC": "Pit Barrel / Smoker", "GR": "Grill", "SV": "Sous Vide", "SC": "Slow Cooker", "AF": "Air Fryer"}
     types = {"Beef": "Beef main", "Chicken": "Chicken main", "Pork": "Pork main", "Seafood": "Seafood main",
              "Other": "Other main", "Side": "Side dish", "Appetizer": "Appetizer"}
     note = ("\n\nI couldn't tell which cooker this is for, so it's filed under **Grill**. "

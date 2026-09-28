@@ -44,7 +44,7 @@ button{font:inherit;cursor:pointer}
 header.hero{background:linear-gradient(135deg,#1c1410 0%,#3b1d0e 60%,#7c2d12 100%);color:#fff7ed;padding:16px 0 24px}
 .hero .banner{display:block;width:100%;height:auto;aspect-ratio:3/1;border-radius:14px;box-shadow:0 8px 28px rgba(0,0,0,.45)}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-@media (max-width:640px){header.hero{padding-top:0}.hero .wrap{padding:0}.hero .banner{border-radius:0;box-shadow:none}.hero .stats,.hero .spin-cta{margin-left:16px;margin-right:16px}}
+@media (max-width:640px){header.hero{padding-top:0}header.hero .theme-toggle{top:8px;bottom:auto;right:8px;padding:4px 10px;font-size:.78rem;background:rgba(0,0,0,.45)}.hero .wrap{padding:0}.hero .banner{border-radius:0;box-shadow:none}.hero .stats,.hero .spin-cta{margin-left:16px;margin-right:16px}}
 .hero p{max-width:720px;color:#fde6d3;margin:10px 0 0}
 .hero .stats{display:flex;gap:18px;flex-wrap:wrap;margin-top:16px;font-size:.9rem;color:#fed7aa}
 .hero .stats b{color:#fff;font-size:1.15rem;margin-right:4px}
@@ -389,7 +389,7 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
       <label class="fl">Recipe link<input id="addUrl" type="url" required placeholder="https://" autocomplete="off"></label>
       <label class="fl">Name (optional)<input id="addName" maxlength="60" placeholder="e.g. Kielbasa Cowboy Stir Fry" autocomplete="off"><small style="font-weight:400;color:var(--ink-2)">Give it your own name, especially if a similar dish is already on the site.</small></label>
       <div class="frow2">
-        <label class="fl">Cooker<select id="addCooker"><option>Auto-detect</option><option>Blackstone</option><option>Pit Barrel</option><option>Grill</option><option>Sous Vide</option><option>Slow Cooker</option><option>Air Fryer</option></select></label>
+        <label class="fl">Cooker<select id="addCooker"><option>Auto-detect</option><option>Blackstone</option><option>Pit Barrel / Smoker</option><option>Grill</option><option>Sous Vide</option><option>Slow Cooker</option><option>Air Fryer</option></select></label>
         <label class="fl">Type<select id="addType"><option>Auto-detect</option><option>Beef main</option><option>Chicken main</option><option>Pork main</option><option>Seafood main</option><option>Other main (lamb, duck, tofu)</option><option>Side dish</option><option>Appetizer</option></select></label>
       </div>
       <div id="tsBox" style="margin:12px 0"></div>
@@ -1752,7 +1752,7 @@ const MENUS = [
  {name:"Mediterranean Night",s:"Mediterranean",why:"One batch of tzatziki covers both dishes.",ids:["greek-gyros","veg-kebabs","greek-meatballs"]}
 ];
 
-const COOKERS={BS:"Blackstone",PBC:"Pit Barrel",GR:"Grill",SV:"Sous Vide",SC:"Slow Cooker",AF:"Air Fryer"};
+const COOKERS={BS:"Blackstone",PBC:"Pit Barrel / Smoker",GR:"Grill",SV:"Sous Vide",SC:"Slow Cooker",AF:"Air Fryer"};
 const cookerLabel=r=>COOKERS[r.cooker]+(r.finish&&COOKERS[r.finish]?" + "+COOKERS[r.finish]:"");   // sous vide combos: "Sous Vide + Blackstone"
 const MAIN_T=new Set(["Beef","Chicken","Pork","Seafood","Other"]);
 const TYPES=["Beef","Chicken","Pork","Seafood",...(R.some(r=>r.type==="Other")?["Other"]:[]),"Side","Appetizer"];
@@ -2729,7 +2729,7 @@ async function loadHearts(){
 
 /* ---------- stats + boot ---------- */
 const c=k=>R.filter(r=>r.cooker===k).length;
-$("#stats").innerHTML=`<span><b>${R.length}</b>recipes</span><span><b>${c("BS")}</b>Blackstone</span><span><b>${c("PBC")}</b>Pit Barrel</span><span><b>${c("GR")}</b>Grill</span><span><b>${c("SV")}</b>Sous Vide</span><span><b>${c("SC")}</b>Slow Cooker</span><span><b>${c("AF")}</b>Air Fryer</span><span><b>${REGIONS.length}</b>regions</span><span><b>${MENUS.length}</b>meal nights</span>`;
+$("#stats").innerHTML=`<span><b>${R.length}</b>recipes</span><span><b>${c("BS")}</b>Blackstone</span><span><b>${c("PBC")}</b>Pit Barrel / Smoker</span><span><b>${c("GR")}</b>Grill</span><span><b>${c("SV")}</b>Sous Vide</span><span><b>${c("SC")}</b>Slow Cooker</span><span><b>${c("AF")}</b>Air Fryer</span><span><b>${REGIONS.length}</b>regions</span><span><b>${MENUS.length}</b>meal nights</span>`;
 render();
 loadHearts();
 if(location.hash&&byId[location.hash.slice(1)])openRecipe(location.hash.slice(1));

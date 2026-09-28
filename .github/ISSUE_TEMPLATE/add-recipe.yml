@@ -19,7 +19,7 @@ body:
       options:
         - Auto-detect
         - Blackstone
-        - Pit Barrel
+        - Pit Barrel / Smoker
         - Grill
         - Sous Vide
         - Slow Cooker
