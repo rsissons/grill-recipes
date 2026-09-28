@@ -1510,7 +1510,7 @@ const MENUS = [
  {name:"Grilled Steak Night",s:"Grilled Steak",why:"Filets or a marinated London broil, garlic bread and asparagus. All on the grill except the bread.",ids:["filet-cowboy","london-broil","grilled-asparagus","foil-potatoes","griddle-garlic-bread"]},
  {name:"Greek Grill Night",s:"Greek Grill",why:"Souvlaki or kofta, zucchini with feta, halloumi to start.",ids:["souvlaki","kofta","grilled-zucchini","greek-meatballs"]},
  {name:"Peruvian Chicken Night",s:"Peruvian",why:"Pollo a la brasa with aji verde. Make extra sauce for the potatoes.",ids:["pollo-brasa","foil-potatoes","shishitos"]},
- {name:"Grill Taco Night",s:"Grill Tacos",why:"Pollo asado chopped with crispy skin, guac and corn off the grill.",ids:["pollo-asado","shish-kebab","grilled-guac","elote"]},
+ {name:"Grill Taco Night",s:"Grill Tacos",why:"Pollo asado chopped with crispy skin, guac and corn off the grill.",ids:["pollo-asado","shish-kebab","grilled-guac","elote","grilled-zucchini","griddle-naan"],pair:{"pollo-asado":["grilled-guac","elote"],"shish-kebab":["grilled-zucchini","griddle-naan"]}},
  {name:"Spicy Grill Night",s:"Spicy Grill",why:"Piri piri or chicken kabobs, with blistered shishitos and zucchini.",ids:["piri-piri","chicken-kabobs","grilled-zucchini","shishitos"]},
  {name:"Backyard BBQ Chicken",s:"BBQ Chicken",why:"Sauced BBQ chicken or lemon herb breasts, with foil potatoes and Caesar.",ids:["bbq-chicken","lemon-herb-chicken","foil-potatoes","grilled-caesar"]},
  {name:"Beer Can Sunday",s:"Beer Can",why:"The bird stands on the grill for an hour. Pizza keeps everyone busy.",ids:["beer-can-chicken","grilled-asparagus","grilled-pizza"]},
@@ -1518,17 +1518,17 @@ const MENUS = [
  {name:"Sandwich Shop Night",s:"Sandwich Shop",why:"Reuben, Cuban or cutlet sandwich, all pressed on the flat top, with smash fries.",ids:["reuben","cuban-sandwich","chicken-cutlet-sandwich","smash-fries","bacon-fried-corn"]},
  {name:"Seafood on the Flat Top",s:"Flat Top Seafood",why:"Salmon, scallops or shrimp tacos. Everything cooks in under 10 minutes, so prep first.",ids:["griddle-salmon","seared-scallops","ahi-tuna","blistered-green-beans","charred-cauliflower"]},
  {name:"California Burrito Night",s:"Cali Burritos",why:"San Diego style. Fries go inside, nachos to start.",ids:["california-burrito","elote","griddle-nachos"]},
- {name:"Shrimp & Salmon Night",s:"Shrimp & Salmon",why:"Salmon on the griddle or shrimp skewers on the grill. Both cook in under 10 minutes.",ids:["griddle-salmon","grilled-shrimp","grilled-asparagus","hibachi-rice","cajun-shrimp"]},
+ {name:"Shrimp & Salmon Night",s:"Shrimp & Salmon",why:"Salmon on the griddle or shrimp skewers on the grill. Both cook in under 10 minutes.",ids:["griddle-salmon","grilled-shrimp","grilled-asparagus","hibachi-rice"]},
  {name:"Fish Taco Night",s:"Fish Tacos",why:"Blackened fish or chile shrimp tacos, street corn and grilled guac.",ids:["blackened-fish-tacos","shrimp-tacos","elote","grilled-guac"]},
- {name:"Curry Night",s:"Curry Night",why:"Pick an Indian or Thai curry. Rice and naan soak up the sauce.",ids:["tikka-masala","keema","green-curry","panang-steak","yellow-rice","griddle-naan"]},
+ {name:"Curry Night",s:"Curry Night",why:"Pick an Indian or Thai curry. Rice and naan soak up the sauce.",ids:["tikka-masala","keema","green-curry","panang-steak","yellow-rice","griddle-naan","pineapple-rice","satay"],pair:{"tikka-masala":["yellow-rice","griddle-naan"],"keema":["yellow-rice","griddle-naan"],"green-curry":["pineapple-rice","satay"],"panang-steak":["pineapple-rice","satay"]}},
  {name:"Sous Vide Steak Night",s:"Sous Vide Steak",why:"Everything goes in the bath early, then the Blackstone does 5 minutes of searing right before dinner.",ids:["sv-steak","sv-pork-chops","sv-mashed","sv-carrots","sv-shrimp-cocktail"]},
  {name:"Set It and Forget It BBQ",s:"Sous Vide BBQ",why:"The bath does the long cook for brisket, ribs or short ribs; the fire just finishes them.",ids:["sv-brisket","sv-ribs","sv-short-ribs","sv-corn","popper-mac"]},
  {name:"Crockpot Game Day",s:"Crockpot Game Day",why:"Everything cooks itself and holds on WARM through the whole game.",ids:["sc-italian-beef","sc-pulled-pork","sc-mac","sc-creamed-corn","sc-jelly-meatballs","sc-spinach-dip"]},
- {name:"Walk In the Door Dinner",s:"Crockpot Dinner",why:"Load it before work and dinner's done when you get home.",ids:["sc-mississippi-roast","sc-crack-chicken","sc-butter-chicken","sc-kalua-pork","sv-mashed","hibachi-veg"]},
+ {name:"Walk In the Door Dinner",s:"Crockpot Dinner",why:"Load it before work and dinner's done when you get home.",ids:["sc-mississippi-roast","sc-crack-chicken","sc-butter-chicken","sc-kalua-pork","sv-mashed","sv-carrots","blistered-green-beans","yellow-rice","griddle-naan","pineapple-rice","fried-cabbage"],pair:{"sc-mississippi-roast":["sv-mashed","sv-carrots"],"sc-crack-chicken":["sv-mashed","blistered-green-beans"],"sc-butter-chicken":["yellow-rice","griddle-naan"],"sc-kalua-pork":["pineapple-rice","fried-cabbage"]}},
  {name:"Rib Night",s:"Rib Night",why:"The Pit Barrel's famous ribs with beans catching the drippings underneath.",ids:["pbc-ribs","pbc-pulled-pork","drip-beans","popper-mac","smokies"]},
  {name:"Thanksgiving on the Barrel",s:"Thanksgiving",why:"The turkey hangs in the barrel and frees up the oven for everything else.",ids:["smoked-turkey","sv-mashed","sv-carrots","honey-brussels"]},
  {name:"Fajita & Quesadilla Night",s:"Fajita Night",why:"Steak fajitas or chicken quesadillas, all on the Blackstone.",ids:["steak-fajitas","chicken-quesadillas","mexican-rice","elote"]},
- {name:"Soup & Stew Day",s:"Soup Day",why:"Load the slow cooker in the morning. Garlic bread on the griddle right before dinner.",ids:["sc-beef-stew","sc-tortilla-soup","griddle-garlic-bread"]},
+ {name:"Soup & Stew Day",s:"Soup Day",why:"Load the slow cooker in the morning. Garlic bread on the griddle right before dinner.",ids:["sc-beef-stew","sc-tortilla-soup","griddle-garlic-bread","grilled-guac"],pair:{"sc-beef-stew":["griddle-garlic-bread"],"sc-tortilla-soup":["grilled-guac"]}},
  {name:"Mediterranean Night",s:"Mediterranean",why:"One batch of tzatziki covers both dishes.",ids:["greek-gyros","veg-kebabs","greek-meatballs"]}
 ];
 
@@ -1926,15 +1926,18 @@ dlg.addEventListener("close",()=>history.replaceState(null,"",location.pathname+
 
 /* ---------- meal nights ---------- */
 const isMain=id=>MAIN_T.has(byId[id].type);
+// Sides that go with the chosen main: a night's pair map when it has one (so Kalua pork doesn't get mashed potatoes), else all its sides.
+const withFor=(m,main)=>(m.pair&&m.pair[main])||m.ids.filter(id=>!isMain(id));
+function optRow(id,input){const r=byId[id];return `<label class="opt">${input}<button type="button" class="lnk" data-id="${id}">${esc(r.name)}</button><small>${COOKERS[r.cooker]} · ${fmtTime(r.mins)}</small></label>`}
+const withHTML=ids=>ids.length?`<div class="nh">With</div>${ids.map(id=>optRow(id,`<input type="checkbox" data-x="${id}" checked>`)).join("")}`:"";
 function nightCard(m,i,pfx,chosen){
-  const mains=m.ids.filter(isMain),extras=m.ids.filter(id=>!isMain(id));
-  const sel=chosen||mains[0];
-  const row=(id,input)=>{const r=byId[id];return `<label class="opt">${input}<button type="button" class="lnk" data-id="${id}">${esc(r.name)}</button><small>${COOKERS[r.cooker]} · ${fmtTime(r.mins)}</small></label>`};
+  const mains=m.ids.filter(isMain),sel=chosen||mains[0],extras=withFor(m,sel);
+  const row=optRow;
   const cks=[...new Set(m.ids.flatMap(id=>[byId[id].cooker,byId[id].finish]).filter(Boolean))],rgs=[...new Set(mains.map(id=>byId[id].region))];
-  return `<div class="menu" data-card data-cookers="${cks.join(" ")}" data-regions="${esc(rgs.join("|"))}"><h3>${esc(m.name)}</h3><p>${esc(m.why)}</p>
+  return `<div class="menu" data-card data-mi="${i}" data-cookers="${cks.join(" ")}" data-regions="${esc(rgs.join("|"))}"><h3>${esc(m.name)}</h3><p>${esc(m.why)}</p>
     <div class="nh">${mains.length>1?"Main (pick one)":"Main"}</div>
     ${mains.map(id=>row(id,`<input type="radio" name="m-${pfx}${i}" value="${id}"${id===sel?" checked":""}${mains.length===1?" hidden":""}>`)).join("")}
-    ${extras.length?`<div class="nh">With</div>${extras.map(id=>row(id,`<input type="checkbox" data-x="${id}" checked>`)).join("")}`:""}
+    <div data-with>${withHTML(extras)}</div>
     <p class="plate" data-plate>${plateText([sel,...extras])}</p>
     <div class="night-actions"><select aria-label="Which day">${dayOpts("Tonight")}</select><button class="btn primary" type="button" data-add>＋ Add to list</button>${pfx==="w"?'<button class="btn" type="button" data-respin>Spin again</button>':""}</div>
     <div class="night-actions"><label class="rb">Ready by <input type="time" value="17:00" data-ready></label><button class="btn" type="button" data-time>⏰ Plan my timing</button></div>
@@ -1973,7 +1976,9 @@ function nightClick(e){
   render();add.textContent="✓ Added to list";setTimeout(()=>add.textContent="＋ Add to list",1800);
 }
 $("#menus").addEventListener("click",nightClick);
-["#menus","#wheelOut"].forEach(sel=>$(sel).addEventListener("change",e=>{const c=e.target.closest("[data-card]");if(c)updatePlate(c)}));
+["#menus","#wheelOut"].forEach(sel=>$(sel).addEventListener("change",e=>{const c=e.target.closest("[data-card]");if(!c)return;
+  if(e.target.type==="radio"){const m=MENUS[+c.dataset.mi];if(m.pair){c.querySelector("[data-with]").innerHTML=withHTML(withFor(m,e.target.value));c.querySelector("[data-timeline]").innerHTML=""}}
+  updatePlate(c)}));
 $("#wheelOut").addEventListener("click",nightClick);
 
 /* ---------- "I don't know" wheel ---------- */
