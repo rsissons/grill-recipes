@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS nights (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  author TEXT NOT NULL DEFAULT '',
+  ids TEXT NOT NULL,
+  device TEXT NOT NULL,
+  created INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS nights_device ON nights (device);

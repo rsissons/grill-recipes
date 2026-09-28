@@ -219,6 +219,7 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
 .inghead{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
 .serves select{border:1px solid var(--line);background:var(--surface-2);color:var(--ink);border-radius:8px;padding:4px 6px}
 .mnf{margin-bottom:14px}
+.menu p .lnk,.saveok{background:none;border:0;color:var(--ember);font-weight:600;text-decoration:underline;cursor:pointer;padding:0 4px}
 .mnbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .mnsum{font-size:.88rem;color:var(--ink-2);flex:1;min-width:160px}
 .mnsum b{color:var(--ink)}
@@ -1766,6 +1767,26 @@ const MENUS = [
  {name:"Breakfast for Dinner",s:"Breakfast Dinner",why:"Bacon, egg and potato burritos with crispy griddle potatoes. Nobody complains.",ids:["breakfast-burritos","griddle-potatoes","hash-browns"]},
  {name:"Fish Fry Friday",s:"Fish Fry",why:"Beer-battered fish and chips or catfish po' boys, with onion rings and fried green tomatoes.",ids:["beer-battered-fish-and-chips","catfish-po-boys","onion-rings","fried-green-tomatoes"]},
  {name:"Comfort Food Night",s:"Comfort Food",why:"Country fried steak, stroganoff or chicken fettuccine, the stuff you actually crave on a cold night.",ids:["country-fried-steak","beef-stroganoff","chicken-fettuccine","garlic-parmesan-zucchini","corn-fritters"],pair:{"country-fried-steak":["corn-fritters","garlic-parmesan-zucchini"],"beef-stroganoff":["garlic-parmesan-zucchini"],"chicken-fettuccine":["garlic-parmesan-zucchini"]}},
+ {name:"Takeout Night: Round Two",s:"Takeout 2",why:"Mongolian beef, General Tso's, kung pao, chow fun or char siu pork. Egg rolls and rangoon nachos on the side.",ids:["mongolian-beef", "general-tso", "kung-pao", "beef-chow-fun", "shrimp-chow-mein", "char-siu-pork", "crispy-asian-broccoli", "air-fryer-egg-rolls", "crab-rangoon-nachos"]},
+ {name:"Stir-Fry Night",s:"Stir-Fry",why:"One hot griddle, 20 to 30 minutes: stir fry, fried rice, egg roll in a bowl or spicy pork noodles.",ids:["chicken-stir-fry", "chicken-fried-rice", "egg-roll-bowl", "spicy-pork-noodles", "hibachi-veg", "shrimp-toast"]},
+ {name:"Japanese Griddle Night",s:"Japanese",why:"Yakisoba, teriyaki chicken or katsu curry, with hibachi rice and veg.",ids:["yakisoba", "teriyaki-chicken", "chicken-katsu-curry", "hibachi-rice", "hibachi-veg"]},
+ {name:"Hawaiian Plate Lunch",s:"Plate Lunch",why:"Spam fried rice or char siu chicken with a scoop of mac salad, island style.",ids:["spam-fried-rice", "char-siu-chicken", "hawaiian-mac-salad", "pineapple-rice"],pair:{"spam-fried-rice": ["hawaiian-mac-salad"], "char-siu-chicken": ["hawaiian-mac-salad", "pineapple-rice"]}},
+ {name:"Italian Night",s:"Italian",why:"Shrimp scampi, chicken piccata, chicken parm or meatball subs, with garlic bread and Caesar.",ids:["shrimp-scampi", "chicken-piccata", "chicken-parm", "air-fryer-chicken-parmesan", "meatball-subs", "griddle-garlic-bread", "grilled-caesar", "stuffed-mushrooms"]},
+ {name:"Cajun Night",s:"Cajun",why:"Cajun pasta, blackened mahi or shrimp po' boys, with dirty rice and fried green tomatoes.",ids:["cajun-pasta", "blackstone-blackened-mahi-mahi", "shrimp-po-boy", "cajun-dirty-rice", "fried-green-tomatoes", "corn-fritters"],pair:{"cajun-pasta": ["fried-green-tomatoes"], "blackstone-blackened-mahi-mahi": ["cajun-dirty-rice", "fried-green-tomatoes"], "shrimp-po-boy": ["corn-fritters", "fried-green-tomatoes"]}},
+ {name:"Enchilada & Tostada Night",s:"Enchiladas",why:"Chicken enchiladas, beef tostadas, taco salad or smoked chicken tinga.",ids:["chicken-enchiladas", "cheesy-beef-tostadas", "taco-salad", "chicken-tinga", "mexican-rice", "corn-bean-salsa", "jalapeno-poppers"]},
+ {name:"Taco Truck Night",s:"Taco Truck",why:"Birria, elote chicken tacos, smash tacos, Caesar smash tacos, carnitas or a crunchwrap.",ids:["birria-tacos", "chicken-and-elote-tacos", "smash-tacos", "caesar-smash-tacos", "sc-carnitas", "crunchwrap", "elote", "grilled-guac"]},
+ {name:"Sizzling Fajita Night",s:"Sizzling Fajitas",why:"Chicken or shrimp fajitas off the flat top, or chicken bacon ranch quesadillas.",ids:["chicken-fajitas", "shrimp-fajitas", "cbr-quesadillas", "mexican-rice", "elote"]},
+ {name:"South American Grill",s:"South American",why:"Picanha, flank steak with chimichurri, or arroz con pollo.",ids:["picanha", "flank-chimichurri", "arroz-con-pollo", "grilled-zucchini", "jerk-sweet-potato-street-fries"],pair:{"picanha": ["grilled-zucchini", "jerk-sweet-potato-street-fries"], "flank-chimichurri": ["grilled-zucchini", "jerk-sweet-potato-street-fries"], "arroz-con-pollo": ["grilled-zucchini"]}},
+ {name:"Smokehouse Chicken",s:"Smoked Chicken",why:"A whole chicken hung in the barrel or Alabama white sauce chicken, with Southern sides.",ids:["hanging-chicken", "alabama-white", "smoked-sweet-potatoes", "collards", "sc-mac"]},
+ {name:"Spice Night",s:"Spice Night",why:"Smoky tandoori kebabs or a from-scratch Thai yellow curry.",ids:["tandoori", "thai-yellow-curry-from-scratch", "yellow-rice", "griddle-naan", "pineapple-rice"],pair:{"tandoori": ["yellow-rice", "griddle-naan"], "thai-yellow-curry-from-scratch": ["pineapple-rice"]}},
+ {name:"Sunday Supper",s:"Sunday Supper",why:"Meatloaf, pork chops, pork tenderloin or a pot of chili, the way Sunday dinner should be.",ids:["meatloaf", "grilled-pork-chops", "blackstone-pork-tenderloin", "sc-chili", "sv-mashed", "honey-brussels", "griddle-corn-salad", "griddle-garlic-bread"],pair:{"meatloaf": ["sv-mashed", "honey-brussels"], "grilled-pork-chops": ["sv-mashed", "griddle-corn-salad"], "blackstone-pork-tenderloin": ["honey-brussels", "sv-mashed"], "sc-chili": ["griddle-garlic-bread"]}},
+ {name:"Griddle Sandwich Night",s:"Sandwich Night",why:"Chopped cheese, onion burgers, sloppy joes, chicken clubs, BLTs, chili dogs or grilled cheese and tomato soup.",ids:["chopped-cheese", "onion-burger", "sloppy-joes", "grilled-chicken-club", "blt-sandwich", "griddle-chili-dogs", "grilled-cheese-and-tomato-soup", "smash-fries", "onion-rings", "potato-skins"],pair:{"grilled-cheese-and-tomato-soup": ["potato-skins"]}},
+ {name:"Kielbasa & Sausage Night",s:"Kielbasa Night",why:"Kielbasa, cowboy stir fry or sausage and peppers, with griddle potatoes and fried cabbage.",ids:["blackstone-kielbasa", "kielbasa-cowboy-stir-fry", "cowboy-stir-fry", "sausage-peppers", "griddle-potatoes", "fried-cabbage"],pair:{"kielbasa-cowboy-stir-fry": ["fried-cabbage"], "cowboy-stir-fry": ["fried-cabbage"]}},
+ {name:"Air Fryer Seafood Night",s:"AF Seafood",why:"Garlic shrimp, crab cakes, salmon patties or lobster tails, with corn and zucchini.",ids:["air-fryer-shrimp", "easy-air-fryer-crab-cakes", "salmon-patties", "lobster-tails", "air-fryer-corn-on-the-cob", "air-fryer-zucchini", "bacon-wrapped-scallops"]},
+ {name:"Air Fryer Dinner Classics",s:"AF Classics",why:"Steak with garlic-herb butter, crispy thighs, turkey breast, turkey burgers or stuffed peppers.",ids:["air-fryer-steak-with-garlic-herb-butter", "af-chicken-thighs", "air-fryer-turkey-breast", "air-fryer-turkey-burgers", "air-fryer-stuffed-peppers", "easy-air-fryer-asparagus", "air-fryer-potatoes", "air-fryer-sweet-potato-fries", "air-fryer-cauliflower"],pair:{"air-fryer-steak-with-garlic-herb-butter": ["easy-air-fryer-asparagus", "air-fryer-potatoes"], "af-chicken-thighs": ["air-fryer-cauliflower", "air-fryer-potatoes"], "air-fryer-turkey-breast": ["easy-air-fryer-asparagus", "air-fryer-potatoes"], "air-fryer-turkey-burgers": ["air-fryer-sweet-potato-fries"], "air-fryer-stuffed-peppers": ["air-fryer-cauliflower"]}},
+ {name:"Sous Vide Chicken Night",s:"SV Chicken",why:"Juicy sous vide breasts or crispy-skin thighs, with butter-poached sides from the same bath.",ids:["sv-chicken-breast", "sv-chicken-thighs", "sv-carrots", "sv-mashed", "sv-corn"]},
+ {name:"Bistro Night",s:"Bistro",why:"Steak frites, crispy pork cutlets or lamb chops, a little Paris on the flat top.",ids:["steak-frites", "crispy-pork-cutlets", "marinated-lamb-chops", "grilled-asparagus", "griddle-potatoes", "grilled-caesar"],pair:{"steak-frites": ["grilled-asparagus"], "crispy-pork-cutlets": ["griddle-potatoes", "grilled-caesar"], "marinated-lamb-chops": ["grilled-asparagus", "griddle-potatoes"]}},
+ {name:"Shawarma Night",s:"Shawarma",why:"Chicken shawarma wraps with grilled zucchini and veggie kebabs.",ids:["chicken-shawarma-wraps", "grilled-zucchini", "veg-kebabs"]},
  {name:"Mediterranean Night",s:"Mediterranean",why:"One batch of tzatziki covers both dishes.",ids:["greek-gyros","veg-kebabs","greek-meatballs"]}
 ];
 
@@ -2271,6 +2292,8 @@ function openRecipe(id){
   const picks=()=>[...$("#dlgBody").querySelectorAll("[data-pair]:checked")].map(x=>x.dataset.pair);
   $("#dlgBody").querySelectorAll(".pairpick [data-id]").forEach(b=>b.onclick=e=>{e.preventDefault();openRecipe(b.dataset.id)});
   $("#dlgBody").querySelectorAll("[data-pair]").forEach(x=>x.onchange=()=>{const n=picks().length;if(!inPlan(r.id))$("#listBtn").textContent=n?`＋ Add meal to list (${n+1})`:"＋ Add to list";$("#dlgTimeline").innerHTML=""});
+  if(RELAY&&MAIN_T.has(r.type)){const sb=document.createElement("button");sb.className="btn";sb.type="button";sb.textContent="⭐ Save as a meal night";$("#dlgCook").parentNode.appendChild(sb);
+    sb.onclick=()=>{if(!picks().length){alert("Tick at least one side under Make it a meal first.");return}saveNight([r.id,...picks()],r.name+" Night",sb)}}
   $("#dlgCook").onclick=()=>openCookAll(r.name+(picks().length?" + sides":""),[r.id,...picks()],$("#dlgReady").value,$("#dayPick").value,+$("#dlgServes").value);
   $("#dlgBody").querySelectorAll("[data-also]").forEach(b=>b.onclick=()=>openRecipe(b.dataset.also));
   const fx=$("#dlgBody").querySelector("#fixBtn");if(fx)fx.onclick=()=>{dlg.close();openAdd(r)};
@@ -2326,7 +2349,7 @@ function nightCard(m,i,pfx,chosen){
   const mains=m.ids.filter(isMain),sel=chosen||mains[0],extras=withFor(m,sel);
   const row=optRow;
   const cks=[...new Set(m.ids.flatMap(id=>[byId[id].cooker,byId[id].finish]).filter(Boolean))],rgs=[...new Set(mains.map(id=>byId[id].region))];
-  return `<div class="menu" data-card data-mi="${i}" data-cookers="${cks.join(" ")}" data-regions="${esc(rgs.join("|"))}"><h3>${esc(m.name)}</h3><p>${esc(m.why)}</p><div class="ntime" data-ntime>${ntimeHTML(m,sel)}</div>
+  return `<div class="menu" data-card data-mi="${i}" data-cookers="${cks.join(" ")}" data-regions="${esc(rgs.join("|"))}"><h3>${m.saved?"⭐ ":""}${esc(m.name)}</h3><p>${esc(m.why)}${m.mine?` <button type="button" class="lnk" data-delnight="${m.saved}">🗑 Delete</button>`:""}</p><div class="ntime" data-ntime>${ntimeHTML(m,sel)}</div>
     <details class="nbody fold"${pfx==="w"?" open":""}><summary>${mains.length>1?`Pick from ${mains.length} mains, add to list, timing`:"See the menu, add to list, timing"}<span class="chev">▾</span></summary>
     <div class="nh">${mains.length>1?"Main (pick one)":"Main"}</div>
     ${mains.map(id=>row(id,`<input type="radio" name="m-${pfx}${i}" value="${id}"${id===sel?" checked":""}${mains.length===1?" hidden":""}>`)).join("")}
@@ -2337,7 +2360,8 @@ function nightCard(m,i,pfx,chosen){
     <p class="cahint">👨‍🍳 <b>Cook it all:</b> every recipe on one page, timed so it all lands at once.</p>
     <div data-timeline></div></details></div>`;
 }
-$("#menus").innerHTML=MENUS.map((m,i)=>nightCard(m,i,"n")).join("");
+function renderNights(){const order=MENUS.map((m,i)=>i).filter(i=>!MENUS[i].gone).sort((a,b)=>(MENUS[b].saved?1:0)-(MENUS[a].saved?1:0));$("#menus").innerHTML=order.map(i=>nightCard(MENUS[i],i,"n")).join("")}
+renderNights();
 function setMain(c,id,already){
   const m=MENUS[+c.dataset.mi];
   if(!already){const r=c.querySelector(`input[type=radio][value="${id}"]`);if(!r||r.checked)return;r.checked=true}
@@ -2429,6 +2453,7 @@ function nightClick(e){
   if(ca){const card=ca.closest("[data-card]");const main=card.querySelector('input[type=radio]:checked');
     const ids=[main&&main.value,...[...card.querySelectorAll("input[data-x]:checked")].map(x=>x.dataset.x)].filter(Boolean);
     return openCookAll(MENUS[+card.dataset.mi].name,ids,card.querySelector("[data-ready]").value,card.querySelector("select:not([data-serves])").value,+card.querySelector("[data-serves]").value)}
+  const del=e.target.closest("[data-delnight]");if(del)return deleteNight(del.dataset.delnight);
   const add=e.target.closest("[data-add]");if(!add)return;
   const card=add.closest("[data-card]");
   const main=card.querySelector('input[type=radio]:checked');
@@ -2446,12 +2471,15 @@ $("#wheelOut").addEventListener("click",nightClick);
 
 /* ---------- "I don't know" wheel ---------- */
 const WHEEL_COLORS=["#c2410c","#9a3412","#ea580c","#7c2d12","#b45309"];
-let wheelList=[];   // MENUS indexes on the wheel
-function drawWheel(){
+let wheelList=[],wheelPool="";   // MENUS indexes on the wheel; the full matching pool
+const WHEEL_MAX=24;              // more slices than this and the labels collide: show a random 24, reshuffled every spin
+function drawWheel(reshuffle){
   const vis=[...document.querySelectorAll("#menus [data-card]")].filter(c=>!c.hidden).map(c=>+c.dataset.mi);
-  let list=vis.filter(i=>!MENUS[i].nowheel);
+  let list=vis.filter(i=>!MENUS[i].nowheel&&!MENUS[i].gone);
   if(!list.length)list=MENUS.map((m,i)=>i).filter(i=>!MENUS[i].nowheel);
-  if(list.join()===wheelList.join())return;
+  if(list.join()===wheelPool&&!(reshuffle&&list.length>WHEEL_MAX))return;
+  wheelPool=list.join();
+  if(list.length>WHEEL_MAX){const a=list.slice();for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]]}list=a.slice(0,WHEEL_MAX).sort((x,y)=>x-y)}
   wheelList=list;
   const n=list.length,seg=360/n,R=98,rad=d=>d*Math.PI/180;
   let out="";
@@ -2467,6 +2495,7 @@ filterNights();   // after the wheel exists: draws it from the visible nights
 let wheelRot=0,spinning=false;
 function spin(){
   if(spinning)return;spinning=true;$("#spin").disabled=true;
+  drawWheel(true);   // a fresh 24 from the pool each spin
   const n=wheelList.length,seg=360/n;let slot=Math.floor(Math.random()*n),ck=null;
   if(mnState.cooker.size>1){
     const groups=[...mnState.cooker].map(k=>[k,wheelList.map((mi,sl)=>[mi,sl]).filter(([mi])=>fitMains(MENUS[mi]).some(id=>byId[id].cooker===k))]).filter(g=>g[1].length);
@@ -2501,13 +2530,15 @@ $("#build").onclick=()=>{
   const pick=t=>{const c=R.filter(r=>r.type===t&&okCooker(r)&&timeOK(r,true)).map(x=>[x,score(main,x)+Math.random()*2]).sort((a,b)=>b[1]-a[1]);return c.length?c[0][0]:null};
   const items=[main,pick("Side"),pick("Appetizer")].filter(Boolean);
   const mixed=new Set(items.map(i=>i.cooker)).size>1;
-  $("#buildOut").innerHTML=`${note?`<p class="section-intro">${esc(note)}</p>`:""}<div class="menu"><h3>Tonight's cook</h3><ol>${items.map(r=>`<li><button type="button" data-id="${r.id}">${esc(r.name)}</button> <small>${COOKERS[r.cooker]} · ${TYPE_LABEL[r.type]} · ${fmtTime(r.mins)}</small></li>`).join("")}</ol>
+  $("#buildOut").innerHTML=`${note?`<p class="section-intro">${esc(note)}</p>`:""}<details class="menu fold buildfold" open><summary><h3 style="display:inline">Tonight's cook</h3><span class="chev">▾</span></summary><ol>${items.map(r=>`<li><button type="button" data-id="${r.id}">${esc(r.name)}</button> <small>${COOKERS[r.cooker]} · ${TYPE_LABEL[r.type]} · ${fmtTime(r.mins)}</small></li>`).join("")}</ol>
    <p class="plate">${plateText(items.map(r=>r.id))}</p>
    <p style="margin-top:10px">${!mixed?"Game plan: start the longest item first and work down the list so it all lands hot together.":items.some(r=>r.cooker==="PBC")?"Game plan: light the Pit Barrel first. Its items take longest. Fire the other cooker about 30 minutes before the barrel stuff comes off.":"Game plan: light the grill first and start the longest item. The Blackstone only needs 10 to 15 minutes to heat, so fire it last."}</p>
-   <div class="night-actions">${servesSelect(household||4,0,'id="bServes" data-serves')}<select id="bDay" aria-label="Which day">${dayOpts("Tonight")}</select><button class="btn primary" type="button" id="bAdd">＋ Add to list</button><button class="btn" type="button" id="bCook">👨‍🍳 Cook it all</button><button class="btn" type="button" id="again">Reroll</button></div><p class="cahint">👨‍🍳 <b>Cook it all:</b> every recipe on one page, timed so it all lands at once.</p></div>`;
+   <div class="night-actions">${servesSelect(household||4,0,'id="bServes" data-serves')}<select id="bDay" aria-label="Which day">${dayOpts("Tonight")}</select><button class="btn primary" type="button" id="bAdd">＋ Add to list</button><button class="btn" type="button" id="bCook">👨‍🍳 Cook it all</button><button class="btn" type="button" id="again">Reroll</button></div><p class="cahint">👨‍🍳 <b>Cook it all:</b> every recipe on one page, timed so it all lands at once.</p></details>`;
   $("#bAdd").onclick=e=>{items.forEach(r=>addToPlan(r.id,$("#bDay").value,+$("#bServes").value));render();e.target.textContent="✓ Added to list"};
   $("#bServes").onchange=e=>setHousehold(+e.target.value);
   $("#bCook").onclick=()=>openCookAll("Tonight's cook",items.map(r=>r.id),"17:00",$("#bDay").value,+$("#bServes").value);
+  if(RELAY){const sb=document.createElement("button");sb.className="btn";sb.type="button";sb.textContent="⭐ Save as a meal night";$("#bAdd").parentNode.appendChild(sb);
+    sb.onclick=()=>saveNight(items.map(r=>r.id),items[0].name+" Night",sb)}
   $("#buildOut").querySelectorAll("button[data-id]").forEach(b=>b.onclick=()=>openRecipe(b.dataset.id));
   $("#again").onclick=()=>$("#build").click();
 };
@@ -2781,8 +2812,34 @@ async function sendHeart(id,on){
   try{const r=await fetch(RELAY+"/heart",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id,device:deviceId,on})});const d=await r.json();
     if(d.ok){heartCounts[id]=d.count;const synced=new Set(store.get("ftb-hsync",[]));on?synced.add(id):synced.delete(id);store.set("ftb-hsync",[...synced]);render();if(dlg.open&&$("#dlgTitle").textContent===byId[id].name)openRecipe(id)}}catch(_){}
 }
+/* ---------- saved meal nights (shared through the relay) ---------- */
+function addSavedNight(n){
+  const ids=n.ids.filter(id=>byId[id]);if(!ids.some(isMain))return;
+  MENUS.push({name:n.name,s:n.name.length>16?n.name.slice(0,15)+"…":n.name,why:`Saved by ${n.author||"a friend"}.`,ids,saved:n.id,mine:!!n.mine});
+}
+async function loadSavedNights(){
+  if(!RELAY)return;
+  try{const d=await (await fetch(`${RELAY}/nights?device=${deviceId}`)).json();if(!d.ok)return;
+    d.nights.slice().reverse().forEach(addSavedNight);renderNights();filterNights()}catch(_){}
+}
+async function saveNight(ids,suggest,btn){
+  const name=(prompt("Name this meal night (everyone will see it):",suggest)||"").trim();if(!name)return;
+  let author=store.get("ftb-author","");
+  if(!author){author=(prompt("Your name, so people know who saved it (optional):","")||"").trim();store.set("ftb-author",author)}
+  btn.disabled=true;btn.textContent="Saving…";
+  try{const d=await (await fetch(RELAY+"/night",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name,author,ids,device:deviceId})})).json();
+    if(!d.ok){btn.disabled=false;btn.textContent="⭐ Save as a meal night";alert(d.reason||"Couldn't save that night.");return}
+    addSavedNight({id:d.id,name,author,ids,mine:true});renderNights();filterNights();btn.textContent="✓ Saved to Meal Nights"}
+  catch(_){btn.disabled=false;btn.textContent="⭐ Save as a meal night";alert("Couldn't reach the site's server. Try again in a minute.")}
+}
+async function deleteNight(id){
+  if(!confirm("Delete this saved meal night for everyone?"))return;
+  try{const d=await (await fetch(RELAY+"/night/delete",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:+id,device:deviceId})})).json();
+    if(d.ok){const m=MENUS.find(x=>x.saved==id);if(m)m.gone=true;renderNights();filterNights()}}catch(_){}
+}
 async function loadHearts(){
   if(!RELAY)return;
+  loadSavedNights();
   try{const d=await (await fetch(RELAY+"/community")).json();if(d.ok){heartCounts=d.hearts||{};cookRatings=d.ratings||{};render()}}catch(_){}
   const synced=new Set(store.get("ftb-hsync",[]));   // favorites saved before shared hearts existed get counted once
   for(const id of favs)if(!synced.has(id)&&byId[id])await sendHeart(id,true);

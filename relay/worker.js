@@ -142,6 +142,48 @@ async function handleHeart(req, env, origin) {
   return json({ ok: true, count: row ? row.n : 0 }, 200, origin);
 }
 
+/* Saved meal nights, shared with everyone.
+   GET /nights?device=x -> {nights:[{id,name,author,ids,mine}]}
+   POST /night {name, author, ids[], device} -> {id}
+   POST /night/delete {id, device} -> only the device that saved it can delete it */
+const TEXT_RE = /^[\w\s&'!.,()-]+$/;
+async function handleNights(req, env, origin) {
+  const device = String(new URL(req.url).searchParams.get("device") || "").toLowerCase();
+  const { results } = await env.DB.prepare("SELECT id, name, author, ids, device FROM nights ORDER BY id DESC LIMIT 400").all();
+  const nights = results.map(r => ({ id: r.id, name: r.name, author: r.author, ids: JSON.parse(r.ids), mine: !!device && r.device === device }));
+  return json({ ok: true, nights }, 200, origin);
+}
+async function handleNightSave(req, env, origin) {
+  let body;
+  try { body = await req.json(); } catch { return json({ ok: false, reason: "Bad request." }, 400, origin); }
+  const name = String(body.name || "").replace(/\s+/g, " ").trim().slice(0, 40);
+  const author = String(body.author || "").replace(/\s+/g, " ").trim().slice(0, 24);
+  const device = String(body.device || "").toLowerCase();
+  const ids = Array.isArray(body.ids) ? [...new Set(body.ids.map(String))] : [];
+  if (name.length < 3 || !TEXT_RE.test(name)) return json({ ok: false, reason: "Give it a name (3 to 40 letters, numbers or basic punctuation)." }, 400, origin);
+  if (author && !TEXT_RE.test(author)) return json({ ok: false, reason: "Your name can only use letters, numbers and basic punctuation." }, 400, origin);
+  if (!DEVICE_RE.test(device) || ids.length < 1 || ids.length > 8 || !ids.every(x => ID_RE.test(x))) return json({ ok: false, reason: "That menu couldn't be saved." }, 400, origin);
+  if (env.LIMITER) {
+    const ip = req.headers.get("CF-Connecting-IP") || "unknown";
+    const { success } = await env.LIMITER.limit({ key: "night:" + ip });
+    if (!success) return json({ ok: false, reason: "That's a lot of saves at once. Wait a minute and try again." }, 429, origin);
+  }
+  const mine = await env.DB.prepare("SELECT COUNT(*) AS n FROM nights WHERE device = ?").bind(device).first();
+  if (mine && mine.n >= 25) return json({ ok: false, reason: "You've saved 25 nights. Delete one to save another." }, 400, origin);
+  const all = await env.DB.prepare("SELECT COUNT(*) AS n FROM nights").first();
+  if (all && all.n >= 400) return json({ ok: false, reason: "The saved nights list is full right now." }, 400, origin);
+  const r = await env.DB.prepare("INSERT INTO nights (name, author, ids, device, created) VALUES (?, ?, ?, ?, ?)").bind(name, author, JSON.stringify(ids), device, Date.now()).run();
+  return json({ ok: true, id: r.meta.last_row_id }, 200, origin);
+}
+async function handleNightDelete(req, env, origin) {
+  let body;
+  try { body = await req.json(); } catch { return json({ ok: false }, 400, origin); }
+  const id = Number(body.id), device = String(body.device || "").toLowerCase();
+  if (!Number.isInteger(id) || !DEVICE_RE.test(device)) return json({ ok: false }, 400, origin);
+  const r = await env.DB.prepare("DELETE FROM nights WHERE id = ? AND device = ?").bind(id, device).run();
+  return json({ ok: r.meta.changes > 0 }, 200, origin);
+}
+
 /* Everything shared in one call: GET /community -> {hearts: {id: n}, ratings: {id: [avg, n]}} */
 async function handleCommunity(env, origin) {
   const [h, r] = await env.DB.batch([
@@ -240,6 +282,9 @@ export default {
       if (req.method === "GET" && path === "/community") return await handleCommunity(env, origin);
       if (req.method === "POST" && path === "/rate") return await handleRate(req, env, origin);
       if (req.method === "GET" && path === "/deals") return await handleDeals(req, env, origin);
+      if (req.method === "GET" && path === "/nights") return await handleNights(req, env, origin);
+      if (req.method === "POST" && path === "/night") return await handleNightSave(req, env, origin);
+      if (req.method === "POST" && path === "/night/delete") return await handleNightDelete(req, env, origin);
       return json({ ok: true, service: "grill-recipes relay" }, 200, origin);
     } catch (e) {
       return json({ ok: false, reason: "Something went wrong on our end." }, 500, origin);
