@@ -12,19 +12,19 @@
 <style>
 :root{
   --bg:#f6f1ea; --surface:#ffffff; --surface-2:#efe7dc; --ink:#231c16; --ink-2:#5c5148; --line:#ddd1c2;
-  --ember:#c2410c; --ember-ink:#fff; --bs:#1f2937; --pbc:#7c2d12; --gr:#166534; --sv:#1d4ed8; --gold:#b45309; --focus:#2563eb;
+  --ember:#c2410c; --ember-ink:#fff; --bs:#1f2937; --pbc:#7c2d12; --gr:#166534; --sv:#1d4ed8; --sc:#7e22ce; --gold:#b45309; --focus:#2563eb;
   --shadow:0 1px 2px rgba(0,0,0,.06),0 4px 14px rgba(0,0,0,.06);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --bg:#15120f; --surface:#1f1a16; --surface-2:#2a231d; --ink:#f3ece4; --ink-2:#b9ab9c; --line:#3a3129;
-    --ember:#f97316; --ember-ink:#1a0f06; --bs:#94a3b8; --pbc:#fb923c; --gr:#4ade80; --sv:#93c5fd; --gold:#fbbf24; --focus:#60a5fa;
+    --ember:#f97316; --ember-ink:#1a0f06; --bs:#94a3b8; --pbc:#fb923c; --gr:#4ade80; --sv:#93c5fd; --sc:#d8b4fe; --gold:#fbbf24; --focus:#60a5fa;
     --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.3);
   }
 }
 :root[data-theme="dark"]{
   --bg:#15120f; --surface:#1f1a16; --surface-2:#2a231d; --ink:#f3ece4; --ink-2:#b9ab9c; --line:#3a3129;
-  --ember:#f97316; --ember-ink:#1a0f06; --bs:#94a3b8; --pbc:#fb923c; --gr:#4ade80; --sv:#93c5fd; --gold:#fbbf24; --focus:#60a5fa;
+  --ember:#f97316; --ember-ink:#1a0f06; --bs:#94a3b8; --pbc:#fb923c; --gr:#4ade80; --sv:#93c5fd; --sc:#d8b4fe; --gold:#fbbf24; --focus:#60a5fa;
   --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.3);
 }
 *{box-sizing:border-box}
@@ -123,6 +123,7 @@ nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(-
 .tag.pbc{background:var(--pbc);color:var(--bg)}
 .tag.gr{background:var(--gr);color:var(--bg)}
 .tag.sv{background:var(--sv);color:var(--bg)}
+.tag.sc{background:var(--sc);color:var(--bg)}
 .tag.added{background:var(--gold);color:var(--bg)}
 a.btn{text-decoration:none;display:inline-flex;align-items:center}
 .meta{display:flex;justify-content:space-between;font-size:.82rem;color:var(--ink-2);margin-top:auto}
@@ -319,7 +320,7 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
       <p class="section-intro" style="margin:0 0 12px">Paste a link to any recipe page. It gets read, sorted and added to the site for everyone, macros included when the site publishes them. Links that aren't recipes get turned away.</p>
       <label class="fl">Recipe link<input id="addUrl" type="url" required placeholder="https://" autocomplete="off"></label>
       <div class="frow2">
-        <label class="fl">Cooker<select id="addCooker"><option>Auto-detect</option><option>Blackstone</option><option>Pit Barrel</option><option>Grill</option><option>Sous Vide</option></select></label>
+        <label class="fl">Cooker<select id="addCooker"><option>Auto-detect</option><option>Blackstone</option><option>Pit Barrel</option><option>Grill</option><option>Sous Vide</option><option>Slow Cooker</option></select></label>
         <label class="fl">Type<select id="addType"><option>Auto-detect</option><option>Beef main</option><option>Chicken main</option><option>Pork main</option><option>Seafood main</option><option>Side dish</option><option>Appetizer</option></select></label>
       </div>
       <div id="tsBox" style="margin:12px 0"></div>
@@ -1242,13 +1243,79 @@ const R = [
  desc:"Potatoes cooked in butter and milk with garlic and rosemary. Creamy, never watery, and make-ahead friendly.",
  ing:["2 lb Yukon Gold potatoes, peeled and sliced 1/8 inch thick","1 stick butter","1 cup whole milk","5 garlic cloves, smashed","2 rosemary sprigs","2 tsp kosher salt"],
  steps:["Set the circulator to 194°F.","Bag everything together and seal.","Cook 1.5 hours.","Strain, saving the liquid, and pull out the rosemary.","Mash, adding back the buttery liquid until creamy. Season to taste."],
- tip:"Make them days ahead: chill the sealed bag in ice water, then reheat in a 160°F bath.",src:["Anova: Sous Vide Garlic and Rosemary Mashed Potatoes","https://recipes.anovaculinary.com/recipe/sous-vide-garlic-and-rosemary-mashed-potatoes"]}
+ tip:"Make them days ahead: chill the sealed bag in ice water, then reheat in a 160°F bath.",src:["Anova: Sous Vide Garlic and Rosemary Mashed Potatoes","https://recipes.anovaculinary.com/recipe/sous-vide-garlic-and-rosemary-mashed-potatoes"]},
+/* ================= SLOW COOKER BATCH (2026-09-28) ================= */
+{id:"sc-mississippi-roast",name:"Mississippi Pot Roast",cooker:"SC",high:360,type:"Beef",region:"American",mins:480,
+ desc:"The internet-famous five-ingredient roast: chuck with ranch, au jus, butter and pepperoncini, shredded in its own gravy.",
+ ing:["3 to 4 lb chuck roast","1 packet ranch seasoning mix","1 packet au jus gravy mix","1 stick butter","6 to 8 pepperoncini peppers (plus a splash of their juice)","Mashed potatoes, egg noodles or rolls to serve"],
+ steps:["Optional but better: sear the roast on a hot Blackstone 3 to 4 minutes a side.","Put the roast in the slow cooker and sprinkle the ranch and au jus mixes over the top.","Set the butter and pepperoncini on top. Don't add any water or broth.","Cook on LOW 8 hours (or HIGH 6) until it shreds easily.","Shred it right in the pot and stir it through the juices."],
+ tip:"No added liquid. The roast and butter make plenty of gravy on their own.",src:["The Country Cook: Mississippi Pot Roast","https://www.thecountrycook.net/crock-pot-mississippi-pot-roast/"]},
+{id:"sc-italian-beef",name:"Chicago Italian Beef Sandwiches",cooker:"SC",high:360,type:"Beef",region:"American",mins:600,
+ desc:"Chuck roast braised in seasoned beef broth until it shreds, piled on hoagies with giardiniera, provolone and a dunk in the juice.",
+ ing:["3 lb chuck roast","2 cups beef broth","1 packet dry Italian dressing mix","1 tsp each garlic powder, oregano, basil; 1/2 tsp red pepper flakes","1 cup pepperoncini (with a splash of juice)","8 hoagie rolls, 8 slices provolone","Hot giardiniera"],
+ steps:["Season and sear the roast on the Blackstone (optional).","Add it to the slow cooker with the broth, dressing mix, spices and pepperoncini.","Cook on LOW 10 hours (or HIGH 6) until tender.","Shred it and stir it back into the juices.","Toast the rolls, pile on the beef, top with provolone and giardiniera, and dip the whole sandwich in the juice if you like it wet."],
+ tip:"Order it \"dipped\": dunk the whole sandwich in the juice. That's how Chicago does it.",src:["Fox Valley Foodie: Crock Pot Italian Beef","https://www.foxvalleyfoodie.com/crock-pot-italian-beef-sandwiches-chicago-style/"]},
+{id:"sc-chili",name:"Slow Cooker Beef Chili",cooker:"SC",high:240,type:"Beef",region:"American",mins:360,
+ desc:"Thick, rich beef and bean chili with a little cocoa for depth. Set it in the morning, top it at dinner.",
+ ing:["2 lb ground beef, browned and drained","1 onion, 1 bell pepper, 4 garlic cloves, diced","2 cans (15 oz) kidney or pinto beans, drained","1 can (28 oz) diced tomatoes, 1 can (15 oz) tomato sauce","1 cup beef broth","3 Tbsp chili powder, 2 tsp cumin, 1 tsp paprika, 1 tsp oregano, 1 tsp cocoa powder, 1 tsp sugar, salt","Cheddar, sour cream, green onions, Fritos"],
+ steps:["Brown the beef with the onion, pepper and garlic on the Blackstone, then drain.","Add everything to the slow cooker and stir.","Cook on LOW 6 hours (or HIGH 4).","Taste and adjust the salt and chili powder.","Serve with the toppings."],
+ tip:"The cocoa won't taste like chocolate. It adds a deep, restaurant-chili richness.",src:["Cooking Classy: Slow Cooker Chili","https://www.cookingclassy.com/slow-cooker-chili/"]},
+{id:"sc-crack-chicken",name:"Crack Chicken",cooker:"SC",high:240,type:"Chicken",region:"American",mins:360,
+ desc:"The original viral recipe: chicken slow-cooked with cream cheese and ranch, shredded with bacon and cheddar.",
+ ing:["2 lb boneless, skinless chicken breasts or thighs","8 oz cream cheese","1 packet ranch seasoning","8 slices bacon, cooked and crumbled","1 cup shredded cheddar (optional)","Green onions; buns, tortillas or lettuce to serve"],
+ steps:["Put the chicken in the slow cooker, then the cream cheese on top and the ranch sprinkled over.","Cook on LOW 6 hours (or HIGH 4) until the chicken shreds easily.","Shred it and stir everything together.","Stir in the bacon (and cheddar), then top with green onions.","Serve on buns, in wraps or over rice."],
+ tip:"Crisp the bacon on the Blackstone while it cooks and stir it in at the end so it stays crunchy.",src:["Cookies and Cups: Slow Cooker Crack Chicken","https://cookiesandcups.com/slow-cooker-crack-chicken/"]},
+{id:"sc-butter-chicken",name:"Slow Cooker Butter Chicken",cooker:"SC",high:120,type:"Chicken",region:"Indian",mins:300,
+ desc:"Chicken thighs in a spiced tomato and butter sauce that's finished with cream. Takeout-level with 15 minutes of work.",
+ ing:["2 lb boneless chicken thighs","1 can (15 oz) tomato sauce","4 garlic cloves, 1 Tbsp ginger","2 tsp garam masala, 1 tsp curry powder, 1 tsp cumin, 1 tsp paprika, 1/2 tsp chili powder, 1 tsp salt, 1 tsp sugar","4 Tbsp butter","3/4 cup heavy cream","Cilantro, basmati rice, naan"],
+ steps:["Stir the tomato sauce, garlic, ginger, spices, salt and sugar in the slow cooker.","Add the chicken, coat it, and scatter the butter on top.","Cook on LOW 4 to 6 hours (or HIGH 2).","Pull out the chicken and cut it into bite-size pieces.","Stir the cream into the sauce, return the chicken and top with cilantro."],
+ tip:"Cream goes in at the end. Added early, it splits over the long cook.",src:["Little Sunny Kitchen: Slow Cooker Butter Chicken","https://littlesunnykitchen.com/slow-cooker-butter-chicken/"]},
+{id:"sc-carnitas",name:"Crispy Carnitas",cooker:"SC",finish:"BS",high:300,type:"Pork",region:"Mexican",mins:480,
+ desc:"Pork shoulder slow-cooked with citrus, garlic and chipotle, then shredded and crisped on the flat top.",
+ ing:["4 lb boneless pork shoulder, cut into big chunks","Rub: 2 tsp salt, 2 tsp cumin, 2 tsp oregano, 1 tsp chili powder, 1 tsp pepper","1 onion, chopped; 6 garlic cloves","1 chipotle in adobo (optional)","Juice of 2 oranges and 2 limes","Corn tortillas, onion, cilantro, salsa verde, lime"],
+ steps:["Rub the pork and put it in the slow cooker on top of the onion and garlic. Add the chipotle and pour the citrus over.","Cook on LOW 8 hours (or HIGH 5) until it falls apart.","Shred it and save the juices.","Heat the Blackstone to medium-high. Spread the pork out in a thin layer, splash with some juices, and let it crisp 3 to 5 minutes without moving it. Flip in sections.","Serve in warm tortillas with onion, cilantro, salsa verde and lime."],
+ tip:"Crisp it in batches on the steel. Crowded carnitas steam instead of crisp.",src:["Gimme Some Oven: Crispy Slow Cooker Carnitas","https://www.gimmesomeoven.com/crispy-slow-cooker-carnitas/"]},
+{id:"sc-pulled-pork",name:"Root Beer Pulled Pork",cooker:"SC",high:300,type:"Pork",region:"BBQ",mins:480,
+ desc:"Pork shoulder braised in root beer until it falls apart, then tossed in BBQ sauce for sandwiches.",
+ ing:["4 lb boneless pork shoulder","2 Tbsp BBQ rub","1 onion, sliced","1 can (12 oz) root beer (or Dr Pepper)","1.5 cups BBQ sauce","Brioche buns, coleslaw, pickles"],
+ steps:["Rub the pork and set it on the onion in the slow cooker.","Pour the root beer around it.","Cook on LOW 8 hours (or HIGH 5).","Drain most of the liquid, shred the pork and toss with the BBQ sauce.","Pile on buns with slaw and pickles."],
+ tip:"For bark, spread the sauced pork on a hot grill or Blackstone 3 to 4 minutes before serving.",src:["White On Rice Couple: Root Beer Pulled Pork","https://whiteonricecouple.com/root-beer-pulled-pork/"]},
+{id:"sc-kalua-pork",name:"Kalua Pork",cooker:"SC",high:420,type:"Pork",region:"Hawaiian",mins:600,
+ desc:"Hawaii's luau pork in three ingredients: pork shoulder, sea salt and liquid smoke, slow-cooked until silky.",
+ ing:["4 to 5 lb pork shoulder (butt)","1.5 Tbsp coarse sea salt (Hawaiian alaea if you can find it)","1.5 Tbsp liquid smoke","Rice, mac salad, sautéed cabbage"],
+ steps:["Pierce the pork all over with a fork.","Rub on the liquid smoke, then the salt.","Set it in the slow cooker, fat side up, with no liquid.","Cook on LOW 10 hours (or HIGH 7) until it shreds.","Shred it in its juices and serve with rice and mac salad."],
+ tip:"Toss leftovers on the Blackstone with cabbage for kalua pork and cabbage, the classic plate lunch.",src:["Downshiftology: Slow Cooker Kalua Pork","https://downshiftology.com/recipes/slow-cooker-kalua-pork/"]},
+{id:"sc-mac",name:"Crockpot Mac and Cheese",cooker:"SC",type:"Side",region:"Southern",mins:180,
+ desc:"Thick, creamy, never-grainy mac from uncooked pasta, cheddar and evaporated milk. It holds great for parties.",
+ ing:["1 lb elbow macaroni, uncooked","4 cups shredded sharp cheddar (divided)","1 can (12 oz) evaporated milk","1.5 cups whole milk","1/2 stick butter, melted","2 eggs, beaten","1 tsp salt, 1/2 tsp pepper, 1/2 tsp dry mustard"],
+ steps:["Grease the slow cooker.","Stir in the pasta, 3 cups of the cheese, both milks, butter, eggs and seasonings.","Top with the rest of the cheese.","Cook on LOW 2.5 to 3 hours, stirring once or twice, until the pasta is tender.","Switch to WARM to hold."],
+ tip:"LOW only. HIGH makes the edges grainy and scorched.",src:["Southern Bite: The Best Crock Pot Mac and Cheese","https://southernbite.com/the-best-crock-pot-mac-and-cheese/"]},
+{id:"sc-creamed-corn",name:"Rudy's Creamed Corn",cooker:"SC",high:120,type:"Side",region:"BBQ",mins:240,
+ desc:"The Texas BBQ joint's famous side: sweet corn in cream cheese, butter and cream. Dump, stir, done.",
+ ing:["2 lb frozen corn","8 oz cream cheese, cubed","1 cup heavy cream","1/2 stick butter, diced","2 Tbsp sugar, 1 tsp salt, 1/2 tsp pepper"],
+ steps:["Put the corn in the slow cooker.","Add the cream cheese, cream, butter, sugar, salt and pepper.","Cook on LOW 4 hours (or HIGH 2), stirring every hour.","Stir well until creamy and serve."],
+ tip:"Stir it once an hour so the cream cheese melts evenly.",src:["Barefeet in the Kitchen: Rudy's Slow-Cooker Creamed Corn","https://barefeetinthekitchen.com/rudys-creamed-corn-copycat-crockpot-recipe/"]},
+{id:"sc-jelly-meatballs",name:"Grape Jelly Meatballs",cooker:"SC",high:120,type:"Appetizer",region:"American",mins:240,
+ desc:"The potluck legend: meatballs in a sweet-tangy grape jelly and chili sauce. Three ingredients, gone in minutes.",
+ ing:["2 lb frozen fully cooked meatballs","1 cup grape jelly","1 bottle (12 oz) Heinz chili sauce (or BBQ sauce)","Toothpicks"],
+ steps:["Whisk the jelly and chili sauce in the slow cooker.","Add the meatballs and stir to coat.","Cook on LOW 4 hours (or HIGH 2), stirring once or twice.","Switch to WARM and set out toothpicks."],
+ tip:"Swap the chili sauce for BBQ sauce for a smokier version.",src:["Culinary Hill: Crockpot Grape Jelly Meatballs","https://www.culinaryhill.com/crockpot-meatballs-with-grape-jelly-sauce/"]},
+{id:"sc-spinach-dip",name:"Spinach Artichoke Dip",cooker:"SC",high:120,type:"Appetizer",region:"American",mins:240,
+ desc:"Hot, cheesy, creamy dip that stays warm for the whole party.",
+ ing:["8 oz cream cheese","10 oz frozen spinach, thawed and squeezed dry","1 can (14 oz) artichoke hearts, drained and chopped","1.5 cups shredded mozzarella","1/2 cup grated parmesan","1/2 cup sour cream","3 garlic cloves, salt, pepper, red pepper flakes","Tortilla chips, bread, veggies"],
+ steps:["Add everything to the slow cooker.","Cook on LOW 3 to 4 hours (or HIGH 2), stirring once or twice.","Stir well once it's hot and bubbly.","Switch to WARM and serve with dippers."],
+ tip:"Squeeze the spinach really dry, or the dip turns watery.",src:["Gimme Some Oven: Slow Cooker Spinach Artichoke Dip","https://www.gimmesomeoven.com/slow-cooker-spinach-artichoke-dip/"]}
 
 ];
 /* recipes added through the "Add a recipe" form (written by the GitHub automation) */
 if(Array.isArray(window.ADDED))window.ADDED.forEach(r=>{if(r&&r.id&&!R.some(x=>x.id===r.id))R.push({...r,added:1})});
 /* Per-serving macros: [calories, protein g, carbs g, fat g, servings, s=published by the source / e=estimate from the ingredient list, note] */
 const MACROS={
+ "sc-mississippi-roast":[500,32,4,38,8,"e","without sides"],"sc-italian-beef":[820,48,52,43,8,"e","1 sandwich"],"sc-chili":[420,30,28,20,8,"e","without toppings"],
+ "sc-crack-chicken":[365,41,3,20,6,"e","without buns"],"sc-butter-chicken":[420,31,6,29,6,"e","without rice"],"sc-carnitas":[310,26,4,21,10,"e","meat only, without tortillas"],
+ "sc-pulled-pork":[345,26,16,19,10,"e","meat only, without the bun"],"sc-kalua-pork":[290,26,0,20,10,"e"],"sc-mac":[435,20,36,23,10,"e"],
+ "sc-creamed-corn":[285,4,20,22,10,"e"],"sc-jelly-meatballs":[310,11,30,16,12,"e","about 5 meatballs"],"sc-spinach-dip":[165,8,4,12,12,"e","without dippers"],
+ 
  "sv-steak":[600,48,0,45,4,"e","8 oz raw steak"],"sv-brisket":[420,45,1,26,10,"e","5 oz sliced"],"sv-short-ribs":[760,46,4,62,4,"e"],
  "sv-chicken-breast":[280,48,0,9,4,"e","1 breast"],"sv-chicken-thighs":[460,40,1,33,4,"e","2 thighs"],"sv-pork-chops":[430,48,1,26,4,"e","1 chop"],
  "sv-ribs":[820,56,30,52,4,"e","half rack, sauced"],"sv-egg-bites":[260,20,1,19,4,"e","2 bites"],"sv-shrimp-cocktail":[160,23,8,5,6,"e"],
@@ -1449,10 +1516,12 @@ const MENUS = [
  {name:"Curry Night",s:"Curry Night",why:"Pick an Indian or Thai curry. Rice and naan soak up the sauce.",ids:["tikka-masala","keema","green-curry","panang-steak","yellow-rice","griddle-naan"]},
  {name:"Sous Vide Steak Night",s:"Sous Vide Steak",why:"Everything goes in the bath early, then the Blackstone does 5 minutes of searing right before dinner.",ids:["sv-steak","sv-pork-chops","sv-mashed","sv-carrots","sv-shrimp-cocktail"]},
  {name:"Set It and Forget It BBQ",s:"Sous Vide BBQ",why:"The bath does the long cook for brisket, ribs or short ribs; the fire just finishes them.",ids:["sv-brisket","sv-ribs","sv-short-ribs","sv-corn","popper-mac"]},
+ {name:"Crockpot Game Day",s:"Crockpot Game Day",why:"Everything cooks itself and holds on WARM through the whole game.",ids:["sc-italian-beef","sc-pulled-pork","sc-mac","sc-creamed-corn","sc-jelly-meatballs","sc-spinach-dip"]},
+ {name:"Walk In the Door Dinner",s:"Crockpot Dinner",why:"Load it before work and dinner's done when you get home.",ids:["sc-mississippi-roast","sc-crack-chicken","sc-butter-chicken","sc-kalua-pork","sv-mashed","hibachi-veg"]},
  {name:"Mediterranean Night",s:"Mediterranean",why:"One batch of tzatziki covers both dishes.",ids:["greek-gyros","veg-kebabs","greek-meatballs"]}
 ];
 
-const COOKERS={BS:"Blackstone",PBC:"Pit Barrel",GR:"Grill",SV:"Sous Vide"};
+const COOKERS={BS:"Blackstone",PBC:"Pit Barrel",GR:"Grill",SV:"Sous Vide",SC:"Slow Cooker"};
 const cookerLabel=r=>COOKERS[r.cooker]+(r.finish&&COOKERS[r.finish]?" + "+COOKERS[r.finish]:"");   // sous vide combos: "Sous Vide + Blackstone"
 const MAIN_T=new Set(["Beef","Chicken","Pork","Seafood","Other"]);
 const TYPES=["Beef","Chicken","Pork","Seafood",...(R.some(r=>r.type==="Other")?["Other"]:[]),"Side","Appetizer"];
@@ -1823,11 +1892,11 @@ const bState={region:"Any",setup:"Any",protein:"Any"};
 function single(el,opts,key){el.innerHTML=opts.map(o=>`<button class="chip" type="button" aria-pressed="${o===bState[key]}" data-v="${esc(o)}">${esc(o)}</button>`).join("");
   el.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{bState[key]=c.dataset.v;el.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",x===c))});}
 single($("#b-region"),["Any",...REGIONS],"region");
-single($("#b-setup"),["Any","Blackstone only","Pit Barrel only","Grill only","Sous Vide only"],"setup");
+single($("#b-setup"),["Any","Blackstone only","Pit Barrel only","Grill only","Sous Vide only","Slow Cooker only"],"setup");
 single($("#b-protein"),["Any","Beef","Chicken","Pork","Seafood"],"protein");
 const rnd=a=>a[Math.floor(Math.random()*a.length)];
 $("#build").onclick=()=>{
-  const okCooker=r=>bState.setup==="Any"||r.cooker==={"Blackstone only":"BS","Pit Barrel only":"PBC","Grill only":"GR","Sous Vide only":"SV"}[bState.setup];
+  const okCooker=r=>bState.setup==="Any"||r.cooker==={"Blackstone only":"BS","Pit Barrel only":"PBC","Grill only":"GR","Sous Vide only":"SV","Slow Cooker only":"SC"}[bState.setup];
   let mains=R.filter(r=>MAIN_T.has(r.type)&&okCooker(r)&&(bState.protein==="Any"||r.type===bState.protein));
   const inRegion=mains.filter(r=>bState.region==="Any"||r.region===bState.region);
   let note="";
@@ -1929,6 +1998,12 @@ const TIPS=[
   ["Bags and water",["Zip-top freezer bags work for most cooks. Use the <b>water displacement</b> trick: lower the open bag into the water and the pressure pushes the air out, then seal it just above the waterline.","Vacuum-seal anything going longer than about 4 hours, or anything with bones that could poke a hole.","Clip bags to the pot side and make sure the food stays fully under water. Cover the pot (plastic wrap or ping-pong balls) on long cooks so it doesn't evaporate dry."]],
   ["The finish",["<b>Dry it hard</b> with paper towels. A wet surface steams instead of browning.","Sear as hot as you can for as short as you can: 45 to 60 seconds a side on a 500°F+ Blackstone. You're only building a crust, because the inside is already done.","For extra-long cooks, chill the bag in ice water first, then sear. A cold center lets you sear longer without overcooking."]],
   ["Safety",["Keep bath temps at 130°F or above for anything cooking longer than 4 hours.","Low-temp chicken (145 to 150°F) is safe because of the hold time. Follow the recipe's minimum time.","Cooking straight from frozen works. Add about 50% to the time."]],
+ ]},
+ {cooker:"SC",title:"Slow Cooker / Crockpot",open:0,groups:[
+  ["Low vs. High",["Roughly, <b>1 hour on HIGH = 2 hours on LOW</b>. LOW gives tougher cuts (chuck, pork shoulder) more tender, better texture. HIGH is for when you started late.","Every recipe here lists LOW time first, and the ⏰ planner shows both start times.","<b>Warm</b> is for holding only (up to about 2 hours). It's not for cooking."]],
+  ["Fill it right",["Fill it half to two-thirds full. Too little and it scorches; too full and it won't come up to temperature safely.","Put dense vegetables (potatoes, carrots) on the bottom and meat on top.","Don't add much liquid. Nothing evaporates, and meat releases its own juice."]],
+  ["Hands off",["Every time you lift the lid you add 15 to 20 minutes. Leave it closed.","<b>Never start with frozen meat</b>. It sits too long in the danger zone. Thaw it in the fridge first.","Dairy (cream, cheese, sour cream) goes in the last 30 to 60 minutes so it doesn't split."]],
+  ["Make it taste grilled",["Brown the meat first on the Blackstone for deeper flavor. It's optional but worth it.","<b>Finish on the flat top</b>: spread shredded carnitas or pulled pork on a hot Blackstone for crispy edges, like the Carnitas recipe does.","Reduce the leftover juices on the griddle or stove into a sauce."]],
  ]}
 ];
 $("#tipsBox").innerHTML=TIPS.map(t=>`<div class="tipcard"><h2><span class="tag ${t.cooker.toLowerCase()}">${COOKERS[t.cooker]}</span>${esc(t.title)}</h2>${t.groups.map((g,i)=>`<details${i===0?" open":""}><summary>${esc(g[0])}</summary><ul>${g[1].map(x=>`<li>${x}</li>`).join("")}</ul></details>`).join("")}</div>`).join("");
@@ -1972,6 +2047,13 @@ function buildSteps(ids,ready,day){
     const start=new Date(at-r.mins*M);
     const ahead=/marinat|overnight|dry brine|brine /i.test(r.steps.join(" "))&&r.cooker!=="SV";
     if(ahead)steps.push({t:new Date(start-4*60*M),txt:`Marinate or brine: ${r.name}`,sub:"Start 2 to 24 hours ahead (see the recipe). The time here is the latest."});
+    if(r.cooker==="SC"){
+      const hi=r.high?new Date(at-r.high*M):null,fin=r.finish?(r.finish==="PBC"?30:12):0,end=new Date(start-fin*M);
+      const s0=new Date(end.getTime()-0);
+      steps.push({t:new Date(at-(r.mins+fin)*M),txt:`Into the slow cooker on LOW: ${r.name}`,sub:`${hi?`Or start at ${fmtClock(new Date(hi-fin*M),at)} on HIGH. `:""}It can hold on WARM up to 2 hours, so starting a little early is fine.`});
+      if(r.finish){const f=new Date(at-fin*M);preheat(r.finish,new Date(f-15*M),`Heat the ${COOKERS[r.finish]}`);steps.push({t:f,txt:`Finish ${r.name} on the ${COOKERS[r.finish]}`,sub:"Crisp it up hot and fast (see the recipe)."})}
+      return;
+    }
     if(r.cooker==="SV"){
       preheat("SV",new Date(start-20*M),"Fill and heat the sous vide bath");
       const hold=HOLD[r.id]||0;
@@ -2077,7 +2159,7 @@ async function loadHearts(){
 
 /* ---------- stats + boot ---------- */
 const c=k=>R.filter(r=>r.cooker===k).length;
-$("#stats").innerHTML=`<span><b>${R.length}</b>recipes</span><span><b>${c("BS")}</b>Blackstone</span><span><b>${c("PBC")}</b>Pit Barrel</span><span><b>${c("GR")}</b>Grill</span><span><b>${c("SV")}</b>Sous Vide</span><span><b>${REGIONS.length}</b>regions</span><span><b>${MENUS.length}</b>meal nights</span>`;
+$("#stats").innerHTML=`<span><b>${R.length}</b>recipes</span><span><b>${c("BS")}</b>Blackstone</span><span><b>${c("PBC")}</b>Pit Barrel</span><span><b>${c("GR")}</b>Grill</span><span><b>${c("SV")}</b>Sous Vide</span><span><b>${c("SC")}</b>Slow Cooker</span><span><b>${REGIONS.length}</b>regions</span><span><b>${MENUS.length}</b>meal nights</span>`;
 render();
 loadHearts();
 if(location.hash&&byId[location.hash.slice(1)])openRecipe(location.hash.slice(1));

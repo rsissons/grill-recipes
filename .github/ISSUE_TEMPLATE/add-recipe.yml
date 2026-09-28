@@ -22,6 +22,7 @@ body:
         - Pit Barrel
         - Grill
         - Sous Vide
+        - Slow Cooker
       default: 0
   - type: dropdown
     id: type

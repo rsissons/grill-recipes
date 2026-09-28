@@ -238,6 +238,7 @@ def pick_cooker(title, text):
         "PBC": score(r"\b(pit barrel|pbc|smoker|smoked|smoking|drum smoker|low and slow|wood chunks|pellet grill|burnt ends|hooks?)\b", text, title),
         "GR": score(r"\b(grill|grilled|grilling|grates|kebabs?|kabobs?|skewers?|charcoal)\b", text, title),
         "SV": score(r"\b(sous[- ]vide|immersion circulator|water bath|anova|joule)\b", text, title) * 3,
+        "SC": score(r"\b(slow[- ]cooker|crock[- ]?pot|crockpot)\b", text, title) * 3,
     }
     best = max(s, key=s.get)
     return (best, False) if s[best] > 0 else ("GR", True)
@@ -386,12 +387,12 @@ def main():
     title = name.lower()
     text = " ".join([title, desc.lower(), kw.lower(), cat, cuisine.lower(), " ".join(steps).lower(), " ".join(ings).lower()])
 
-    cooker_pick = {"blackstone": "BS", "pit barrel": "PBC", "grill": "GR", "sous vide": "SV"}.get(form.get("cooker", "").lower())
+    cooker_pick = {"blackstone": "BS", "pit barrel": "PBC", "grill": "GR", "sous vide": "SV", "slow cooker": "SC"}.get(form.get("cooker", "").lower())
     guessed_cooker = False
     if not cooker_pick:
         cooker_pick, guessed_cooker = pick_cooker(title, text)
     finish_cooker = None
-    if cooker_pick == "SV":   # sous vide combos: which cooker does the final sear/smoke?
+    if cooker_pick in ("SV", "SC"):   # combos: which cooker does the final sear/crisp/smoke?
         fin = {k: score(pat, text, title) for k, pat in (
             ("BS", r"\b(blackstone|griddle|flat[- ]?top|skillet|cast iron|pan[- ]?sear)"),
             ("PBC", r"\b(pit barrel|smoker|smoked|smoke)\b"),
@@ -444,7 +445,7 @@ def main():
         items.append(recipe)
     save_added(items)
 
-    cookers = {"BS": "Blackstone", "PBC": "Pit Barrel", "GR": "Grill", "SV": "Sous Vide"}
+    cookers = {"BS": "Blackstone", "PBC": "Pit Barrel", "GR": "Grill", "SV": "Sous Vide", "SC": "Slow Cooker"}
     types = {"Beef": "Beef main", "Chicken": "Chicken main", "Pork": "Pork main", "Seafood": "Seafood main",
              "Other": "Other main", "Side": "Side dish", "Appetizer": "Appetizer"}
     note = ("\n\nI couldn't tell which cooker this is for, so it's filed under **Grill**. "
