@@ -3321,7 +3321,7 @@ window.ADDED = [
   "id": "blt-sandwich",
   "name": "BLT Sandwich",
   "cooker": "BS",
-  "type": "Side",
+  "type": "Pork",
   "region": "American",
   "mins": 15,
   "serves": 2,

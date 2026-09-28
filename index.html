@@ -48,6 +48,8 @@ header.hero{background:linear-gradient(135deg,#1c1410 0%,#3b1d0e 60%,#7c2d12 100
 .hero p{max-width:720px;color:#fde6d3;margin:10px 0 0}
 .hero .stats{display:flex;gap:18px;flex-wrap:wrap;margin-top:16px;font-size:.9rem;color:#fed7aa}
 .hero .stats b{color:#fff;font-size:1.15rem;margin-right:4px}
+.hero .stat{background:none;border:0;padding:0;color:inherit;font:inherit;cursor:pointer;text-decoration:underline;text-decoration-color:rgba(254,215,170,.35);text-underline-offset:4px}
+.hero .stat:hover{color:#fff;text-decoration-color:#fed7aa}
 .spin-cta{margin-top:16px;background:#fb923c;color:#1c1410;border:0;border-radius:999px;padding:11px 20px;font-family:Oswald,Impact,sans-serif;font-size:1.1rem;letter-spacing:.03em;box-shadow:0 4px 14px rgba(0,0,0,.3)}
 .spin-cta:hover{background:#fdba74}
 .theme-toggle{position:absolute;bottom:14px;right:16px;background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:6px 12px;font-size:.85rem}
@@ -124,7 +126,7 @@ details.group>summary h2{display:inline}
 .seg button[aria-pressed=true]{background:var(--ember);color:#fff}
 .chk{display:inline-flex;gap:6px;align-items:center;font-size:.9rem}
 .dealline{margin-top:10px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);font-size:.88rem}
-.dealline .lnk,.popacts .lnk{background:none;border:0;color:var(--ember);font-weight:600;padding:0 4px;text-decoration:underline;cursor:pointer}
+#dlgBody .lnk,.dealline .lnk,.popacts .lnk{background:none;border:0;color:var(--ember);font-weight:600;padding:0 4px;text-decoration:underline;cursor:pointer}
 .dealpanel{margin-top:8px;padding:10px;border:1px solid var(--line);border-radius:10px;display:grid;gap:10px}
 .dprow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .pop{position:relative}
@@ -391,6 +393,7 @@ select{font:inherit;background:var(--surface-2);color:var(--ink);border:1px soli
       <div class="frow2">
         <label class="fl">Cooker<select id="addCooker"><option>Auto-detect</option><option>Blackstone</option><option>Pit Barrel / Smoker</option><option>Grill</option><option>Sous Vide</option><option>Slow Cooker</option><option>Air Fryer</option></select></label>
         <label class="fl">Type<select id="addType"><option>Auto-detect</option><option>Beef main</option><option>Chicken main</option><option>Pork main</option><option>Seafood main</option><option>Other main (lamb, duck, tofu)</option><option>Side dish</option><option>Appetizer</option></select></label>
+        <label class="fl">Region<select id="addRegion"><option value="">Auto-detect</option></select></label>
       </div>
       <div id="tsBox" style="margin:12px 0"></div>
       <button class="btn primary" id="addGo" type="submit">Add it</button>
@@ -2227,11 +2230,12 @@ function openRecipe(id){
     <h3>Steps</h3><ol>${r.steps.map(s=>`<li>${esc(s)}</li>`).join("")}</ol>
     ${r.tip?`<div class="tip"><b>Tip:</b> ${esc(r.tip)}</div>`:""}
     <details class="pairs-wrap fold"><summary><h3>Pairs with</h3><span class="chev">▾</span></summary><div class="pairs">${pairsFor(r).map(p=>`<button type="button" data-id="${p.id}">${esc(p.name)}<small>${COOKERS[p.cooker]} · ${TYPE_LABEL[p.type]} · ${esc(p.region)}</small></button>`).join("")}</div></details>
-    <p style="margin-top:16px;font-size:.88rem">Source: <a href="${esc(r.src[1])}" target="_blank" rel="noopener">${esc(r.src[0])}</a></p>
+    <p style="margin-top:16px;font-size:.88rem">Source: <a href="${esc(r.src[1])}" target="_blank" rel="noopener">${esc(r.src[0])}</a>${r.added&&RELAY?` · <button type="button" class="lnk" id="fixBtn">✏️ Fix sorting</button>`:""}</p>
     <div class="dlg-actions"><select id="dayPick" aria-label="Which day">${dayOpts(inPlan(r.id)?inPlan(r.id).day:"Tonight")}</select><button class="btn primary" id="listBtn" type="button">${inPlan(r.id)?'✓ On list (remove)':'＋ Add to list'}</button><button class="btn ${isFav?'primary':''}" id="favBtn" type="button">${isFav?'♥ Saved':'♡ Save to favorites'}</button><button class="btn" type="button" onclick="window.print()">Print</button><button class="btn" id="shareBtn" type="button">Copy link</button></div>
     <div class="dlg-actions"><label class="rb">Ready by <input type="time" value="17:00" id="dlgReady"></label><button class="btn" type="button" id="dlgTime">⏰ Plan my timing</button></div><div id="dlgTimeline"></div>`;
   $("#dlgBody").querySelectorAll(".pairs button").forEach(b=>b.onclick=()=>openRecipe(b.dataset.id));
   $("#dlgBody").querySelectorAll("[data-also]").forEach(b=>b.onclick=()=>openRecipe(b.dataset.also));
+  const fx=$("#dlgBody").querySelector("#fixBtn");if(fx)fx.onclick=()=>{dlg.close();openAdd(r)};
   $("#listBtn").onclick=()=>{inPlan(r.id)?removeFromPlan(r.id):addToPlan(r.id,$("#dayPick").value,+$("#dlgServes").value);openRecipe(r.id);render()};
   $("#dlgServes").onchange=e=>{const n=+e.target.value;setHousehold(n);const p=inPlan(r.id);if(p){p.serves=n;savePlan()}$("#dlgIng").innerHTML=ingHTML(r,n)};
   $("#dayPick").onchange=()=>{if(inPlan(r.id)){addToPlan(r.id,$("#dayPick").value);render()}};
@@ -2475,11 +2479,18 @@ function loadTurnstile(){
   const sc=document.createElement("script");sc.src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";sc.async=true;sc.onload=render;document.head.appendChild(sc);
 }
 function addStatus(html){const b=$("#addStatus");b.hidden=false;b.innerHTML=html}
+$("#addRegion").innerHTML='<option value="">Auto-detect</option>'+REGIONS.map(g=>`<option>${esc(g)}</option>`).join("");
+const TYPE_OPT={Beef:"Beef main",Chicken:"Chicken main",Pork:"Pork main",Seafood:"Seafood main",Other:"Other main (lamb, duck, tofu)",Side:"Side dish",Appetizer:"Appetizer"};
+function openAdd(r){
+  $("#addForm").hidden=false;$("#addStatus").hidden=true;$("#addGo").disabled=false;
+  $("#addTitle").textContent=r?"Fix this recipe":"Add a recipe";$("#addGo").textContent=r?"Save changes":"Add it";
+  $("#addUrl").value=r?r.src[1]:"";$("#addUrl").readOnly=!!r;$("#addName").value=r?r.name:"";
+  $("#addCooker").value=r?COOKERS[r.cooker]:"Auto-detect";$("#addType").value=r?TYPE_OPT[r.type]:"Auto-detect";$("#addRegion").value=r?r.region:"";
+  if(!addDlg.open)addDlg.showModal();loadTurnstile();setTimeout(()=>(r?$("#addType"):$("#addUrl")).focus(),50);
+}
 $("#addBtn").addEventListener("click",e=>{
   if(!RELAY)return;            // no relay yet: the link opens the GitHub form
-  e.preventDefault();
-  $("#addForm").hidden=false;$("#addStatus").hidden=true;$("#addGo").disabled=false;$("#addUrl").value="";
-  if(!addDlg.open)addDlg.showModal();loadTurnstile();setTimeout(()=>$("#addUrl").focus(),50);
+  e.preventDefault();openAdd(null);
 });
 $("#addClose").onclick=()=>addDlg.close();
 addDlg.addEventListener("click",e=>{if(e.target===addDlg)addDlg.close()});
@@ -2490,7 +2501,7 @@ $("#addForm").onsubmit=async e=>{
   $("#addGo").disabled=true;addStatus('<span class="spin"></span>Checking the link…');
   let res;
   try{
-    const r=await fetch(RELAY+"/add",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({url:$("#addUrl").value.trim(),name:$("#addName").value.trim(),cooker:$("#addCooker").value,type:$("#addType").value,token:tsToken})});
+    const r=await fetch(RELAY+"/add",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({url:$("#addUrl").value.trim(),name:$("#addName").value.trim(),region:$("#addRegion").value,cooker:$("#addCooker").value,type:$("#addType").value,token:tsToken})});
     res=await r.json();
   }catch(_){res={ok:false,reason:"Couldn't reach the recipe service. Check your connection and try again."}}
   if(window.turnstile&&tsWidget!==null){turnstile.reset(tsWidget);tsToken=""}
@@ -2729,7 +2740,16 @@ async function loadHearts(){
 
 /* ---------- stats + boot ---------- */
 const c=k=>R.filter(r=>r.cooker===k).length;
-$("#stats").innerHTML=`<span><b>${R.length}</b>recipes</span><span><b>${c("BS")}</b>Blackstone</span><span><b>${c("PBC")}</b>Pit Barrel / Smoker</span><span><b>${c("GR")}</b>Grill</span><span><b>${c("SV")}</b>Sous Vide</span><span><b>${c("SC")}</b>Slow Cooker</span><span><b>${c("AF")}</b>Air Fryer</span><span><b>${REGIONS.length}</b>regions</span><span><b>${MENUS.length}</b>meal nights</span>`;
+// every count is a shortcut: a cooker shows just its recipes, "recipes" clears filters, "regions" opens the filters, "meal nights" jumps there
+const stat=(k,n,l)=>`<button type="button" class="stat" data-stat="${k}"><b>${n}</b>${l}</button>`;
+$("#stats").innerHTML=stat("all",R.length,"recipes")+Object.keys(COOKERS).map(k=>stat(k,c(k),COOKERS[k])).join("")+stat("regions",REGIONS.length,"regions")+stat("nights",MENUS.length,"meal nights");
+$("#stats").addEventListener("click",e=>{const b=e.target.closest("[data-stat]");if(!b)return;const k=b.dataset.stat;
+  if(k==="nights"){document.querySelector('nav.tabs [data-tab="menus"]').click();document.querySelector("nav.tabs").scrollIntoView({behavior:"smooth"});return}
+  document.querySelector('nav.tabs [data-tab="recipes"]').click();$("#reset").click();
+  if(COOKERS[k]){const chip=document.querySelector(`#f-cooker [data-v="${k}"]`);if(chip)chip.click()}
+  if(k==="regions")setFilters(true);
+  (k==="regions"?$("#f-region"):document.querySelector("nav.tabs")).scrollIntoView({behavior:"smooth",block:"start"});
+});
 render();
 loadHearts();
 if(location.hash&&byId[location.hash.slice(1)])openRecipe(location.hash.slice(1));
