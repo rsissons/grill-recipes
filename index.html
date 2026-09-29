@@ -2047,6 +2047,14 @@ function scaleLine(line,f,dec){
     // spoons and cups: nearest quarter (no 5/8 Tbsp)
     const spoon=/^\s*(cups?|c\b|tbsp|tablespoons?|tsp|teaspoons?)/i.test(after.replace(/^\s*(to|-|–)\s*[\d.\/½¼¾⅓⅔⅛ ]+/,""));
     const val=spoon&&v*f<10?Math.max(.25,Math.round(v*f*4)/4):v*f;
+    // readable small amounts on the recipe (the grocery list keeps pounds so it can add them up):
+    // 5/8 lb -> 10 oz, 1/2 Tbsp -> 1 1/2 tsp, 1/8 cup -> 2 Tbsp
+    const um=after.match(/^\s*(lbs?|pounds?|tbsp|tablespoons?|cups?)\b\.?/i),inRange=/(to|-|–)\s*$/.test(line.slice(0,m.index))||/^\s*(to|-|–)\s*\d/.test(after);
+    if(!dec&&measured&&um&&!inRange){const u=um[1].toLowerCase(),x=v*f;
+      if(/^(lb|pound)/.test(u)&&x<1){out+=Math.max(1,Math.round(x*16))+" oz";i+=um[0].length;continue}
+      if(/^(tbsp|tablespoon)/.test(u)&&x<1){out+=fmtQty(Math.max(.25,Math.round(x*3*4)/4))+" tsp";i+=um[0].length;continue}
+      if(/^cup/.test(u)&&x<.25){out+=fmtQty(Math.max(.5,Math.round(x*16*2)/2))+" Tbsp";i+=um[0].length;continue}
+      if(u==="cups"&&val<=1){out+=fmtQty(val)+" cup";i+=um[0].length;continue}}
     out+=measured?fmtQty(val,dec):String(Math.max(1,Math.round(v*f)));
   }
   return out+line.slice(i);
