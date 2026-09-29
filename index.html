@@ -1946,7 +1946,10 @@ const BREAKFASTY=/egg bites|breakfast|pancake|french toast|hash browns?/i;
 // shared by Build me a cook and the recipe page's suggestions
 const KIND=/burnt ends|bang bang|potato|fries|tots|corn|rice|beans|mac|slaw|bread|salad|mushroom|asparagus|zucchini|broccoli|brussels|egg roll|wings|dip|poppers|nachos|shrimp/i;
 const kind=r=>(r.name.match(KIND)||[""])[0].toLowerCase().replace(/fries|tots/,"potato");
-const PLATED=/roast|stew|soup|meatloaf|turkey breast|breast|\bchops?\b|tenderloin|salmon|cod\b|mahi|halibut|scampi|stroganoff|fettuccine|pasta|piccata|\bparm|curry|katsu|prime rib|short ribs|lamb|\bsteak\b(?! (fajita|bite|taco))|filet|ribeye|tomahawk/i;
+const PLATED=/roast|whole chicken|stew|soup|meatloaf|turkey breast|breast|\bchops?\b|tenderloin|salmon|cod\b|mahi|halibut|scampi|stroganoff|fettuccine|pasta|piccata|\bparm|curry|katsu|prime rib|short ribs|lamb|\bsteak\b(?! (fajita|bite|taco))|filet|ribeye|tomahawk/i;
+const PROTEIN=[["Chicken",/chicken|wings?\b|lollipops?|drumsticks?|buffalo/i],["Beef",/beef|steak|meatballs?|brisket|burnt ends|sliders?|cheesesteak|moink/i],["Pork",/pork|smokies|sausage|kielbasa|chorizo|ham\b/i],["Seafood",/shrimp|crab|scallops?|fish|salmon|tuna|lobster|oysters?/i]];
+const appProtein=x=>{const g=PROTEIN.find(([,re])=>re.test(x.name));return g?g[0]:""};
+const sameProtein=(main,x)=>x.type==="Appetizer"&&appProtein(x)===main.type;
 const isCasual=main=>{const gi=GOES.findIndex(([m])=>m.test(main.name));return !PLATED.test(main.name)&&([0,1,2,4].includes(gi)||/wing|nacho|slider|game day|dog/i.test(main.name))};
 function goesWith(main,side){const g=GOES.find(([m])=>m.test(main.name));return !g?0:g[1].test(side.name)?10:g[2].test(side.name)?7:0}
 function score(a,b){let s=0;if(a.region===b.region)s+=5;
@@ -1962,7 +1965,7 @@ function pairsFor(r){
   const fromN=[...new Set(nights.flatMap(m=>[...withFor(m,r.id),...m.ids]))].map(id=>byId[id]).filter(x=>x&&x.id!==r.id&&!MAIN_T.has(x.type));
   const ok=x=>fits(r,x)&&!BREAKFASTY.test(x.name);
   const ranked=t=>[...fromN.filter(x=>x.type===t),...R.filter(x=>x.type===t).map(x=>[x,score(r,x)]).sort((a,b)=>b[1]-a[1]).map(a=>a[0])].filter(ok);
-  const take=(t,n,chosen)=>{const got=[];for(const x of ranked(t)){if(got.length>=n)break;if(got.includes(x)||[...chosen,...got].some(c=>kind(c)&&kind(c)===kind(x))||overKit(x,[...chosen,...got]))continue;got.push(x)}return got};
+  const take=(t,n,chosen)=>{const got=[];for(const x of ranked(t)){if(got.length>=n)break;if(got.includes(x)||[...chosen,...got].some(c=>kind(c)&&kind(c)===kind(x))||overKit(x,[...chosen,...got])||sameProtein(r,x))continue;got.push(x)}return got};
   const sides=take("Side",3,[r]);
   return [...sides,...(isCasual(r)?take("Appetizer",2,[r,...sides]):[])];
 }
@@ -2597,7 +2600,7 @@ $("#build").onclick=()=>{
   // pick the cooker first (evenly across the ones you picked), then the dish, so 12 air fryer mains aren't drowned out by 100 Blackstone ones
   const ck=rnd([...new Set(pool.map(r=>r.cooker))]),main=rnd(pool.filter(r=>r.cooker===ck));
   // sides come from the main's hand-built Meal Night first; the scored pick is only the fallback, and never two of the same thing (potato + potato skins)
-  const clash=(x,chosen)=>chosen.some(c=>c&&kind(c)&&kind(c)===kind(x))||overKit(x,chosen);
+  const clash=(x,chosen)=>chosen.some(c=>c&&kind(c)&&kind(c)===kind(x))||overKit(x,chosen)||sameProtein(main,x);
   const usable=x=>x&&okCooker(x)&&timeOK(x,true)&&!BREAKFASTY.test(x.name);
   const night=rnd(MENUS.filter(m=>!m.gone&&m.ids.includes(main.id)))||null;
   const fromNight=t=>night?(t==="Side"?withFor(night,main.id):night.ids).map(id=>byId[id]).filter(x=>x&&x.type===t&&usable(x)&&fits(main,x)):[];
